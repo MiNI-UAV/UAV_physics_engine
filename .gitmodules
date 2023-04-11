@@ -1,0 +1,6 @@
+[submodule "lib/eigen"]
+	path = lib/eigen
+	url = https://gitlab.com/libeigen/eigen
+[submodule "lib/cppzmq"]
+	path = lib/cppzmq
+	url = https://github.com/zeromq/cppzmq.git
