@@ -1,18 +1,11 @@
 #include <Eigen/Dense>
+#include <cmath>
 #include "constants.hpp"
 
 using namespace Eigen;
 
 Constants::Constants()
-{
-    double m = 5;
-    double Ix = 10;
-    double Iy = 11;
-    double Iz = 12;
-    double Ixy = 1;
-    double Ixz = 2;
-    double Iyz = 3;
-    
+{   
     //mass matrix
     massMatrix.setZero();
     massMatrix(0,0) = m;
@@ -27,6 +20,8 @@ Constants::Constants()
     massMatrix(5,3) = -Ixz;
     massMatrix(4,5) = -Iyz;
     massMatrix(5,4) = -Iyz;
+
+    invMassMatrix = massMatrix.inverse();
 }
 
 Matrix<double,6,6> Constants::gyroMatrix(Vector<double,6> x)
@@ -52,4 +47,11 @@ Matrix<double,6,6> Constants::gyroMatrix(Vector<double,6> x)
     gyro(3,5) =  x(4);
     gyro(4,5) = -x(3);
     return gyro;
+}
+
+Vector<double,6> Constants::gravity_forces(Vector<double,6>  y)
+{
+    Vector<double,6> Fg = {-std::sin(y(4)), std::sin(y(3))*std::cos(y(4)), std::cos(y(3))*std::cos(y(4)), 0.0, 0.0, 0.0};
+    Fg = (m*g)*Fg;
+    return Fg;
 }
