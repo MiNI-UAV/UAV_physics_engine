@@ -1,9 +1,20 @@
 cmake_minimum_required(VERSION 3.5)
-project(UAV_physics_engine) # this does not matter for our simple case
-add_executable(main src/main.cpp src/constants.cpp) # this determines the executable name
-target_include_directories(main PUBLIC include)
-target_compile_features(main PUBLIC cxx_std_20) # we need C++20
-add_subdirectory(lib/eigen)
-link_directories(${CMAKE_SOURCE_DIR}/lib)
+project(uav)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
+
+set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+set(BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build)
+
+file(GLOB SOURCES ${SOURCE_DIR}/*.cpp)
+
+include_directories(${INCLUDE_DIR})
+link_directories(${LIB_DIR})
+
+add_executable(uav ${SOURCES})
+target_include_directories(uav PUBLIC include)
+target_compile_features(uav PUBLIC cxx_std_20)
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
-target_link_libraries(main Eigen3::Eigen)
+target_link_libraries(uav Eigen3::Eigen)
