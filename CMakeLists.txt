@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 project(UAV_physics_engine) # this does not matter for our simple case
-add_executable(main src/main.cpp) # this determines the executable name
+add_executable(main src/main.cpp src/constants.cpp) # this determines the executable name
 target_include_directories(main PUBLIC include)
 target_compile_features(main PUBLIC cxx_std_20) # we need C++20
 add_subdirectory(lib/eigen)
