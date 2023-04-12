@@ -1,17 +1,28 @@
 #include <iostream>
+#include <Eigen/Dense>
 #include "constants.hpp"
 #include "forces.hpp"
+#include "RK4.hpp"
+
+Eigen::Vector4d fun(double t , Eigen::Vector4d om)
+{
+  Forces f;
+  return f.angularAcceleration(om);
+}
 
 int main()
 {
     Constants c;
     Forces f;
     std::cout << "Start!" << std::endl;
-    double om[] = {11,11,10,10};
-    std::cout << f.lift_forces(om) << std::endl << std::endl;
+    Vector4d om = {0,0,0,0};
 
-    Vector<double,6> y;
-    y.setZero();
-    std::cout << c.TMatrix(y) << std::endl;
+    for (int i = 0; i < 1000; i++)
+    {
+        om = RK4_step<4>(i,om,fun,0.001);
+        std::cout << om(1) << "\n";
+    }
+    
+
     return 0;
 }

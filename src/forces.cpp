@@ -17,13 +17,13 @@ Vector<double,6> Forces::gravity_forces(Vector<double,6>  y)
     return Fg;
 }
 
-Vector<double,6> Forces::lift_forces(double rotorAngularVelocity[])
+Vector<double,6> Forces::lift_forces(Vector<double,noOfRotors> rotorAngularVelocity)
 {
     Vector3d Fr = {0.0, 0.0, 0.0};
     Vector3d Mr = {0.0, 0.0, 0.0};
     for (int i = 0; i < noOfRotors; i++)
     {
-        double om2 = std::pow(rotorAngularVelocity[i],2);
+        double om2 = std::pow(rotorAngularVelocity(i),2);
         Vector3d Fi = {0.0, 0.0, -ro*forceCoff*om2};
         Fr += Fi;
         Mr(2) += rotorDir[i]*ro*torqueCoff*om2;
@@ -34,4 +34,11 @@ Vector<double,6> Forces::lift_forces(double rotorAngularVelocity[])
     Vector<double,6> res;
     res << Fr, Mr;
     return res; 
+}
+
+Vector<double,noOfRotors> Forces::angularAcceleration(Vector<double,noOfRotors> rotorAngularVelocity)
+{
+    Vector<double,noOfRotors> res;
+    res = (demandedAngularVelocity - rotorAngularVelocity);
+    return res.cwiseQuotient(rotorTimeConstant);
 }
