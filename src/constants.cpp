@@ -3,6 +3,7 @@
 #include "constants.hpp"
 
 using namespace Eigen;
+using namespace std;
 
 Constants::Constants()
 {   
@@ -49,9 +50,23 @@ Matrix<double,6,6> Constants::gyroMatrix(Vector<double,6> x)
     return gyro;
 }
 
-Vector<double,6> Constants::gravity_forces(Vector<double,6>  y)
+Matrix<double,6,6> Constants::TMatrix(Vector<double,6>  y)
 {
-    Vector<double,6> Fg = {-std::sin(y(4)), std::sin(y(3))*std::cos(y(4)), std::cos(y(3))*std::cos(y(4)), 0.0, 0.0, 0.0};
-    Fg = (m*g)*Fg;
-    return Fg;
+    Matrix3d Tv, Tom;
+    Matrix<double,6,6> res;
+    res.setZero();
+    double fi = y(3);
+    double theta = y(4);
+    double psi = y(5);
+
+    Tv  << cos(theta)*cos(psi), sin(fi)*sin(theta)*cos(psi) - cos(fi)*sin(psi), cos(fi)*sin(theta)*cos(psi) + sin(fi)*sin(psi),
+           cos(theta)*sin(psi), sin(fi)*sin(theta)*sin(psi) + cos(fi)*cos(psi), cos(fi)*sin(theta)*sin(psi) - sin(fi)*cos(psi),
+           -sin(theta)        , sin(fi)*cos(theta)                            , cos(fi)*cos(theta);
+    
+    Tom << 1, sin(fi)*tan(theta), cos(fi)*tan(theta),
+           0, cos(fi)           , -sin(fi),
+           0, sin(fi)/cos(theta), cos(fi)/cos(theta);
+    res.block<3,3>(0,0) = Tv;
+    res.block<3,3>(3,3) = Tom;
+    return res;
 }

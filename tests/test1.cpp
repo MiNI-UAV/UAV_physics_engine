@@ -1,6 +1,6 @@
 #include <iostream>
 #include <Eigen/Dense>
-#include "RK4.hpp"
+#include "../src/RK4.hpp"
 
 // Harmonic oscillator
 Eigen::Vector2d fun(double t , Eigen::Vector2d y)
@@ -11,7 +11,7 @@ Eigen::Vector2d fun(double t , Eigen::Vector2d y)
   return vec;
 }
 
-int main()
+int test1()
 {
   Eigen::Vector2d vec;
   vec(0) = 10;

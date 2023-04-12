@@ -20,5 +20,5 @@ class Constants
         Matrix<double,6,6> massMatrix;
         Matrix<double,6,6> invMassMatrix;
         Matrix<double,6,6> gyroMatrix(Vector<double,6>  x);
-        Vector<double,6>   gravity_forces(Vector<double,6>  y);
+        Matrix<double,6,6> TMatrix(Vector<double,6>  y);
 };
