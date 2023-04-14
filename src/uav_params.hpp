@@ -5,6 +5,7 @@ struct UAVparams
 {
     public:
         UAVparams();
+        UAVparams(std::string configFile);
         ~UAVparams();
 
         double g;
@@ -47,6 +48,11 @@ UAVparams::UAVparams()
                                                {-0.1,-0.1, 0.0},
                                                { 0.1,-0.1, 0.0}};
     rotorDir = new int[noOfRotors] {1,-1, 1,-1};
+}
+
+UAVparams::UAVparams(std::string configFile)
+{
+    UAVparams();
 }
 
 UAVparams::~UAVparams()
