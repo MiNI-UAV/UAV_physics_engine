@@ -1,17 +1,28 @@
 #include <iostream>
 #include <Eigen/Dense>
-#include "uav_params.hpp"
-#include "uav_state.hpp"
+#include "constants.hpp"
+#include "forces.hpp"
+#include "RK4.hpp"
+//#include "uav_params.hpp"
 
+Eigen::Vector4d fun(double t , Eigen::Vector4d om)
+{
+  Forces f;
+  return f.angularAcceleration(om);
+}
 
 int main()
 {
-    UAVparams params;
-    UAVstate state(4);
-    std::cout << state << std::endl;
-    Eigen::Vector<double,16> test;
-    test.setRandom();
-    state = test;
-    std::cout << state << std::endl;
+    Constants c;
+    Forces f;
+    std::cout << "Start!" << std::endl;
+    Vector4d om = {0,0,0,0};
+
+    for (int i = 0; i < 1000; i++)
+    {
+        om = RK4_step(i,om,fun,0.001);
+        std::cout << om(1) << "\n";
+    }
+    
     return 0;
 }

@@ -4,10 +4,9 @@
 
 using namespace Eigen;
 
-template <int S>
-Vector<double,S> RK4_step(double t,
-                          Vector<double,S> y0,
-                          std::function<Vector<double,S>(double,Vector<double,S>)> rhs_fun,
+VectorXd RK4_step(double t,
+                          VectorXd y0,
+                          std::function<VectorXd(double,VectorXd)> rhs_fun,
                           double h);
 
 #include "RK4.tpp"
