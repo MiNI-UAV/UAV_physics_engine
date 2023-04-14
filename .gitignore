@@ -1,6 +1,7 @@
 build/
 src/.vscode/*
 .vscode/*
+docs/
 
 
 # Prerequisites

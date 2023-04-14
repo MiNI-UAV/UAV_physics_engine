@@ -25,7 +25,8 @@ struct UAVparams
         int* rotorDir;
 };
 
-UAVparams::UAVparams()
+/// @brief Initialize default data
+UAVparams::UAVparams() 
 {
     g = 9.81;
     ro = 1.204;
