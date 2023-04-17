@@ -1,26 +1,27 @@
 #include <Eigen/Dense>
 #include <cmath>
 #include "constants.hpp"
+//#include "uav_params.hpp"
 
 using namespace Eigen;
 using namespace std;
 
-Constants::Constants()
+Constants::Constants(UAVparams& params): params{params}
 {   
     //mass matrix
     massMatrix.setZero();
-    massMatrix(0,0) = m;
-    massMatrix(1,1) = m;
-    massMatrix(2,2) = m;
-    massMatrix(3,3) = Ix;
-    massMatrix(4,4) = Iy;
-    massMatrix(5,5) = Iz;
-    massMatrix(3,4) = -Ixy;
-    massMatrix(4,3) = -Ixy;
-    massMatrix(3,5) = -Ixz;
-    massMatrix(5,3) = -Ixz;
-    massMatrix(4,5) = -Iyz;
-    massMatrix(5,4) = -Iyz;
+    massMatrix(0,0) = params.m;
+    massMatrix(1,1) = params.m;
+    massMatrix(2,2) = params.m;
+    massMatrix(3,3) = params.Ix;
+    massMatrix(4,4) = params.Iy;
+    massMatrix(5,5) = params.Iz;
+    massMatrix(3,4) = -params.Ixy;
+    massMatrix(4,3) = -params.Ixy;
+    massMatrix(3,5) = -params.Ixz;
+    massMatrix(5,3) = -params.Ixz;
+    massMatrix(4,5) = -params.Iyz;
+    massMatrix(5,4) = -params.Iyz;
 
     invMassMatrix = massMatrix.inverse();
 }

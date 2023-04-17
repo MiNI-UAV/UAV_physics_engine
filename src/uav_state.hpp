@@ -17,6 +17,9 @@ struct UAVstate
         /* @brief Angular velocities of uav motors */
         Eigen::VectorXd rotorAngularVelocities;
 
+        /* @brief Angular velocities of uav motors */
+        Eigen::VectorXd demandedAngularVelocity;
+
 
     public:
         UAVstate(int rotors);
@@ -25,6 +28,9 @@ struct UAVstate
         Eigen::Vector<double,6> getY();
         Eigen::Vector<double,6> getX();
         Eigen::VectorXd getOm();
+        Eigen::VectorXd getDemandedOm();
+
+        void setDemandedOm(Eigen::VectorXd);
 
         UAVstate& operator=(Eigen::VectorXd& other);
         friend std::ostream& operator << ( std::ostream& outs, const UAVstate& state);

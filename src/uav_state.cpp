@@ -6,6 +6,7 @@ UAVstate::UAVstate(int rotors): noOfRotors{rotors}
     y.setZero();
     x.setZero();
     rotorAngularVelocities.setZero(noOfRotors);
+    demandedAngularVelocity.setZero(noOfRotors);
 }
 
 UAVstate::~UAVstate()
@@ -26,6 +27,16 @@ Eigen::Vector<double,6> UAVstate::getX()
 Eigen::VectorXd UAVstate::getOm()
 {
     return rotorAngularVelocities;
+}
+
+Eigen::VectorXd UAVstate::getDemandedOm()
+{
+    return demandedAngularVelocity;
+}
+
+void UAVstate::setDemandedOm(Eigen::VectorXd newDemandedOm)
+{
+    demandedAngularVelocity = newDemandedOm;
 }
 
 UAVstate& UAVstate::operator=(Eigen::VectorXd& other)
