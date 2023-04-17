@@ -4,10 +4,10 @@
 
 using namespace Eigen;
 
-class Constants
+class Matrices
 {
     public:
-        Constants(UAVparams& params);
+        Matrices(UAVparams& params);
         Matrix<double,6,6> massMatrix;
         Matrix<double,6,6> invMassMatrix;
         Matrix<double,6,6> gyroMatrix(Vector<double,6>  x);

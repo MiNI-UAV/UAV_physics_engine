@@ -13,7 +13,7 @@ Eigen::Vector4d fun(double t , Eigen::Vector4d om)
 
 int main()
 {
-    Constants c;
+    Matrices c;
     Forces f;
     std::cout << "Start!" << std::endl;
     Vector4d om = {0,0,0,0};

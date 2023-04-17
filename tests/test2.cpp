@@ -5,7 +5,7 @@
 
 int main()
 {
-  Constants c;
+  Matrices c;
 
   std::cout << c.massMatrix << std::endl << "==================" << std::endl;
 

@@ -1,12 +1,12 @@
 #include <Eigen/Dense>
 #include <cmath>
-#include "constants.hpp"
-//#include "uav_params.hpp"
+#include "matrices.hpp"
+#include "uav_params.hpp"
 
 using namespace Eigen;
 using namespace std;
 
-Constants::Constants(UAVparams& params): params{params}
+Matrices::Matrices(UAVparams& params): params{params}
 {   
     //mass matrix
     massMatrix.setZero();
@@ -26,7 +26,7 @@ Constants::Constants(UAVparams& params): params{params}
     invMassMatrix = massMatrix.inverse();
 }
 
-Matrix<double,6,6> Constants::gyroMatrix(Vector<double,6> x)
+Matrix<double,6,6> Matrices::gyroMatrix(Vector<double,6> x)
 {
     Matrix<double,6,6> gyro;
     gyro.setZero();
@@ -51,7 +51,7 @@ Matrix<double,6,6> Constants::gyroMatrix(Vector<double,6> x)
     return gyro;
 }
 
-Matrix<double,6,6> Constants::TMatrix(Vector<double,6>  y)
+Matrix<double,6,6> Matrices::TMatrix(Vector<double,6>  y)
 {
     Matrix3d Tv, Tom;
     Matrix<double,6,6> res;
