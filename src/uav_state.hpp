@@ -29,9 +29,20 @@ struct UAVstate
         Eigen::Vector<double,6> getX();
         Eigen::VectorXd getOm();
         Eigen::VectorXd getDemandedOm();
+        Eigen::VectorXd getState();
 
         void setDemandedOm(Eigen::VectorXd);
 
         UAVstate& operator=(Eigen::VectorXd& other);
         friend std::ostream& operator << ( std::ostream& outs, const UAVstate& state);
+
+        static void setY(Eigen::VectorXd& state, Eigen::Vector<double,6> Y);
+        static void setX(Eigen::VectorXd& state, Eigen::Vector<double,6> X);
+        static void setOm(Eigen::VectorXd& state, Eigen::VectorXd Om);
+
+        static Eigen::Vector<double,6> getY(const Eigen::VectorXd& state);
+        static Eigen::Vector<double,6> getX(const Eigen::VectorXd& state);
+        static Eigen::VectorXd getOm(const Eigen::VectorXd& state);
 };
+
+

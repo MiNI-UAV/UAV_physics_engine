@@ -8,6 +8,12 @@ using namespace std;
 
 Matrices::Matrices(UAVparams& params): params{params}
 {   
+    updateMatrices();
+}
+
+
+void Matrices::updateMatrices()
+{
     //mass matrix
     massMatrix.setZero();
     massMatrix(0,0) = params.m;
@@ -71,3 +77,4 @@ Matrix<double,6,6> Matrices::TMatrix(Vector<double,6>  y)
     res.block<3,3>(3,3) = Tom;
     return res;
 }
+

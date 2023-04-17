@@ -12,6 +12,7 @@ class Matrices
         Matrix<double,6,6> invMassMatrix;
         Matrix<double,6,6> gyroMatrix(Vector<double,6>  x);
         Matrix<double,6,6> TMatrix(Vector<double,6>  y);
+        void updateMatrices();
 
     private:
         UAVparams& params;
