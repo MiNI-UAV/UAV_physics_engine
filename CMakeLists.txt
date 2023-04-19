@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(uav)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
+set(CMAKE_CXX_STANDARD 20)
 
 set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -16,6 +17,7 @@ link_directories(${LIB_DIR})
 link_directories("/usr/lib/x86_64-linux-gnu")
 
 add_executable(uav ${SOURCES})
+set_property(TARGET uav PROPERTY CXX_STANDARD 20)
 target_include_directories(uav PUBLIC include)
 target_compile_features(uav PUBLIC cxx_std_20)
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)

@@ -1,6 +1,9 @@
 #include "simulation.hpp"
 #include <Eigen/Dense>
-#include "iostream"
+#include <zmq.hpp>
+#include <iostream>
+#include <string>
+#include <sstream>
 
 #include "uav_params.hpp"
 #include "uav_state.hpp"
@@ -9,12 +12,16 @@
 #include "RK4.hpp"
 #include "timed_loop.hpp"
 
+
 Simulation::Simulation(UAVparams& params, UAVstate& state):
     _params{params},
     _state{state},
     forces(params),
     matrices(params)
 {
+    sock = zmq::socket_t(_ctx, zmq::socket_type::pub);
+    sock.bind("ipc:///tmp/pos");
+
     RHS = [this] (double, Eigen::VectorXd local_state)
     {
         VectorXd res;
@@ -29,14 +36,25 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
     };
 }
 
+void Simulation::sendState()
+{
+    std::stringstream ss;
+    ss << "t: " << real_time <<std::endl;
+    std::string msg_str = ss.str();
+    zmq::message_t message(msg_str.size());
+    std::memcpy (message.data(), msg_str.data(), msg_str.size());
+    sock.send(message,zmq::send_flags::dontwait);
+}
+
 void Simulation::run()
 {
     matrices.updateMatrices();
-    TimedLoop loop(2, [this](){
-        VectorXd next = RK4_step(real_time,_state.getState(),RHS,0.002);
+    TimedLoop loop(1, [this](){
+        VectorXd next = RK4_step(real_time,_state.getState(),RHS,0.001);
         real_time+=0.001;
         _state = next;
-        std::cout << _state << std::endl;
+        sendState();
+        //std::cout << _state << std::endl;
         return true;
     });
     loop.go();
