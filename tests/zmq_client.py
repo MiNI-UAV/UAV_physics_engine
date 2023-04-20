@@ -10,4 +10,4 @@ socket.subscribe(topicfilter)
 
 while(1):
     s = socket.recv_string()
-    print(s)
+    print(s + ".")

@@ -2,8 +2,7 @@
 #include <Eigen/Dense>
 #include <zmq.hpp>
 #include <iostream>
-#include <string>
-#include <sstream>
+#include <cstdio>
 
 #include "uav_params.hpp"
 #include "uav_state.hpp"
@@ -38,12 +37,11 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
 
 void Simulation::sendState()
 {
-    std::stringstream ss;
-    ss << "t: " << real_time <<std::endl;
-    std::string msg_str = ss.str();
-    zmq::message_t message(msg_str.size());
-    std::memcpy (message.data(), msg_str.data(), msg_str.size());
-    sock.send(message,zmq::send_flags::dontwait);
+    constexpr int msg_size = 20;
+    char msg[msg_size];
+    int sz = std::snprintf(msg,msg_size,"t: %5.3lf",real_time);
+    zmq::message_t message(msg,sz);
+    sock.send(message,zmq::send_flags::none);
 }
 
 void Simulation::run()
@@ -54,7 +52,6 @@ void Simulation::run()
         real_time+=0.001;
         _state = next;
         sendState();
-        //std::cout << _state << std::endl;
         return true;
     });
     loop.go();
