@@ -53,7 +53,7 @@ void Simulation::run()
         _state = next;
         _state.real_time+=step_time;
         sendState();
-        std::cout << _state.getX().transpose() << std::endl;
+        std::cout << _state << std::endl;
         return true;
     });
     loop.go();

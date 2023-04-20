@@ -18,9 +18,9 @@ struct UAVstate
         /* @brief Angular velocities of uav motors */
         Eigen::VectorXd rotorAngularVelocities;
 
-        /* @brief Demanded angular velocities of uav motors */
-        Eigen::VectorXd demandedAngularVelocity;
-
+        int demandedBufSwitch = 0;
+        Eigen::VectorXd demandedAngularBuf[2];
+        std::atomic<Eigen::VectorXd*> demanded_ptr;
 
         int windBufSwitch = 0;
         Eigen::Vector3d windBuf[2];

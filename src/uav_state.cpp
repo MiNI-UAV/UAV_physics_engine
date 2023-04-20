@@ -6,7 +6,11 @@ UAVstate::UAVstate(int rotors): noOfRotors{rotors}
     y.setZero();
     x.setZero();
     rotorAngularVelocities.setZero(noOfRotors);
-    demandedAngularVelocity.setZero(noOfRotors);
+
+
+    demandedAngularBuf[0].setZero(noOfRotors);
+    demandedAngularBuf[1].setZero(noOfRotors);
+    demanded_ptr = demandedAngularBuf + 1;
 
     windBuf[0].setZero();
     windBuf[1].setZero();
@@ -35,7 +39,7 @@ Eigen::VectorXd UAVstate::getOm()
 
 Eigen::VectorXd UAVstate::getDemandedOm()
 {
-    return demandedAngularVelocity;
+    return (*(demanded_ptr.load()));
 }
 
 Eigen::Vector3d UAVstate::getWind()
@@ -55,7 +59,9 @@ Eigen::VectorXd UAVstate::getState()
 
 void UAVstate::setDemandedOm(Eigen::VectorXd newDemandedOm)
 {
-    demandedAngularVelocity = newDemandedOm;
+    demandedAngularBuf[demandedBufSwitch] = newDemandedOm;
+    demanded_ptr = demandedAngularBuf + demandedBufSwitch;
+    demandedBufSwitch = 1 - demandedBufSwitch;
 }
 
 void UAVstate::setWind(Eigen::Vector3d wind)
