@@ -24,6 +24,9 @@ UAVparams::UAVparams()
                                                { 0.1,-0.1, 0.0}};
     rotorDir = new int[noOfRotors] {1,-1, 1,-1};
     rotorTimeConstant.setConstant(noOfRotors,0.05);
+
+    S = 0.1;
+    d = 0.001;
 }
 
 UAVparams::UAVparams(std::string configFile)

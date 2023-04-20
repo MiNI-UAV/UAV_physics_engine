@@ -1,5 +1,6 @@
 #pragma once
 #include <Eigen/Dense>
+#include <atomic>
 
 struct UAVstate
 {
@@ -17,21 +18,30 @@ struct UAVstate
         /* @brief Angular velocities of uav motors */
         Eigen::VectorXd rotorAngularVelocities;
 
-        /* @brief Angular velocities of uav motors */
+        /* @brief Demanded angular velocities of uav motors */
         Eigen::VectorXd demandedAngularVelocity;
+
+
+        int windBufSwitch = 0;
+        Eigen::Vector3d windBuf[2];
+        std::atomic<Eigen::Vector3d*> wind_ptr;
 
 
     public:
         UAVstate(int rotors);
         ~UAVstate();
 
+        std::atomic<double> real_time;
+
         Eigen::Vector<double,6> getY();
         Eigen::Vector<double,6> getX();
         Eigen::VectorXd getOm();
         Eigen::VectorXd getDemandedOm();
+        Eigen::Vector3d getWind();
         Eigen::VectorXd getState();
 
         void setDemandedOm(Eigen::VectorXd);
+        void setWind(Eigen::Vector3d);
 
         UAVstate& operator=(Eigen::VectorXd& other);
         friend std::ostream& operator << ( std::ostream& outs, const UAVstate& state);

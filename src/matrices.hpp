@@ -12,6 +12,7 @@ class Matrices
         Matrix<double,6,6> invMassMatrix;
         Matrix<double,6,6> gyroMatrix(Vector<double,6>  x);
         Matrix<double,6,6> TMatrix(Vector<double,6>  y);
+        Matrix<double,3,3> R_nb(const Vector<double,6>&  y);
         void updateMatrices();
 
     private:

@@ -78,3 +78,14 @@ Matrix<double,6,6> Matrices::TMatrix(Vector<double,6>  y)
     return res;
 }
 
+Matrix<double, 3, 3> Matrices::R_nb(const Vector<double,6>&  y)
+{
+    double fi = y(3);
+    double theta = y(4);
+    double psi = y(5);
+    Matrix<double, 3, 3> r_nb;
+    r_nb << cos(theta)*cos(psi),                            cos(theta)*sin(psi),                           -sin(theta),
+            sin(fi)*sin(theta)*cos(psi) - cos(fi)*sin(psi), sin(fi)*sin(theta)*sin(psi) + cos(fi)*cos(psi), sin(fi)*cos(theta),
+            cos(fi)*sin(theta)*cos(psi) + sin(fi)*sin(psi), cos(fi)*sin(theta)*sin(psi) - sin(fi)*cos(psi), cos(fi)*cos(theta);
+    return r_nb;
+}

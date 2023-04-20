@@ -1,22 +1,24 @@
 #include <Eigen/Dense>
 #include <cmath>
 #include <iostream>
+#include "uav_params.hpp"
 #include "forces.hpp"
-//#include "uav_params.hpp"
+#include "matrices.hpp"
+
 
 using namespace Eigen;
 
 Forces::Forces(UAVparams& params): params{params}
 {}
 
-Vector<double,6> Forces::gravity_forces(Vector<double,6>  y)
+Vector<double,6> Forces::gravity_loads(Vector<double,6>  y)
 {
     Vector<double,6> Fg = {-std::sin(y(4)), std::sin(y(3))*std::cos(y(4)), std::cos(y(3))*std::cos(y(4)), 0.0, 0.0, 0.0};
     Fg = (params.m*params.g)*Fg;
     return Fg;
 }
 
-Vector<double,6> Forces::lift_forces(VectorXd rotorAngularVelocity)
+Vector<double,6> Forces::lift_loads(VectorXd rotorAngularVelocity)
 {
     Vector3d Fr = {0.0, 0.0, 0.0};
     Vector3d Mr = {0.0, 0.0, 0.0};
@@ -33,6 +35,28 @@ Vector<double,6> Forces::lift_forces(VectorXd rotorAngularVelocity)
     Vector<double,6> res;
     res << Fr, Mr;
     return res; 
+}
+
+double Forces::dynamic_pressure(double Vtot)
+{
+    return 0.5*params.ro*Vtot*Vtot;
+}
+
+Vector<double, 6> Forces::aerodynamic_loads(Matrices& matricies, const Vector<double, 6> &x, const Vector<double, 6> &y, Vector3d wind_global)
+{
+    Vector<double, 6> Fa(params.Ci);
+    Vector3d wind = matricies.R_nb(y)*wind_global;
+    Vector3d velocity = x.segment(0,3);
+    Vector3d diff = velocity-wind;
+    double Vtot = diff.norm();
+    double alpha = atan2(diff(2),diff(0));
+    double beta = asin(diff(1)/Vtot);
+    Fa(0) *= (cos(alpha)*cos(beta));
+    Fa(1) *= sin(beta);
+    Fa(2) *= (sin(alpha)*cos(beta));
+    Fa.segment(3,3) *= params.d;
+    Fa *= -(dynamic_pressure(Vtot)*params.S);
+    return Fa;
 }
 
 VectorXd Forces::angularAcceleration(VectorXd demandedAngularVelocity, VectorXd rotorAngularVelocity)

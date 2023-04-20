@@ -17,10 +17,10 @@ class Simulation
         UAVstate& _state;
         zmq::context_t _ctx;
         zmq::socket_t sock;
+        const double step_time = 0.001;
 
         Forces forces;
         Matrices matrices;
-        double real_time = 0.0;
         std::function<VectorXd(double,VectorXd)> RHS;
 
         void sendState();
