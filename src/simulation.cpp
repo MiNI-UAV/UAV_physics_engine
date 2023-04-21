@@ -19,7 +19,9 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
     matrices(params)
 {
     sock = zmq::socket_t(_ctx, zmq::socket_type::pub);
-    sock.bind("ipc:///tmp/pos");
+    char address[100];
+    std::snprintf(address,100,"ipc:///tmp/%s",_params.name);
+    sock.bind(address);
 
     RHS = [this] (double, Eigen::VectorXd local_state)
     {
@@ -53,7 +55,7 @@ void Simulation::run()
         _state = next;
         _state.real_time+=step_time;
         sendState();
-        std::cout << _state << std::endl;
+        //std::cout << _state << std::endl;
         return true;
     });
     loop.go();

@@ -5,8 +5,10 @@ struct UAVparams
 {
     public:
         UAVparams();
-        UAVparams(std::string configFile);
+        UAVparams(const char* configFile);
         ~UAVparams();
+
+        const char name[20] = "dron1";
 
         double g;
         double ro;

@@ -7,7 +7,9 @@
 
 int main()
 {
-    UAVparams params;
+    //const char* path = "test.xml";
+    //UAVparams params(path);
+    UAVparams params();
     UAVstate state(params.noOfRotors);
     zmq::context_t ctx;
     
