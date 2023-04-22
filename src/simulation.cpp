@@ -19,6 +19,7 @@ void controlListenerJob(zmq::context_t* ctx, std::string address)
 {
     zmq::socket_t controlInSock = zmq::socket_t(*ctx, zmq::socket_type::sub);
     controlInSock.bind(address);
+    //controlInSock.bind("tcp://192.168.234.1:6667");
     //Subscribe wind
     controlInSock.set(zmq::sockopt::subscribe, "w:");
     //Subscribe demanded speed
@@ -50,6 +51,7 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
         std::cerr << "Can not create comunication folder";
     std::snprintf(address,100,"ipc:///tmp/%s/state",_params.name);
     stateOutSock.bind(address);
+    //stateOutSock.bind("tcp://192.168.234.1:5556");
 
     std::snprintf(address,100,"ipc:///tmp/%s/control",_params.name);
     controlListener = std::thread(controlListenerJob,&_ctx, std::string(address));
@@ -70,10 +72,18 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
 
 void Simulation::sendState()
 {
-    constexpr int msg_size = 20;
+    constexpr int msg_size = 100;
     char msg[msg_size];
-    int sz = std::snprintf(msg,msg_size,"t: %5.3lf",_state.real_time.load());
+    int sz = std::snprintf(msg,msg_size,"t:%5.3lf",_state.real_time.load());
     zmq::message_t message(msg,sz);
+    stateOutSock.send(message,zmq::send_flags::none);
+    Eigen::Vector<double,6> v = _state.getY();
+    sz = std::snprintf(msg,msg_size,"pos:%5.3lf,%5.3lf,%5.3lf,%5.3lf,%5.3lf,%5.3lf",v(0),v(1),v(2),v(3),v(4),v(5));
+    message.rebuild(msg,sz);
+    stateOutSock.send(message,zmq::send_flags::none);
+    v = _state.getX();
+    sz = std::snprintf(msg,msg_size,"vel:%5.3lf,%5.3lf,%5.3lf,%5.3lf,%5.3lf,%5.3lf",v(0),v(1),v(2),v(3),v(4),v(5));
+    message.rebuild(msg,sz);
     stateOutSock.send(message,zmq::send_flags::none);
 }
 

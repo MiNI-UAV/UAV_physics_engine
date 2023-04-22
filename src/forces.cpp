@@ -49,6 +49,11 @@ Vector<double, 6> Forces::aerodynamic_loads(Matrices& matricies, const Vector<do
     Vector3d velocity = x.segment(0,3);
     Vector3d diff = velocity-wind;
     double Vtot = diff.norm();
+    if(Vtot == 0.0)
+    {
+        Fa.setZero();
+        return Fa;
+    }
     double alpha = atan2(diff(2),diff(0));
     double beta = asin(diff(1)/Vtot);
     Fa(0) *= (cos(alpha)*cos(beta));

@@ -32,6 +32,6 @@ struct UAVparams
 
         //Aerodynamic params
         double S, d;
-        double Ci[6] = {1.0,-0.1,0.1,-0.1,-0.1,-0.1};
+        double Ci[6] = {1.0,1.0,1.0,0.0,0.0,0.0};
 
 };
