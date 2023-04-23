@@ -95,7 +95,7 @@ void Simulation::run()
         _state = next;
         _state.real_time+=step_time;
         sendState();
-        //std::cout << _state << std::endl;
+        std::cout << _state.real_time << std::endl;
         return true;
     });
     loop.go();
