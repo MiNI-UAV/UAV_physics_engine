@@ -1,0 +1,40 @@
+<params>
+   <name>drone1</name>
+   <ineria>
+      <mass>1.2</mass>
+      <Ix>2.0</Ix>
+      <Iy>4.0</Iy>
+      <Iz>6.0</Iz>
+      <Ixy>1.0</Ixy>
+      <Ixz>3.0</Ixz>
+      <Iyz>5.0</Iyz>
+   </ineria>
+   <rotors> 
+      <no>4</no>
+      <forceCoff>1.0</forceCoff>
+      <torqueCoff>1.0</torqueCoff>
+      <positions>
+         <item>0.15 0.15 0.0</item>
+         <item>-0.15 0.15 0.0</item>
+         <item>-0.15 -0.15 0.0</item>
+         <item>0.15 -0.15 0.0</item>
+      </positions>
+      <direction>
+         <item>1</item>
+         <item>-1</item>
+         <item>1</item>
+         <item>-1</item>
+      </direction>
+      <timeConstants>
+         <item>0.05</item>
+         <item>0.05</item>
+         <item>0.05</item>
+         <item>0.05</item>
+      </timeConstants>
+   </rotors>
+   <aero>
+      <S>0.1</S>
+      <d>0.01</d>
+      <C>1.0 1.0 1.0 0.0 0.0 0.0</C>
+   </aero>
+</params>

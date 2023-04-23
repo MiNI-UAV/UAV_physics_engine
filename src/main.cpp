@@ -7,8 +7,6 @@
 
 int main()
 {
-    //const char* path = "test.xml";
-    //UAVparams params(path);
     UAVparams params;
     UAVstate state(params.noOfRotors); 
     VectorXd dem;

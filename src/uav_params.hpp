@@ -1,5 +1,6 @@
 #pragma once
 #include <Eigen/Dense>
+#include "rapidxml/rapidxml.hpp"
 
 struct UAVparams
 {
@@ -8,7 +9,7 @@ struct UAVparams
         UAVparams(const char* configFile);
         ~UAVparams();
 
-        const char name[20] = "dron1";
+        char* name;
 
         double g;
         double ro;
@@ -33,5 +34,10 @@ struct UAVparams
         //Aerodynamic params
         double S, d;
         double Ci[6] = {1.0,1.0,1.0,0.0,0.0,0.0};
+
+    private:
+        void setMass(rapidxml::xml_node<> * interiaNode);
+        void setRotors(rapidxml::xml_node<> * rotorsNode);
+        void setAero(rapidxml::xml_node<> * aeroNode);
 
 };
