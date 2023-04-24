@@ -72,21 +72,22 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
 
 void Simulation::sendState()
 {
-    constexpr int msg_size = 100;
-    char msg[msg_size];
-    int sz = std::snprintf(msg,msg_size,"t:%5.3lf",_state.real_time.load());
-    zmq::message_t message(msg,sz);
-    stateOutSock.send(message,zmq::send_flags::none);
-    Eigen::Vector<double,6> v = _state.getY();
-    sz = std::snprintf(msg,msg_size,"pos:%5.3lf,%5.3lf,%5.3lf,%5.3lf,%5.3lf,%5.3lf",v(0),v(1),v(2),v(3),v(4),v(5));
-    message.rebuild(msg,sz);
-    stateOutSock.send(message,zmq::send_flags::none);
-    v = _state.getX();
-    sz = std::snprintf(msg,msg_size,"vel:%5.3lf,%5.3lf,%5.3lf,%5.3lf,%5.3lf,%5.3lf",v(0),v(1),v(2),v(3),v(4),v(5));
-    message.rebuild(msg,sz);
-    stateOutSock.send(message,zmq::send_flags::none);
+    static Eigen::IOFormat commaFormat(3, Eigen::DontAlignCols," ",",");
     std::stringstream ss;
-    ss << "om:" << _state.getOm();
+    ss.precision(3);
+    ss << "t:"<< std::fixed << _state.real_time.load();
+    zmq::message_t message(ss.str());
+    ss.str("");
+    stateOutSock.send(message,zmq::send_flags::none);
+    ss << "pos:" << _state.getY().format(commaFormat);
+    message.rebuild(ss.str());
+    ss.str("");
+    stateOutSock.send(message,zmq::send_flags::none);
+    ss << "vel:" << _state.getX().format(commaFormat);
+    message.rebuild(ss.str());
+    ss.str("");
+    stateOutSock.send(message,zmq::send_flags::none);
+    ss << "om:" << _state.getOm().format(commaFormat);
     message.rebuild(ss.str());
     stateOutSock.send(message,zmq::send_flags::none);
 }

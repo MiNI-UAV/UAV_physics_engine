@@ -81,7 +81,6 @@ void UAVparams::setRotors(rapidxml::xml_node<> * rotorsNode)
             rotorPos = new Eigen::Vector3d[noOfRotors];
             rotorDir = new int[noOfRotors];
             rotorTimeConstant.setZero(noOfRotors);
-
         }
         if(std::strcmp(node->name(),"forceCoff") == 0)
         {

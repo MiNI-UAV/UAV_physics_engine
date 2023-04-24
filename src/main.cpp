@@ -21,7 +21,7 @@ int main()
 
     Vector3d wind = {0.0,0.0,0.0};
     state.setWind(wind);
-    std::cout << params.rotorTimeConstant << std::endl;
+
     std::cout << "Starting simulation!" <<std::endl;
     Simulation sim(params,state);
     sim.run();
