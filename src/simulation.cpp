@@ -25,17 +25,23 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
 {
     stateOutSock = zmq::socket_t(_ctx, zmq::socket_type::pub);
 
-    char address[100];
-    std::snprintf(address,100,"/tmp/%s",_params.name);
+    std::stringstream ss;
+    ss << "/tmp/" << _params.name;
+    std::string address = address.str();
     fs::remove_all(address);
     if (!fs::create_directory(address))
         std::cerr << "Can not create comunication folder";
-    std::snprintf(address,100,"ipc:///tmp/%s/state",_params.name);
+    ss.str("");
+    
+    ss << "ipc:///tmp/" << _params.name << "/state"
+    address = ss.str();
     stateOutSock.bind(address);
     std::cout << "Starting state publisher: " << address << std::endl;
     //stateOutSock.bind("tcp://192.168.234.1:5556");
 
-    std::snprintf(address,100,"ipc:///tmp/%s/control",_params.name);
+    ss.str("");
+    ss << "ipc:///tmp/" << _params.name << "/control"
+    address = ss.str();
     controlListener = std::thread(controlListenerJob,&_ctx, std::string(address),std::ref(_state));
 
     RHS = [this] (double, Eigen::VectorXd local_state)
