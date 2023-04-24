@@ -27,20 +27,20 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
 
     std::stringstream ss;
     ss << "/tmp/" << _params.name;
-    std::string address = address.str();
+    std::string address = ss.str();
     fs::remove_all(address);
     if (!fs::create_directory(address))
         std::cerr << "Can not create comunication folder";
     ss.str("");
-    
-    ss << "ipc:///tmp/" << _params.name << "/state"
+
+    ss << "ipc:///tmp/" << _params.name << "/state";
     address = ss.str();
     stateOutSock.bind(address);
     std::cout << "Starting state publisher: " << address << std::endl;
     //stateOutSock.bind("tcp://192.168.234.1:5556");
 
     ss.str("");
-    ss << "ipc:///tmp/" << _params.name << "/control"
+    ss << "ipc:///tmp/" << _params.name << "/control";
     address = ss.str();
     controlListener = std::thread(controlListenerJob,&_ctx, std::string(address),std::ref(_state));
 
