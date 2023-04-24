@@ -1,6 +1,9 @@
 #pragma once
 #include <Eigen/Dense>
 #include <atomic>
+#include <condition_variable>
+#include "status.hpp"
+
 
 struct UAVstate
 {
@@ -39,6 +42,7 @@ struct UAVstate
         Eigen::VectorXd getDemandedOm();
         Eigen::Vector3d getWind();
         Eigen::VectorXd getState();
+        inline int getNoOfRotors(){return noOfRotors;}
 
         void setDemandedOm(Eigen::VectorXd);
         void setWind(Eigen::Vector3d);
@@ -53,6 +57,10 @@ struct UAVstate
         static Eigen::Vector<double,6> getY(const Eigen::VectorXd& state);
         static Eigen::Vector<double,6> getX(const Eigen::VectorXd& state);
         static Eigen::VectorXd getOm(const Eigen::VectorXd& state);
+        
+        Status status;
+        std::condition_variable status_cv;
+        inline void setStatus(Status newStatus) {status = newStatus; status_cv.notify_all();}
 };
 
 

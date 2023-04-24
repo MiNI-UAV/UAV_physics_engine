@@ -1,5 +1,6 @@
-#include "uav_state.hpp"
 #include <Eigen/Dense>
+#include "uav_state.hpp"
+#include "status.hpp"
 
 UAVstate::UAVstate(int rotors): noOfRotors{rotors}
 {
@@ -15,6 +16,8 @@ UAVstate::UAVstate(int rotors): noOfRotors{rotors}
     windBuf[0].setZero();
     windBuf[1].setZero();
     wind_ptr = windBuf+1;
+
+    status = Status::idle;
 }
 
 UAVstate::~UAVstate()

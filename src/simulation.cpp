@@ -1,39 +1,20 @@
-#include "simulation.hpp"
 #include <Eigen/Dense>
 #include <zmq.hpp>
 #include <iostream>
 #include <cstdio>
 #include <thread>
+#include <mutex>
 #include <filesystem>
 namespace fs = std::filesystem;
 
+#include "simulation.hpp"
 #include "uav_params.hpp"
 #include "uav_state.hpp"
 #include "forces.hpp"
 #include "matrices.hpp"
 #include "RK4.hpp"
 #include "timed_loop.hpp"
-
-
-void controlListenerJob(zmq::context_t* ctx, std::string address)
-{
-    zmq::socket_t controlInSock = zmq::socket_t(*ctx, zmq::socket_type::sub);
-    controlInSock.bind(address);
-    //controlInSock.bind("tcp://192.168.234.1:6667");
-    //Subscribe wind
-    controlInSock.set(zmq::sockopt::subscribe, "w:");
-    //Subscribe demanded speed
-    controlInSock.set(zmq::sockopt::subscribe, "s:");
-    //Subscribe control instructions
-    controlInSock.set(zmq::sockopt::subscribe, "c:");
-
-    while(1)
-    {
-        zmq::message_t msg;
-        auto res = controlInSock.recv(msg, zmq::recv_flags::none);
-        std::cout << std::string(static_cast<char*>(msg.data()), msg.size()) << std::endl;
-    }
-}
+#include "control.hpp"
 
 
 Simulation::Simulation(UAVparams& params, UAVstate& state):
@@ -54,7 +35,7 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
     //stateOutSock.bind("tcp://192.168.234.1:5556");
 
     std::snprintf(address,100,"ipc:///tmp/%s/control",_params.name);
-    controlListener = std::thread(controlListenerJob,&_ctx, std::string(address));
+    controlListener = std::thread(controlListenerJob,&_ctx, std::string(address),std::ref(_state));
 
     RHS = [this] (double, Eigen::VectorXd local_state)
     {
@@ -100,12 +81,37 @@ void Simulation::run()
         _state = next;
         _state.real_time+=step_time;
         sendState();
-        return true;
-    });
-    loop.go();
+        std::cout << _state.real_time << std::endl;
+    }, _state.status);
+
+    std::mutex mtx;
+    std::unique_lock<std::mutex> lck(mtx);
+    lck.unlock();
+    bool run = true;
+    while(run)
+    {
+        switch(_state.status)
+        {
+            case Status::idle:
+                lck.lock();
+                std::cout << "Idle..." << std::endl;
+                _state.status_cv.wait(lck);
+                lck.unlock();
+            break;
+            case Status::running:
+                std::cout << "Running..." << std::endl;
+                loop.go();
+            break;
+            case Status::exiting:
+                std::cout << "Exiting..." << std::endl;
+                run = false;
+            break;
+        }
+    }
+
 }
 
 Simulation::~Simulation()
 {
-
+    controlListener.join();
 }

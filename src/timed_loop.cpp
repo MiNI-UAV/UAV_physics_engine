@@ -2,10 +2,12 @@
 #include <stdint.h>
 #include <chrono>
 #include <thread>
+#include "status.hpp"
 
 #include <iostream>
 
-TimedLoop::TimedLoop(int periodInMs, std::function<bool(void)> func)
+TimedLoop::TimedLoop(int periodInMs, std::function<void(void)> func,Status& status):
+_status{status}
 {
   on_tick = func;
   period = periodInMs*one_ms_in_ns;
@@ -16,10 +18,9 @@ void TimedLoop::go()
   int64_t time_to_wait = 0;
   //next_clock = ((get_current_clock_ns() / one_ms_in_ns) * one_ms_in_ns);
   next_clock = get_current_clock_ns();
-  bool run = true;
-  while(run)
+  while(_status == Status::running)
   {
-    run = on_tick();
+    on_tick();
 
     // calculate the next tick time and time to wait from now until that time
     time_to_wait = calc_time_to_wait();
@@ -44,6 +45,7 @@ void TimedLoop::go(uint32_t loops)
   next_clock = get_current_clock_ns();
   for (uint32_t loop = 0; loop < loops; ++loop)
   {
+    if(_status != Status::running) break;
     on_tick();
 
     // calculate the next tick time and time to wait from now until that time
