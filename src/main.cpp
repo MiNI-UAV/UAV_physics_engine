@@ -7,8 +7,8 @@
 
 int main()
 {
-    UAVparams params;
-    UAVstate state(params.noOfRotors); 
+    UAVparams params("config.xml");
+    UAVstate state(params.noOfRotors);
     VectorXd dem;
     dem.setOnes(4);
     dem = dem*3.22;
@@ -21,7 +21,7 @@ int main()
 
     Vector3d wind = {0.0,0.0,0.0};
     state.setWind(wind);
-    
+    std::cout << params.rotorTimeConstant << std::endl;
     std::cout << "Starting simulation!" <<std::endl;
     Simulation sim(params,state);
     sim.run();

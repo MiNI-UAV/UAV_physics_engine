@@ -85,6 +85,10 @@ void Simulation::sendState()
     sz = std::snprintf(msg,msg_size,"vel:%5.3lf,%5.3lf,%5.3lf,%5.3lf,%5.3lf,%5.3lf",v(0),v(1),v(2),v(3),v(4),v(5));
     message.rebuild(msg,sz);
     stateOutSock.send(message,zmq::send_flags::none);
+    std::stringstream ss;
+    ss << "om:" << _state.getOm();
+    message.rebuild(ss.str());
+    stateOutSock.send(message,zmq::send_flags::none);
 }
 
 void Simulation::run()
@@ -95,7 +99,6 @@ void Simulation::run()
         _state = next;
         _state.real_time+=step_time;
         sendState();
-        std::cout << _state.real_time << std::endl;
         return true;
     });
     loop.go();

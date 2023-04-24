@@ -81,6 +81,7 @@ void UAVparams::setRotors(rapidxml::xml_node<> * rotorsNode)
             rotorPos = new Eigen::Vector3d[noOfRotors];
             rotorDir = new int[noOfRotors];
             rotorTimeConstant.setZero(noOfRotors);
+
         }
         if(std::strcmp(node->name(),"forceCoff") == 0)
         {
@@ -110,10 +111,10 @@ void UAVparams::setRotors(rapidxml::xml_node<> * rotorsNode)
         }
         if(std::strcmp(node->name(),"timeConstants") == 0)
         {
-           int i = 0;
+            int i = 0;
             for (rapidxml::xml_node<>* timeNode = node->first_node(); timeNode; i++, timeNode = timeNode->next_sibling()) 
             {
-                rotorTimeConstant[i] = std::stoi(timeNode->value());
+                rotorTimeConstant(i) = std::stod(timeNode->value());
             }
         }
     }
@@ -145,7 +146,7 @@ UAVparams::UAVparams(const char* configFile)
 
     if(!std::filesystem::exists(configFile))
     {  
-        std::cout << "Config file not exist!" << std::endl;
+        throw std::runtime_error("Config file not exist!");
     }
     std::cout << "Loading config" << std::endl;
     std::ifstream file(configFile);
