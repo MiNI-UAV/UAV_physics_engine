@@ -12,8 +12,6 @@ set(BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build)
 file(GLOB SOURCES ${SOURCE_DIR}/*.cpp)
 
 include_directories(${INCLUDE_DIR})
-link_directories(${LIB_DIR})
-
 link_directories("/usr/lib/x86_64-linux-gnu")
 
 add_executable(uav ${SOURCES})
@@ -22,5 +20,7 @@ target_include_directories(uav PUBLIC include)
 target_compile_features(uav PUBLIC cxx_std_20)
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 target_link_libraries(uav Eigen3::Eigen)
+find_package(cxxopts)
+target_link_libraries(uav cxxopts)
 find_package(cppzmq)
 target_link_libraries(uav cppzmq)
