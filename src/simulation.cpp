@@ -32,6 +32,7 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
         std::cerr << "Can not create comunication folder";
     std::snprintf(address,100,"ipc:///tmp/%s/state",_params.name);
     stateOutSock.bind(address);
+    std::cout << "Starting state publisher: " << address << std::endl;
     //stateOutSock.bind("tcp://192.168.234.1:5556");
 
     std::snprintf(address,100,"ipc:///tmp/%s/control",_params.name);
@@ -55,21 +56,30 @@ void Simulation::sendState()
 {
     static Eigen::IOFormat commaFormat(3, Eigen::DontAlignCols," ",",");
     std::stringstream ss;
+    std::string s;
     ss.precision(3);
+
     ss << "t:"<< std::fixed << _state.real_time.load();
-    zmq::message_t message(ss.str());
+    s = ss.str();
+    zmq::message_t message(s.data(), s.size());
     ss.str("");
     stateOutSock.send(message,zmq::send_flags::none);
+
     ss << "pos:" << _state.getY().format(commaFormat);
-    message.rebuild(ss.str());
+    s = ss.str();
+    message.rebuild(s.data(), s.size());
     ss.str("");
     stateOutSock.send(message,zmq::send_flags::none);
+
     ss << "vel:" << _state.getX().format(commaFormat);
-    message.rebuild(ss.str());
+    s = ss.str();
+    message.rebuild(s.data(), s.size());
     ss.str("");
     stateOutSock.send(message,zmq::send_flags::none);
+
     ss << "om:" << _state.getOm().format(commaFormat);
-    message.rebuild(ss.str());
+    s = ss.str();
+    message.rebuild(s.data(), s.size());
     stateOutSock.send(message,zmq::send_flags::none);
 }
 
