@@ -77,7 +77,14 @@ void Simulation::sendState()
     ss.str("");
     stateOutSock.send(message,zmq::send_flags::none);
 
-    ss << "vel:" << _state.getX().format(commaFormat);
+    ss << "vb:" << _state.getX().format(commaFormat);
+    s = ss.str();
+    message.rebuild(s.data(), s.size());
+    ss.str("");
+    stateOutSock.send(message,zmq::send_flags::none);
+
+    Eigen::Vector<double,6> vn = matrices.TMatrix(_state.getY())*_state.getX(); 
+    ss << "vn:" << vn.format(commaFormat);
     s = ss.str();
     message.rebuild(s.data(), s.size());
     ss.str("");
