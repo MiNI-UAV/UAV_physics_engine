@@ -8,3 +8,6 @@
 [submodule "lib/libzmq"]
 	path = lib/libzmq
 	url = https://github.com/zeromq/libzmq.git
+[submodule "lib/cxxopts"]
+	path = lib/cxxopts
+	url = https://github.com/jarro2783/cxxopts.git

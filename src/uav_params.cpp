@@ -138,7 +138,7 @@ void UAVparams::setAero(rapidxml::xml_node<> * aeroNode)
     }
 }
 
-UAVparams::UAVparams(const char* configFile)
+UAVparams::UAVparams(std::string configFile)
 {
     g = 9.81;
     ro = 1.204;

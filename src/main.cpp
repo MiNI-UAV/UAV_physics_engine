@@ -1,27 +1,38 @@
 #include <iostream>
-#include <zmq.h>
+#include <cxxopts.hpp>
 #include "simulation.hpp"
-
 #include "uav_params.hpp"
 #include "uav_state.hpp"
+#include "status.hpp"
 
-int main()
+
+UAVparams parseArgs(int argc, char** argv, bool& instantRunFlag)
 {
-    UAVparams params("config.xml");
+    cxxopts::Options options("uav", "Process representing movement of one UAV with rigid frame and constant propellers");
+    options.add_options()
+        ("c,config", "Path of config file", cxxopts::value<std::string>()->default_value("config.xml"))
+        ("i,instant-run", "Instant run. Simulation starts immediately.", cxxopts::value<bool>()->default_value("false"))
+        ("h,help", "Print usage");
+    auto result = options.parse(argc, argv);
+    if(result.count("help"))
+    {
+        std::cout << options.help() << std::endl;
+        exit(0);
+    }
+    instantRunFlag = result["instant-run"].as<bool>();
+    if(result.count("config"))
+    {
+        return UAVparams(result["config"].as<std::string>().c_str());
+    }
+    return UAVparams();
+}
+
+int main(int argc, char** argv)
+{
+    bool instantRun = false;
+    UAVparams params = parseArgs(argc,argv,instantRun);
     UAVstate state(params.noOfRotors);
-    VectorXd dem;
-    dem.setOnes(4);
-    dem = dem*3.22;
-    // dem(0) = 3.0;
-    // dem(1) = 3.5;
-    // dem(2) = 3.0;
-    // dem(3) = 3.5;
-    //dem = dem*0.0;
-    state.setDemandedOm(dem);
-
-    Vector3d wind = {0.0,0.0,0.0};
-    state.setWind(wind);
-
+    if(instantRun) state.setStatus(Status::running);
     std::cout << "Starting simulation!" <<std::endl;
     Simulation sim(params,state);
     sim.run();

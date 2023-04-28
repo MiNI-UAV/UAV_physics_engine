@@ -25,16 +25,24 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
 {
     stateOutSock = zmq::socket_t(_ctx, zmq::socket_type::pub);
 
-    char address[100];
-    std::snprintf(address,100,"/tmp/%s",_params.name);
+    std::stringstream ss;
+    ss << "/tmp/" << _params.name;
+    std::string address = ss.str();
     fs::remove_all(address);
     if (!fs::create_directory(address))
         std::cerr << "Can not create comunication folder";
-    std::snprintf(address,100,"ipc:///tmp/%s/state",_params.name);
-    stateOutSock.bind(address);
-    //stateOutSock.bind("tcp://192.168.234.1:5556");
+    ss.str("");
 
-    std::snprintf(address,100,"ipc:///tmp/%s/control",_params.name);
+    ss << "ipc:///tmp/" << _params.name << "/state";
+    address = ss.str();
+    stateOutSock.bind(address);
+    std::cout << "Starting state publisher: " << address << std::endl;
+    //TODO: Remove below temporiary solution
+    stateOutSock.bind("tcp://*:9090");
+
+    ss.str("");
+    ss << "ipc:///tmp/" << _params.name << "/control";
+    address = ss.str();
     controlListener = std::thread(controlListenerJob,&_ctx, std::string(address),std::ref(_state));
 
     RHS = [this] (double, Eigen::VectorXd local_state)
@@ -55,22 +63,57 @@ void Simulation::sendState()
 {
     static Eigen::IOFormat commaFormat(3, Eigen::DontAlignCols," ",",");
     std::stringstream ss;
+    std::string s;
     ss.precision(3);
+
     ss << "t:"<< std::fixed << _state.real_time.load();
-    zmq::message_t message(ss.str());
+    s = ss.str();
+    zmq::message_t message(s.data(), s.size());
     ss.str("");
     stateOutSock.send(message,zmq::send_flags::none);
+
     ss << "pos:" << _state.getY().format(commaFormat);
-    message.rebuild(ss.str());
+    s = ss.str();
+    message.rebuild(s.data(), s.size());
     ss.str("");
     stateOutSock.send(message,zmq::send_flags::none);
-    ss << "vel:" << _state.getX().format(commaFormat);
-    message.rebuild(ss.str());
+    std::cout << s << std::endl;
+
+    ss << "vb:" << _state.getX().format(commaFormat);
+    s = ss.str();
+    message.rebuild(s.data(), s.size());
     ss.str("");
     stateOutSock.send(message,zmq::send_flags::none);
+
+    Eigen::Vector<double,6> vn = matrices.TMatrix(_state.getY())*_state.getX(); 
+    ss << "vn:" << vn.format(commaFormat);
+    s = ss.str();
+    message.rebuild(s.data(), s.size());
+    ss.str("");
+    stateOutSock.send(message,zmq::send_flags::none);
+
     ss << "om:" << _state.getOm().format(commaFormat);
-    message.rebuild(ss.str());
+    s = ss.str();
+    message.rebuild(s.data(), s.size());
     stateOutSock.send(message,zmq::send_flags::none);
+}
+
+void Simulation::countDown()
+{
+    constexpr int start = 3;
+    std::stringstream ss;
+    std::string s;
+    ss.precision(3);
+    for(int i = start; i > 0; i--)
+    {
+        ss << "t:" << std::fixed << -i;
+        s = ss.str();
+        std::cout << s << std::endl;
+        zmq::message_t message(s.data(), s.size());
+        ss.str("");
+        stateOutSock.send(message,zmq::send_flags::none);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
 }
 
 void Simulation::run()
@@ -99,6 +142,7 @@ void Simulation::run()
                 lck.unlock();
             break;
             case Status::running:
+                countDown();
                 std::cout << "Running..." << std::endl;
                 loop.go();
             break;

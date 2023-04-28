@@ -6,7 +6,7 @@ struct UAVparams
 {
     public:
         UAVparams();
-        UAVparams(const char* configFile);
+        UAVparams(std::string configFile);
         ~UAVparams();
 
         char* name;

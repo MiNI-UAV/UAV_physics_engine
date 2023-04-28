@@ -77,7 +77,7 @@ bool control(UAVstate& state, std::string& msg_str)
 
 void controlListenerJob(zmq::context_t* ctx, std::string address,UAVstate& state)
 {
-    std::cout << "Starting listener: " << address << std::endl;
+    std::cout << "Starting constrol subscriber: " << address << std::endl;
 
     zmq::socket_t controlInSock = zmq::socket_t(*ctx, zmq::socket_type::sub);
     controlInSock.bind(address);
