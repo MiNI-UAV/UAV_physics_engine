@@ -27,4 +27,5 @@ class Simulation
         std::function<VectorXd(double,VectorXd)> RHS;
 
         void sendState();
+        void countDown();
 };

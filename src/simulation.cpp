@@ -96,6 +96,24 @@ void Simulation::sendState()
     stateOutSock.send(message,zmq::send_flags::none);
 }
 
+void Simulation::countDown()
+{
+    constexpr int start = 3;
+    std::stringstream ss;
+    std::string s;
+    ss.precision(3);
+    for(int i = start; i > 0; i--)
+    {
+        ss << "t:" << std::fixed << -i;
+        s = ss.str();
+        std::cout << s << std::endl;
+        zmq::message_t message(s.data(), s.size());
+        ss.str("");
+        stateOutSock.send(message,zmq::send_flags::none);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+}
+
 void Simulation::run()
 {
     matrices.updateMatrices();
@@ -122,6 +140,7 @@ void Simulation::run()
                 lck.unlock();
             break;
             case Status::running:
+                countDown();
                 std::cout << "Running..." << std::endl;
                 loop.go();
             break;
