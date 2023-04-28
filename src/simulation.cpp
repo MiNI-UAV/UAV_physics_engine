@@ -37,7 +37,8 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
     address = ss.str();
     stateOutSock.bind(address);
     std::cout << "Starting state publisher: " << address << std::endl;
-    //stateOutSock.bind("tcp://192.168.234.1:5556");
+    //TODO: Remove below temporiary solution
+    stateOutSock.bind("tcp://*:9090");
 
     ss.str("");
     ss << "ipc:///tmp/" << _params.name << "/control";
@@ -76,6 +77,7 @@ void Simulation::sendState()
     message.rebuild(s.data(), s.size());
     ss.str("");
     stateOutSock.send(message,zmq::send_flags::none);
+    std::cout << s << std::endl;
 
     ss << "vb:" << _state.getX().format(commaFormat);
     s = ss.str();
