@@ -15,6 +15,8 @@ namespace fs = std::filesystem;
 #include "RK4.hpp"
 #include "timed_loop.hpp"
 #include "control.hpp"
+#include <chrono>
+using namespace std::chrono_literals;
 
 
 Simulation::Simulation(UAVparams& params, UAVstate& state):
@@ -77,7 +79,6 @@ void Simulation::sendState()
     message.rebuild(s.data(), s.size());
     ss.str("");
     stateOutSock.send(message,zmq::send_flags::none);
-    std::cout << s << std::endl;
 
     ss << "vb:" << _state.getX().format(commaFormat);
     s = ss.str();
@@ -95,6 +96,12 @@ void Simulation::sendState()
     ss << "om:" << _state.getOm().format(commaFormat);
     s = ss.str();
     message.rebuild(s.data(), s.size());
+    stateOutSock.send(message,zmq::send_flags::none);
+}
+
+void Simulation::sendIdle()
+{
+    zmq::message_t message("idle",4);
     stateOutSock.send(message,zmq::send_flags::none);
 }
 
@@ -124,7 +131,7 @@ void Simulation::run()
         _state = next;
         _state.real_time+=step_time;
         sendState();
-        std::cout << _state.real_time << std::endl;
+        //std::cout << _state.real_time << std::endl;
     }, _state.status);
 
     std::mutex mtx;
@@ -138,11 +145,12 @@ void Simulation::run()
             case Status::idle:
                 lck.lock();
                 std::cout << "Idle..." << std::endl;
-                _state.status_cv.wait(lck);
+                sendIdle();
+                _state.status_cv.wait_for(lck,1s);
                 lck.unlock();
             break;
             case Status::running:
-                countDown();
+                //countDown();
                 std::cout << "Running..." << std::endl;
                 loop.go();
             break;
