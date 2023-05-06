@@ -4,8 +4,8 @@ import time
 
 context = zmq.Context()
 socket = context.socket(zmq.SUB)
-socket.connect("ipc:///tmp/drone1/state")
-topicfilter = ""
+socket.connect("tcp://localhost:9090")
+topicfilter = "pos"
 socket.subscribe(topicfilter)
 
 while(1):
