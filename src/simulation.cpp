@@ -76,6 +76,7 @@ void Simulation::sendState()
 
     ss << "pos:" << _state.getY().format(commaFormat);
     s = ss.str();
+    //std::cout << s << std::endl;
     message.rebuild(s.data(), s.size());
     ss.str("");
     stateOutSock.send(message,zmq::send_flags::none);
@@ -123,11 +124,23 @@ void Simulation::countDown()
     }
 }
 
+void clampOrientation(Eigen::VectorXd& state)
+{
+    for (size_t i = 3; i < 6; i++)
+    {
+        double x = fmod(state(i) + std::numbers::pi,2*std::numbers::pi);
+        if (x < 0)
+            x += 2*std::numbers::pi;
+        state(i) =  x - std::numbers::pi;
+    }
+}
+
 void Simulation::run()
 {
     matrices.updateMatrices();
     TimedLoop loop(std::round(step_time*1000.0), [this](){
         VectorXd next = RK4_step(_state.real_time,_state.getState(),RHS,step_time);
+        clampOrientation(next);
         _state = next;
         _state.real_time+=step_time;
         sendState();
