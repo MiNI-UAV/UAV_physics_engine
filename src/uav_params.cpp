@@ -8,8 +8,7 @@
 /// @brief Initialize default data
 UAVparams::UAVparams() 
 {
-    name = new char[20];
-    std::strcpy(name,"default");
+    setName("default",7);
 
     g = 9.81;
     ro = 1.204;
@@ -34,6 +33,13 @@ UAVparams::UAVparams()
 
     S = 0.1;
     d = 0.001;
+}
+
+void UAVparams::setName(const char* newName, size_t sz)
+{
+    name = new char[sz+1];
+    std::strncpy(name,newName,sz);
+    name[sz] = '\0';
 }
 
 void UAVparams::setMass(rapidxml::xml_node<> * interiaNode)
@@ -157,10 +163,7 @@ UAVparams::UAVparams(std::string configFile)
     {
         if(std::strcmp(node->name(),"name") == 0)
         {
-            size_t sz = node->value_size();
-            name = new char[sz+1];
-            std::strncpy(name,node->value(),sz);
-            name[sz] = '\0';
+            setName(node->value(), node->value_size());
         }
         if(std::strcmp(node->name(),"ineria") == 0)
         {

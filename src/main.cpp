@@ -8,10 +8,12 @@
 
 UAVparams parseArgs(int argc, char** argv, bool& instantRunFlag)
 {
+    UAVparams params;
     cxxopts::Options options("uav", "Process representing movement of one UAV with rigid frame and constant propellers");
     options.add_options()
         ("c,config", "Path of config file", cxxopts::value<std::string>()->default_value("config.xml"))
         ("i,instant-run", "Instant run. Simulation starts immediately.", cxxopts::value<bool>()->default_value("false"))
+        ("n,name", "Override name from config", cxxopts::value<std::string>()->default_value(""))
         ("h,help", "Print usage");
     auto result = options.parse(argc, argv);
     if(result.count("help"))
@@ -22,9 +24,15 @@ UAVparams parseArgs(int argc, char** argv, bool& instantRunFlag)
     instantRunFlag = result["instant-run"].as<bool>();
     if(result.count("config"))
     {
-        return UAVparams(result["config"].as<std::string>().c_str());
+        params = UAVparams(result["config"].as<std::string>().c_str());
     }
-    return UAVparams();
+    if(result.count("name"))
+    {
+        std::string newName = result["name"].as<std::string>();
+        params.setName(newName.c_str(),newName.length());
+    }
+    std::cout << "Name: " << params.name <<std::endl;
+    return params;
 }
 
 int main(int argc, char** argv)

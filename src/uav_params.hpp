@@ -9,6 +9,8 @@ struct UAVparams
         UAVparams(std::string configFile);
         ~UAVparams();
 
+        void setName(const char* newName, size_t sz);
+
         char* name;
 
         double g;
@@ -36,6 +38,7 @@ struct UAVparams
         double Ci[6] = {1.0,1.0,1.0,0.0,0.0,0.0};
 
     private:
+        
         void setMass(rapidxml::xml_node<> * interiaNode);
         void setRotors(rapidxml::xml_node<> * rotorsNode);
         void setAero(rapidxml::xml_node<> * aeroNode);
