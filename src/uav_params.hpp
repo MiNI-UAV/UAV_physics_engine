@@ -9,9 +9,7 @@ struct UAVparams
         UAVparams(std::string configFile);
         ~UAVparams();
 
-        void setName(const char* newName, size_t sz);
-
-        char* name;
+        std::string name;
 
         double g;
         double ro;

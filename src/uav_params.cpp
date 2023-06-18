@@ -8,7 +8,7 @@
 /// @brief Initialize default data
 UAVparams::UAVparams() 
 {
-    setName("default",7);
+    name = "default";
 
     g = 9.81;
     ro = 1.204;
@@ -33,13 +33,6 @@ UAVparams::UAVparams()
 
     S = 0.1;
     d = 0.001;
-}
-
-void UAVparams::setName(const char* newName, size_t sz)
-{
-    name = new char[sz+1];
-    std::strncpy(name,newName,sz);
-    name[sz] = '\0';
 }
 
 void UAVparams::setMass(rapidxml::xml_node<> * interiaNode)
@@ -163,7 +156,7 @@ UAVparams::UAVparams(std::string configFile)
     {
         if(std::strcmp(node->name(),"name") == 0)
         {
-            setName(node->value(), node->value_size());
+            name.assign(node->value(), node->value_size());
         }
         if(std::strcmp(node->name(),"ineria") == 0)
         {
@@ -182,7 +175,6 @@ UAVparams::UAVparams(std::string configFile)
 
 UAVparams::~UAVparams()
 {
-    delete[] name;
     delete[] rotorPos;
     delete[] rotorDir;
 }

@@ -13,7 +13,7 @@ UAVparams parseArgs(int argc, char** argv, bool& instantRunFlag)
     options.add_options()
         ("c,config", "Path of config file", cxxopts::value<std::string>()->default_value("config.xml"))
         ("i,instant-run", "Instant run. Simulation starts immediately.", cxxopts::value<bool>()->default_value("false"))
-        ("n,name", "Override name from config", cxxopts::value<std::string>()->default_value(""))
+        ("n,name", "Override name from config", cxxopts::value<std::string>())
         ("h,help", "Print usage");
     auto result = options.parse(argc, argv);
     if(result.count("help"))
@@ -28,8 +28,7 @@ UAVparams parseArgs(int argc, char** argv, bool& instantRunFlag)
     }
     if(result.count("name"))
     {
-        std::string newName = result["name"].as<std::string>();
-        params.setName(newName.c_str(),newName.length());
+        params.name = result["name"].as<std::string>();
     }
     std::cout << "Name: " << params.name <<std::endl;
     return params;
