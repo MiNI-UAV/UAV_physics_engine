@@ -6,8 +6,8 @@ struct UAVparams
 {
     public:
         UAVparams();
-        UAVparams(std::string configFile);
         ~UAVparams();
+        void loadConfig(std::string configFile);
 
         std::string name;
 

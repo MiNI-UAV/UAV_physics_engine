@@ -24,7 +24,7 @@ UAVparams parseArgs(int argc, char** argv, bool& instantRunFlag)
     instantRunFlag = result["instant-run"].as<bool>();
     if(result.count("config"))
     {
-        params = UAVparams(result["config"].as<std::string>().c_str());
+        params.loadConfig(result["config"].as<std::string>());
     }
     if(result.count("name"))
     {

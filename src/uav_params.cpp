@@ -137,11 +137,11 @@ void UAVparams::setAero(rapidxml::xml_node<> * aeroNode)
     }
 }
 
-UAVparams::UAVparams(std::string configFile)
+void UAVparams::loadConfig(std::string configFile)
 {
-    g = 9.81;
-    ro = 1.204;
-
+    delete[] rotorPos;
+    delete[] rotorDir;
+    
     if(!std::filesystem::exists(configFile))
     {  
         throw std::runtime_error("Config file not exist!");
