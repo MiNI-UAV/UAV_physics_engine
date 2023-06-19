@@ -1,3 +1,7 @@
+#include "RK4.hpp"
+#include <functional>
+#include <Eigen/Dense>
+
 VectorXd RK4_step(double t,
                           VectorXd y0,
                           std::function<VectorXd(double,VectorXd)> rhs_fun,
