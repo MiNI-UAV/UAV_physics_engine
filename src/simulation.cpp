@@ -30,7 +30,11 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
     std::stringstream ss;
     ss << "/tmp/" << _params.name;
     std::string address = ss.str();
-    fs::remove_all(address);
+    try{
+        fs::remove_all(address);
+    } catch (const fs::filesystem_error& ex) {
+        std::cerr << "Remove error: " << ex.what() << std::endl;
+    }
     if (!fs::create_directory(address))
         std::cerr << "Can not create comunication folder";
     ss.str("");
@@ -40,7 +44,7 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
     stateOutSock.bind(address);
     std::cout << "Starting state publisher: " << address << std::endl;
     //TODO: Remove below temporiary solution
-    stateOutSock.bind("tcp://*:9090");
+    //stateOutSock.bind("tcp://*:9090");
 
     ss.str("");
     ss << "ipc:///tmp/" << _params.name << "/control";
