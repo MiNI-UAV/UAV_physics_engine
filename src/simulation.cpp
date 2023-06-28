@@ -30,11 +30,11 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
     std::stringstream ss;
     ss << "/tmp/" << _params.name;
     std::string address = ss.str();
-    try{
-        fs::remove_all(address);
-    } catch (const fs::filesystem_error& ex) {
-        std::cerr << "Remove error: " << ex.what() << std::endl;
-    }
+    // try{
+    //     fs::remove_all(address);
+    // } catch (const fs::filesystem_error& ex) {
+    //     std::cerr << "Remove error: " << ex.what() << std::endl;
+    // }
     if (!fs::create_directory(address))
         std::cerr << "Can not create comunication folder";
     ss.str("");
