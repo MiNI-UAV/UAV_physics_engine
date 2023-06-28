@@ -36,7 +36,7 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
     //     std::cerr << "Remove error: " << ex.what() << std::endl;
     // }
     if (!fs::create_directory(address))
-        std::cerr << "Can not create comunication folder";
+        std::cerr << "Can not create comunication folder" <<std::endl;
     ss.str("");
 
     ss << "ipc:///tmp/" << _params.name << "/state";
@@ -49,7 +49,7 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
     ss.str("");
     ss << "ipc:///tmp/" << _params.name << "/control";
     address = ss.str();
-    controlListener = std::thread(controlListenerJob,&_ctx, std::string(address),std::ref(_state));
+    controlListener = std::thread(controlListenerJob,&_ctx, std::string(address),std::ref(_state),std::ref(matrices));
 
     RHS = [this] (double, Eigen::VectorXd local_state)
     {

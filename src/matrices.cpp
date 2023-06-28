@@ -32,6 +32,11 @@ void Matrices::updateMatrices()
     invMassMatrix = massMatrix.inverse();
 }
 
+void Matrices::reduceMass(double mass_delta) {
+    params.m -= mass_delta;
+    updateMatrices();
+}
+
 Matrix<double,6,6> Matrices::gyroMatrix(Vector<double,6> x)
 {
     Matrix<double,6,6> gyro;

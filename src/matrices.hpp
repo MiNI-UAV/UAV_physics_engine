@@ -14,6 +14,7 @@ class Matrices
         Matrix<double,6,6> TMatrix(Vector<double,6>  y);
         Matrix<double,3,3> R_nb(const Vector<double,6>&  y);
         void updateMatrices();
+        void reduceMass(double mass_delta);
 
     private:
         UAVparams& params;
