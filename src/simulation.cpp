@@ -36,7 +36,7 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
     //     std::cerr << "Remove error: " << ex.what() << std::endl;
     // }
     if (!fs::create_directory(address))
-        std::cerr << "Can not create comunication folder";
+        std::cerr << "Can not create comunication folder" <<std::endl;
     ss.str("");
 
     ss << "ipc:///tmp/" << _params.name << "/state";
