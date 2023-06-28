@@ -44,6 +44,7 @@ struct UAVstate
         Eigen::VectorXd getState();
         inline int getNoOfRotors(){return noOfRotors;}
 
+        void setX(Eigen::Vector<double,6>);
         void setDemandedOm(Eigen::VectorXd);
         void setWind(Eigen::Vector3d);
 

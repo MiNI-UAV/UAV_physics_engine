@@ -60,11 +60,12 @@ Eigen::VectorXd UAVstate::getState()
     return res;
 }
 
-void UAVstate::setDemandedOm(Eigen::VectorXd newDemandedOm)
-{
-    demandedAngularBuf[demandedBufSwitch] = newDemandedOm;
-    demanded_ptr = demandedAngularBuf + demandedBufSwitch;
-    demandedBufSwitch = 1 - demandedBufSwitch;
+void UAVstate::setX(Eigen::Vector<double,6> new_x) {x = new_x;}
+
+void UAVstate::setDemandedOm(Eigen::VectorXd newDemandedOm) {
+  demandedAngularBuf[demandedBufSwitch] = newDemandedOm;
+  demanded_ptr = demandedAngularBuf + demandedBufSwitch;
+  demandedBufSwitch = 1 - demandedBufSwitch;
 }
 
 void UAVstate::setWind(Eigen::Vector3d wind)

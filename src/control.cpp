@@ -5,6 +5,7 @@
 #include "control.hpp"
 #include "uav_state.hpp"
 #include "status.hpp"
+#include "matrices.hpp"
 
 void setWind(UAVstate& state, std::string& msg_str, zmq::socket_t& sock)
 {
@@ -88,7 +89,61 @@ bool control(UAVstate& state, std::string& msg_str, zmq::socket_t& sock)
     return false;
 }
 
-void controlListenerJob(zmq::context_t* ctx, std::string address,UAVstate& state)
+Vector3d calcMomentumConservanceConservation(UAVstate& state, Matrices& matrices, double m, double speed, Vector3d r)
+{
+    Matrix<double,6,6> T = matrices.TMatrix(state.getY());
+    Vector<double,6> momentum = matrices.massMatrix * (T * state.getX());
+    Vector3d obj_vel = state.getX().head<3>();
+    obj_vel(0) += speed;
+    Vector3d obj_linear_speed = T.block<3,3>(0,0) * obj_vel;
+    Vector3d obj_linear_momentum = m * obj_linear_speed;
+    Vector<double,6> obj_momentum;
+    obj_momentum << obj_linear_momentum, r.cross(obj_linear_momentum);
+    matrices.reduceMass(m);
+    Vector<double,6> newX = matrices.invMassMatrix * (momentum - obj_momentum);
+    state.setX(newX);
+    return obj_linear_speed;
+}
+
+void shot(UAVstate& state, Matrices& matrices, std::string& msg_str, zmq::socket_t& sock)
+{
+    std::istringstream f(msg_str.substr(2));
+
+    double m = 0.03;
+    double speed = 150.0;
+    Vector3d r(0.0, 0.0, 0.1);
+
+    std::string res;
+    for (int i = 0; i < 5; i++)
+    {
+        if(!getline(f, res, ',')) break;
+        switch (i)
+        {
+        case 0:
+            m = std::stod(res);
+            break;
+        case 1:
+            speed = std::stod(res);
+            break;
+        case 2:
+        case 3:
+        case 4:
+            r(i-2) = std::stod(res);
+            break;
+        }
+    }
+
+    Vector3d linear_speed = calcMomentumConservanceConservation(state,matrices,m,speed,r);
+
+    static Eigen::IOFormat commaFormat(3, Eigen::DontAlignCols," ",",");
+    std::stringstream ss;
+    ss << "ok;" << linear_speed.format(commaFormat);
+    std::string s = ss.str();
+    zmq::message_t response(s.data(), s.size()); 
+    sock.send(response,zmq::send_flags::none);
+}
+
+void controlListenerJob(zmq::context_t* ctx, std::string address,UAVstate& state, Matrices& matricies)
 {
     std::cout << "Starting control subscriber: " << address << std::endl;
     zmq::socket_t controlInSock = zmq::socket_t(*ctx, zmq::socket_type::rep);
@@ -115,6 +170,9 @@ void controlListenerJob(zmq::context_t* ctx, std::string address,UAVstate& state
             break;
             case 'c':
                 run = control(state,msg_str,controlInSock);
+            break;
+            case 'd':
+                shot(state,matricies,msg_str,controlInSock);
             break;
             default:
                 zmq::message_t response("error",5);
