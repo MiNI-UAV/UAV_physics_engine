@@ -56,10 +56,12 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
         VectorXd res;
         res.setZero(local_state.size());
         UAVstate::setY(res,matrices.TMatrix(UAVstate::getY(local_state))*UAVstate::getX(local_state));
-        UAVstate::setX(res,matrices.invMassMatrix*(forces.gravity_loads(UAVstate::getY(local_state)) 
+        Eigen::Vector<double,6> accel = matrices.invMassMatrix*(forces.gravity_loads(UAVstate::getY(local_state)) 
            + forces.lift_loads(UAVstate::getOm(local_state))
            + forces.aerodynamic_loads(matrices,UAVstate::getX(local_state),UAVstate::getY(local_state),_state.getWind()) 
-           - matrices.gyroMatrix(UAVstate::getX(local_state)) * matrices.massMatrix * UAVstate::getX(local_state)));
+           - matrices.gyroMatrix(UAVstate::getX(local_state)) * matrices.massMatrix * UAVstate::getX(local_state));
+        UAVstate::setX(res,accel);
+        _state.setAcceleration(accel);
         UAVstate::setOm(res, forces.angularAcceleration(this->_state.getDemandedOm(),UAVstate::getOm(local_state)));
         return res;
     };
@@ -98,6 +100,12 @@ void Simulation::sendState()
     ss.str("");
     stateOutSock.send(message,zmq::send_flags::none);
 
+    ss << "ab:" << _state.getAcceleration().format(commaFormat);
+    s = ss.str();
+    message.rebuild(s.data(), s.size());
+    ss.str("");
+    stateOutSock.send(message,zmq::send_flags::none);
+
     ss << "om:" << _state.getOm().format(commaFormat);
     s = ss.str();
     message.rebuild(s.data(), s.size());
@@ -108,24 +116,6 @@ void Simulation::sendIdle()
 {
     zmq::message_t message("idle",4);
     stateOutSock.send(message,zmq::send_flags::none);
-}
-
-void Simulation::countDown()
-{
-    constexpr int start = 3;
-    std::stringstream ss;
-    std::string s;
-    ss.precision(3);
-    for(int i = start; i > 0; i--)
-    {
-        ss << "t:" << std::fixed << -i;
-        s = ss.str();
-        std::cout << s << std::endl;
-        zmq::message_t message(s.data(), s.size());
-        ss.str("");
-        stateOutSock.send(message,zmq::send_flags::none);
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
 }
 
 void clampOrientation(Eigen::VectorXd& state)
@@ -167,7 +157,6 @@ void Simulation::run()
                 lck.unlock();
             break;
             case Status::running:
-                //countDown();
                 std::cout << "Running..." << std::endl;
                 loop.go();
             break;

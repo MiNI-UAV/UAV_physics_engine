@@ -15,6 +15,9 @@ struct UAVstate
         /* @brief Linear and angular velocity in local coordinate system */
         Eigen::Vector<double,6> x;
 
+        /* @brief Linear and angular acceleration in local coordinate system */
+        Eigen::Vector<double,6> acceleration;
+
         /* @brief Number of rotors */
         int noOfRotors;
 
@@ -43,10 +46,12 @@ struct UAVstate
         Eigen::Vector3d getWind();
         Eigen::VectorXd getState();
         inline int getNoOfRotors(){return noOfRotors;}
+        inline Eigen::Vector<double,6> getAcceleration() {return acceleration;}
 
         void setX(Eigen::Vector<double,6>);
         void setDemandedOm(Eigen::VectorXd);
         void setWind(Eigen::Vector3d);
+        void setAcceleration(Eigen::Vector<double,6>);
 
         UAVstate& operator=(Eigen::VectorXd& other);
         friend std::ostream& operator << ( std::ostream& outs, const UAVstate& state);

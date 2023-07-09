@@ -7,6 +7,7 @@ UAVstate::UAVstate(int rotors): noOfRotors{rotors}
     y.setZero();
     x.setZero();
     rotorAngularVelocities.setZero(noOfRotors);
+    acceleration.setZero();
 
 
     demandedAngularBuf[0].setZero(noOfRotors);
@@ -73,6 +74,11 @@ void UAVstate::setWind(Eigen::Vector3d wind)
     windBuf[windBufSwitch] = wind;
     wind_ptr = windBuf + windBufSwitch;
     windBufSwitch = 1 - windBufSwitch;
+}
+
+void UAVstate::setAcceleration(Eigen::Vector<double, 6> new_accel)
+{
+    acceleration = new_accel;
 }
 
 UAVstate& UAVstate::operator=(Eigen::VectorXd& other)
