@@ -91,16 +91,23 @@ bool control(UAVstate& state, std::string& msg_str, zmq::socket_t& sock)
 
 Vector3d calcMomentumConservanceConservation(UAVstate& state, Matrices& matrices, double m, double speed, Vector3d r)
 {
-    Matrix<double,6,6> T = matrices.TMatrix(state.getY());
+    Matrix3d R_nb = matrices.R_nb(state.getY());
+    Matrix3d R_bn = R_nb.inverse();
+    Matrix<double,6,6> T, T_inv;
+    T.block<3,3>(0,0) = R_bn;
+    T.block<3,3>(3,3) = R_bn;
+    T_inv.block<3,3>(0,0) = R_nb;
+    T_inv.block<3,3>(3,3) = R_nb;
     Vector<double,6> momentum = matrices.massMatrix * (T * state.getX());
     Vector3d obj_vel = state.getX().head<3>();
     obj_vel(0) += speed;
-    Vector3d obj_linear_speed = T.block<3,3>(0,0) * obj_vel;
+    Vector3d obj_linear_speed = R_bn * obj_vel;
     Vector3d obj_linear_momentum = m * obj_linear_speed;
     Vector<double,6> obj_momentum;
+    r = R_bn * r;
     obj_momentum << obj_linear_momentum, r.cross(obj_linear_momentum);
     matrices.reduceMass(m);
-    Vector<double,6> newX = T.inverse() * matrices.invMassMatrix * (momentum - obj_momentum);
+    Vector<double,6> newX = T_inv * matrices.invMassMatrix * (momentum - obj_momentum);
     state.setX(newX);
     return obj_linear_speed;
 }
