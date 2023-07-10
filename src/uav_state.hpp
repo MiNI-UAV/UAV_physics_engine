@@ -2,6 +2,7 @@
 #include <Eigen/Dense>
 #include <atomic>
 #include <condition_variable>
+#include <mutex>
 #include "status.hpp"
 
 
@@ -32,7 +33,6 @@ struct UAVstate
         Eigen::Vector3d windBuf[2];
         std::atomic<Eigen::Vector3d*> wind_ptr;
 
-
     public:
         UAVstate(int rotors);
         ~UAVstate();
@@ -47,6 +47,7 @@ struct UAVstate
         Eigen::VectorXd getState();
         inline int getNoOfRotors(){return noOfRotors;}
         inline Eigen::Vector<double,6> getAcceleration() {return acceleration;}
+        std::mutex state_mtx;
 
         void setX(Eigen::Vector<double,6>);
         void setDemandedOm(Eigen::VectorXd);

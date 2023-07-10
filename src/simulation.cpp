@@ -133,6 +133,7 @@ void Simulation::run()
 {
     matrices.updateMatrices();
     TimedLoop loop(std::round(step_time*1000.0), [this](){
+        const std::lock_guard<std::mutex> lock(_state.state_mtx);
         VectorXd next = RK4_step(_state.real_time,_state.getState(),RHS,step_time);
         clampOrientation(next);
         _state = next;

@@ -91,9 +91,12 @@ bool control(UAVstate& state, std::string& msg_str, zmq::socket_t& sock)
 
 Vector3d calcMomentumConservanceConservation(UAVstate& state, Matrices& matrices, double m, double speed, Vector3d r)
 {
+    const std::lock_guard<std::mutex> lock(state.state_mtx);
     Matrix3d R_nb = matrices.R_nb(state.getY());
     Matrix3d R_bn = R_nb.inverse();
     Matrix<double,6,6> T, T_inv;
+    T.setZero();
+    T_inv.setZero();
     T.block<3,3>(0,0) = R_bn;
     T.block<3,3>(3,3) = R_bn;
     T_inv.block<3,3>(0,0) = R_nb;
