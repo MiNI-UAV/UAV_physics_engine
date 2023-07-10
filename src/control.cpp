@@ -100,7 +100,7 @@ Vector3d calcMomentumConservanceConservation(UAVstate& state, Matrices& matrices
     Vector<double,6> obj_momentum;
     obj_momentum << obj_linear_momentum, r.cross(obj_linear_momentum);
     matrices.reduceMass(m);
-    Vector<double,6> newX = matrices.invMassMatrix * (momentum - obj_momentum);
+    Vector<double,6> newX = T.inverse() * matrices.invMassMatrix * (momentum - obj_momentum);
     state.setX(newX);
     return obj_linear_speed;
 }
