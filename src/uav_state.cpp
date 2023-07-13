@@ -18,6 +18,12 @@ UAVstate::UAVstate(int rotors): noOfRotors{rotors}
     windBuf[1].setZero();
     wind_ptr = windBuf+1;
 
+
+    forceBuf[0].setZero();
+    forceBuf[1].setZero();
+    force_ptr = force_ptr+1;
+    forceValidityCounter = 0;
+
     status = Status::idle;
 }
 
@@ -51,6 +57,17 @@ Eigen::Vector3d UAVstate::getWind()
     return (*(wind_ptr.load()));
 }
 
+Eigen::Vector<double, 6> UAVstate::getOuterForce()
+{   
+    if(forceValidityCounter.load() > 0)
+    {
+        forceValidityCounter--;
+        return (*(force_ptr.load()));
+    }
+    return Eigen::Vector<double,6>(0,0,0,0,0,0);
+
+}
+
 Eigen::VectorXd UAVstate::getState()
 {
     Eigen::VectorXd res;
@@ -74,6 +91,16 @@ void UAVstate::setWind(Eigen::Vector3d wind)
     windBuf[windBufSwitch] = wind;
     wind_ptr = windBuf + windBufSwitch;
     windBufSwitch = 1 - windBufSwitch;
+}
+
+void UAVstate::setForce(Eigen::Vector3d force, Eigen::Vector3d torque)
+{
+    Eigen::Vector<double,6> newForce;
+    newForce << force,torque;
+    forceBuf[forceBufSwitch] = newForce;
+    forceValidityCounter = validityOfForce * 4; //< 4 times bcs RK4 call function 4 times.
+    force_ptr = forceBuf + forceBufSwitch;
+    forceBufSwitch = 1 - forceBufSwitch;
 }
 
 void UAVstate::setAcceleration(Eigen::Vector<double, 6> new_accel)

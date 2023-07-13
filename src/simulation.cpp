@@ -58,7 +58,8 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
         UAVstate::setY(res,matrices.TMatrix(UAVstate::getY(local_state))*UAVstate::getX(local_state));
         Eigen::Vector<double,6> accel = matrices.invMassMatrix*(forces.gravity_loads(UAVstate::getY(local_state)) 
            + forces.lift_loads(UAVstate::getOm(local_state))
-           + forces.aerodynamic_loads(matrices,UAVstate::getX(local_state),UAVstate::getY(local_state),_state.getWind()) 
+           + forces.aerodynamic_loads(matrices,UAVstate::getX(local_state),UAVstate::getY(local_state),_state.getWind())
+           + _state.getOuterForce() 
            - matrices.gyroMatrix(UAVstate::getX(local_state)) * matrices.massMatrix * UAVstate::getX(local_state));
         UAVstate::setX(res,accel);
         _state.setAcceleration(accel);

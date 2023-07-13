@@ -32,6 +32,44 @@ void setWind(UAVstate& state, std::string& msg_str, zmq::socket_t& sock)
     sock.send(response,zmq::send_flags::none);
 }
 
+void setForce(UAVstate& state, std::string& msg_str, zmq::socket_t& sock)
+{
+    Eigen::Vector3d force, torque;
+    std::istringstream f(msg_str.substr(2));
+    std::string s;
+    int i; 
+    for (i = 0; i < 6; i++)
+    {
+        if(!getline(f, s, ','))
+        {
+            std::cerr << "Invalid force command" << std::endl;
+            break;
+        }
+        if(i < 3)
+        {
+            force(i) = std::stod(s);
+        }
+        else
+        {
+            torque(i-3) = std::stod(s);
+        }   
+    }
+    zmq::message_t response("ok",2);
+    if(i == 6)
+    {
+        state.setForce(force,torque);
+    }
+    else if(i == 3)
+    {
+        state.setForce(force);
+    }
+    else
+    {
+        response.rebuild("error",5);
+    }
+    sock.send(response,zmq::send_flags::none);
+}
+
 void setSpeed(UAVstate& state, std::string& msg_str, int n, zmq::socket_t& sock)
 {
     Eigen::VectorXd speed;
@@ -183,6 +221,9 @@ void controlListenerJob(zmq::context_t* ctx, std::string address,UAVstate& state
             break;
             case 'd':
                 shot(state,matricies,msg_str,controlInSock);
+            break;
+            case 'f':
+                setForce(state,msg_str,controlInSock);
             break;
             default:
                 zmq::message_t response("error",5);
