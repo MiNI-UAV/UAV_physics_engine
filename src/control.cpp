@@ -191,6 +191,108 @@ void shot(UAVstate& state, Matrices& matrices, std::string& msg_str, zmq::socket
     sock.send(response,zmq::send_flags::none);
 }
 
+void calcImpulseForce(UAVstate& state, Matrices& matrices,
+    double COR, double mi_static, double mi_dynamic,
+    Eigen::Vector3d collisionPoint, Eigen::Vector3d surfaceNormal)
+{
+    const std::lock_guard<std::mutex> lock(state.state_mtx);
+    Eigen::Vector<double,6> Y = state.getY();
+    Eigen::Matrix3d R_nb = matrices.R_nb(Y);
+    Eigen::Matrix3d R_bn = R_nb.inverse();
+    Eigen::Matrix<double,6,6> T, T_inv;
+    T.setZero();
+    T_inv.setZero();
+    T.block<3,3>(0,0) = R_bn;
+    T.block<3,3>(3,3) = R_bn;
+    T_inv.block<3,3>(0,0) = R_nb;
+    T_inv.block<3,3>(3,3) = R_nb;      
+    Eigen::Vector<double,6> X_g = T * state.getX();
+    Eigen::Vector3d r = collisionPoint - Y.head<3>();
+    Eigen::Vector3d vr = X_g.head<3>() + X_g.tail<3>().cross(r);
+    if(vr.dot(surfaceNormal) >= 0.0)
+    {
+        return;
+    }
+    std::cout << "Energy before collision: " << X_g.transpose()*matrices.massMatrix*X_g << std::endl;
+
+    double den_n = (matrices.invMassMatrix(0,0) 
+        + ((matrices.invMassMatrix.block<3,3>(3,3)*r.cross(surfaceNormal)).cross(r)).dot(surfaceNormal));
+    double jr = (-(1+COR)*(vr.dot(surfaceNormal)))/den_n;
+    Eigen::Vector<double,6> delta_n;
+    delta_n << surfaceNormal, r.cross(surfaceNormal);
+    X_g = X_g + jr*matrices.invMassMatrix*delta_n;
+
+    Eigen::Vector3d vt = vr - (vr.dot(surfaceNormal))*surfaceNormal;
+    if(vt.squaredNorm() > FRICTION_EPS)
+    {
+        Eigen::Vector3d tangent = vt.normalized();
+        double js = mi_static*jr;
+        double jd = mi_dynamic*jr;
+        double den_t = (matrices.invMassMatrix(0,0) 
+        + ((matrices.invMassMatrix.block<3,3>(3,3)*r.cross(tangent)).cross(r)).dot(tangent));
+        double jf = -vt.norm()/den_t;
+        if(jf > js) jf = jd;
+        Eigen::Vector<double,6> delta_t;
+        delta_t << tangent, r.cross(tangent);
+        X_g = X_g + jf*matrices.invMassMatrix*delta_t;
+    }
+    std::cout << "Energy after collision: " << X_g.transpose()*matrices.massMatrix*X_g << std::endl;
+    Vector<double,6> newX = T_inv * X_g;
+    state.setX(newX);
+}
+
+bool isNormal(double factor)
+{
+    return factor >= 0.0 && factor <= 1.0;
+}
+
+void solidSurfColision(UAVstate& state, Matrices& matrices, std::string& msg_str, zmq::socket_t& sock)
+{
+    std::istringstream f(msg_str.substr(2));
+    zmq::message_t response("error",5);
+    int i;
+    double COR = 0.0, mi_static = 0.0, mi_dynamic = 0.0;
+    Eigen::Vector3d collisionPoint(0.0,0.0,0.0), surfaceNormal(0.0,0.0,0.0);
+    std::string res;
+    for (i = 0; i < 9; i++)
+    {
+        if(!getline(f, res, ',')) break;
+        switch (i)
+        {
+        case 0:
+            COR = std::stod(res);
+            break;
+        case 1:
+            mi_static = std::stod(res);
+            break;
+        case 2:
+            mi_dynamic = std::stod(res);
+            break;
+        case 3:
+        case 4:
+        case 5:
+            collisionPoint(i-3) = std::stod(res);
+            break;
+        case 6:
+        case 7:
+        case 8:
+            surfaceNormal(i-6) = std::stod(res);
+            break;
+        }
+    }
+    if (i == 9
+        && isNormal(COR)
+        && isNormal(mi_static)
+        && isNormal(mi_dynamic)
+        && mi_static >= mi_dynamic)
+    {
+        calcImpulseForce(state,matrices, COR, mi_static, mi_dynamic, collisionPoint, surfaceNormal);
+        response.rebuild("ok",2);
+    }
+    sock.send(response,zmq::send_flags::none);
+    return; 
+}
+
 void controlListenerJob(zmq::context_t* ctx, std::string address,UAVstate& state, Matrices& matricies)
 {
     std::cout << "Starting control subscriber: " << address << std::endl;
@@ -224,6 +326,9 @@ void controlListenerJob(zmq::context_t* ctx, std::string address,UAVstate& state
             break;
             case 'f':
                 setForce(state,msg_str,controlInSock);
+            break;
+            case 'j':
+                solidSurfColision(state,matricies,msg_str,controlInSock);
             break;
             default:
                 zmq::message_t response("error",5);
