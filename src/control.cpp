@@ -220,6 +220,7 @@ void calcImpulseForce(UAVstate& state, Matrices& matrices,
     double jr = (-(1+COR)*(vr.dot(surfaceNormal)))/den_n;
     Eigen::Vector<double,6> delta_n;
     delta_n << surfaceNormal, r.cross(surfaceNormal);
+    if(jr < GENTLY_PUSH) jr = GENTLY_PUSH;
     X_g = X_g + jr*matrices.invMassMatrix*delta_n;
 
     Eigen::Vector3d vt = vr - (vr.dot(surfaceNormal))*surfaceNormal;
