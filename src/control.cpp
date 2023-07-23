@@ -209,18 +209,18 @@ void calcImpulseForce(UAVstate& state, Matrices& matrices,
     Eigen::Vector<double,6> X_g = T * state.getX();
     Eigen::Vector3d r = collisionPoint - Y.head<3>();
     Eigen::Vector3d vr = X_g.head<3>() + X_g.tail<3>().cross(r);
-    if(vr.dot(surfaceNormal) >= 0.0)
+    double vn = vr.dot(surfaceNormal);
+    if(vn >= 0.0)
     {
         return;
     }
     std::cout << "Energy before collision: " << X_g.transpose()*matrices.massMatrix*X_g << std::endl;
-
     double den_n = (matrices.invMassMatrix(0,0) 
         + ((matrices.invMassMatrix.block<3,3>(3,3)*r.cross(surfaceNormal)).cross(r)).dot(surfaceNormal));
-    double jr = (-(1+COR)*(vr.dot(surfaceNormal)))/den_n;
+    if(vn > -GENTLY_PUSH) vn = -GENTLY_PUSH;
+    double jr = (-(1+COR)*vn)/den_n;
     Eigen::Vector<double,6> delta_n;
     delta_n << surfaceNormal, r.cross(surfaceNormal);
-    if(jr < GENTLY_PUSH) jr = GENTLY_PUSH;
     X_g = X_g + jr*matrices.invMassMatrix*delta_n;
 
     Eigen::Vector3d vt = vr - (vr.dot(surfaceNormal))*surfaceNormal;
