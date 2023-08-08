@@ -62,7 +62,6 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
            + _state.getOuterForce() 
            - matrices.gyroMatrix(UAVstate::getX(local_state)) * matrices.massMatrix * UAVstate::getX(local_state));
         UAVstate::setX(res,accel);
-        _state.setAcceleration(accel);
         UAVstate::setOm(res, forces.angularAcceleration(this->_state.getDemandedOm(),UAVstate::getOm(local_state)));
         return res;
     };
@@ -137,6 +136,7 @@ void Simulation::run()
         const std::lock_guard<std::mutex> lock(_state.state_mtx);
         VectorXd next = RK4_step(_state.real_time,_state.getState(),RHS,step_time);
         clampOrientation(next);
+        _state.setAcceleration((UAVstate::getX(next) - _state.getX())/step_time);
         _state = next;
         _state.real_time+=step_time;
         sendState();
