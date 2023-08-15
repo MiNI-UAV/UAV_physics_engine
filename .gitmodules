@@ -1,1 +1,3 @@
-
+[submodule "lib/UAV_common"]
+	path = lib/UAV_common
+	url = https://github.com/MiNI-UAV/UAV_common

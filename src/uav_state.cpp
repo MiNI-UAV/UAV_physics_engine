@@ -1,6 +1,6 @@
 #include <Eigen/Dense>
 #include "uav_state.hpp"
-#include "status.hpp"
+#include "common.hpp"
 
 UAVstate::UAVstate(int rotors): noOfRotors{rotors}
 {

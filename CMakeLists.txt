@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(uav)
 
+add_subdirectory(lib/UAV_common)
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
 set(CMAKE_CXX_STANDARD 20)
 
@@ -13,6 +15,7 @@ file(GLOB SOURCES ${SOURCE_DIR}/*.cpp)
 
 include_directories(${INCLUDE_DIR})
 link_directories(${LIB_DIR})
+link_directories(${CMAKE_SOURCE_DIR}/lib/UAV_common)
 
 link_directories("/usr/lib/x86_64-linux-gnu")
 link_directories("/usr/local/lib")
@@ -28,3 +31,5 @@ find_package(cppzmq)
 target_link_libraries(uav cppzmq)
 find_package(cxxopts)
 target_link_libraries(uav cxxopts::cxxopts)
+target_link_libraries(uav common) 
+target_include_directories(uav PRIVATE ${CMAKE_SOURCE_DIR}/lib/UAV_common/header)

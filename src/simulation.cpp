@@ -12,8 +12,7 @@ namespace fs = std::filesystem;
 #include "uav_state.hpp"
 #include "forces.hpp"
 #include "matrices.hpp"
-#include "RK4.hpp"
-#include "timed_loop.hpp"
+#include "common.hpp"
 #include "control.hpp"
 #include <chrono>
 using namespace std::chrono_literals;
@@ -164,6 +163,9 @@ void Simulation::run()
             break;
             case Status::exiting:
                 std::cout << "Exiting..." << std::endl;
+                run = false;
+            break;
+            case Status::reload:
                 run = false;
             break;
         }

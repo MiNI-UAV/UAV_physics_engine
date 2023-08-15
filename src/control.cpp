@@ -4,7 +4,7 @@
 #include <iostream>
 #include "control.hpp"
 #include "uav_state.hpp"
-#include "status.hpp"
+#include "common.hpp"
 #include "matrices.hpp"
 
 void setWind(UAVstate& state, std::string& msg_str, zmq::socket_t& sock)

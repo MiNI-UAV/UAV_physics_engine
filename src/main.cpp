@@ -3,7 +3,7 @@
 #include "simulation.hpp"
 #include "uav_params.hpp"
 #include "uav_state.hpp"
-#include "status.hpp"
+#include "common.hpp"
 
 
 UAVparams parseArgs(int argc, char** argv, bool& instantRunFlag)
