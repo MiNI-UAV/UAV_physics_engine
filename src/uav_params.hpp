@@ -2,6 +2,8 @@
 #include <Eigen/Dense>
 #include "rapidxml/rapidxml.hpp"
 
+#define USE_QUATERIONS
+
 struct UAVparams
 {
     public:

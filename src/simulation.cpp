@@ -54,10 +54,11 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
     {
         VectorXd res;
         res.setZero(local_state.size());
-        UAVstate::setY(res,matrices.TMatrix(UAVstate::getY(local_state))*UAVstate::getX(local_state));
-        Eigen::Vector<double,6> accel = matrices.invMassMatrix*(forces.gravity_loads(UAVstate::getY(local_state)) 
+        UAVstate::setY(res,matrices.TMatrix(UAVstate::getY(local_state))*UAVstate::getX(local_state)+matrices.Ycorrection(UAVstate::getY(local_state)));
+        Matrix3d r_nb = matrices.R_nb(UAVstate::getY(local_state));
+        Eigen::Vector<double,6> accel = matrices.invMassMatrix*(forces.gravity_loads(r_nb) 
            + forces.lift_loads(UAVstate::getOm(local_state))
-           + forces.aerodynamic_loads(matrices,UAVstate::getX(local_state),UAVstate::getY(local_state),_state.getWind())
+           + forces.aerodynamic_loads(r_nb,UAVstate::getX(local_state),_state.getWind())
            + _state.getOuterForce() 
            - matrices.gyroMatrix(UAVstate::getX(local_state)) * matrices.massMatrix * UAVstate::getX(local_state));
         UAVstate::setX(res,accel);
@@ -79,7 +80,12 @@ void Simulation::sendState()
     ss.str("");
     stateOutSock.send(message,zmq::send_flags::none);
 
-    ss << "pos:" << _state.getY().format(commaFormat);
+#ifdef USE_QUATERIONS
+    Eigen::Vector<double,6> Y = matrices.quaterionsToRPY(_state.getY());
+#else
+    Eigen::Vector<double,6> Y = _state.getY();
+#endif
+    ss << "pos:" << Y.format(commaFormat);
     s = ss.str();
     //std::cout << s << std::endl;
     message.rebuild(s.data(), s.size());
@@ -92,7 +98,7 @@ void Simulation::sendState()
     ss.str("");
     stateOutSock.send(message,zmq::send_flags::none);
 
-    Eigen::Vector<double,6> vn = matrices.TMatrix(_state.getY())*_state.getX(); 
+    Eigen::Vector<double,6> vn = matrices.TMatrix(Y)*_state.getX(); 
     ss << "vn:" << vn.format(commaFormat);
     s = ss.str();
     message.rebuild(s.data(), s.size());
@@ -119,6 +125,7 @@ void Simulation::sendIdle()
 
 void clampOrientation(Eigen::VectorXd& state)
 {
+#ifndef USE_QUATERIONS
     for (size_t i = 3; i < 6; i++)
     {
         double x = fmod(state(i) + std::numbers::pi,2*std::numbers::pi);
@@ -126,6 +133,7 @@ void clampOrientation(Eigen::VectorXd& state)
             x += 2*std::numbers::pi;
         state(i) =  x - std::numbers::pi;
     }
+#endif
 }
 
 void Simulation::run()
