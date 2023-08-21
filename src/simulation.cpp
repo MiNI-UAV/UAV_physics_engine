@@ -56,7 +56,7 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
         res.setZero(local_state.size());
         auto Y = UAVstate::getY(local_state);
         auto X = UAVstate::getX(local_state);
-        Matrix3d r_nb = matrices.R_nb(Y);
+        Matrix3d r_nb = Matrices::R_nb(Y);
 
         #ifdef USE_QUATERIONS
         Vector<double,7> newY = Vector<double,7>::Zero();
@@ -65,20 +65,20 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
         newY.tail<4>() = Matrices::OM_conj(X)*q  + (1.0 - q.squaredNorm())*q;
         UAVstate::setY(res,newY);
         #else
-        UAVstate::setY(res,matrices.TMatrix(Y)*X);
+        UAVstate::setY(res, Matrices::TMatrix(Y)*X);
         #endif
         Eigen::Vector<double,6> accel = matrices.invMassMatrix*(forces.gravity_loads(r_nb) 
            + forces.lift_loads(UAVstate::getOm(local_state))
            + forces.aerodynamic_loads(r_nb,X,_state.getWind())
            + _state.getOuterForce() 
-           - matrices.gyroMatrix(X) * matrices.massMatrix * UAVstate::getX(local_state));
+           - Matrices::gyroMatrix(X) * matrices.massMatrix * UAVstate::getX(local_state));
         UAVstate::setX(res,accel);
         UAVstate::setOm(res, forces.angularAcceleration(this->_state.getDemandedOm(),UAVstate::getOm(local_state)));
         return res;
     };
 }
 
-void clampOrientation(Eigen::VectorXd& state)
+void clampOrientation([[maybe_unused]] Eigen::VectorXd& state)
 {
 #ifndef USE_QUATERIONS
     for (size_t i = 3; i < 6; i++)
@@ -107,7 +107,7 @@ void Simulation::sendState()
 #ifdef USE_QUATERIONS
     Eigen::Vector<double,6> Y = matrices.quaterionsToRPY(_state.getY());
 #else
-    Eigen::Vector<double,6> Y = matrices.quaterionsToRPY(matrices.RPYtoQuaterion(_state.getY()));
+    Eigen::Vector<double,6> Y = _state.getY();
 #endif
     ss << "pos:" << Y.format(commaFormat);
     s = ss.str();

@@ -32,21 +32,6 @@ void Matrices::updateMatrices()
     invMassMatrix = massMatrix.inverse();
 }
 
-Vector<double, 6> Matrices::Ycorrection(Vector<double, 6> y)
-{
-    return Eigen::Vector<double,6>::Zero();
-}
-
-Vector<double, 7> Matrices::Ycorrection(Vector<double, 7> y)
-{
-    Eigen::Vector<double,7> correction;
-    correction.setZero();
-    Eigen::Vector4d q = y.tail<4>();
-    correction.setZero();
-    correction.tail<4>() = (1.0 - q.squaredNorm())*q;
-    return correction;
-}
-
 Vector<double, 6> Matrices::quaterionsToRPY(Vector<double, 7> y)
 {
     Vector<double, 6> Y_RPY;
@@ -143,27 +128,6 @@ Matrix<double,6,6> Matrices::TMatrix(Vector<double,6>  y)
            0, sin(fi)/cos(theta), cos(fi)/cos(theta);
     res.block<3,3>(0,0) = Tv;
     res.block<3,3>(3,3) = Tom;
-    return res;
-}
-
-Matrix<double,7,6> Matrices::TMatrix(Vector<double,7>  y)
-{
-    Matrix3d Tv;
-    Matrix<double,4,3> Tom;
-    Matrix<double,7,6> res;
-    res.setZero();
-    const Vector4d& e = y.tail<4>();
-
-    Tv  << e(0)*e(0)+e(1)*e(1)-e(2)*e(2)-e(3)*e(3)  , 2*(e(1)*e(2)-e(0)*e(3))                   , 2*(e(1)*e(3)+e(0)*e(2)),
-           2*(e(1)*e(2)+e(0)*e(3))                  , e(0)*e(0)-e(1)*e(1)+e(2)*e(2)-e(3)*e(3)   , 2*(e(2)*e(3)-e(0)*e(1)),
-           2*(e(1)*e(3)-e(0)*e(2))                  , 2*(e(2)*e(3)+e(0)*e(1))                   , e(0)*e(0)-e(1)*e(1)-e(2)*e(2)+e(3)*e(3);
-    
-    Tom << -e(1), -e(2), -e(3),
-            e(0), -e(3),  e(2),
-            e(3),  e(0), -e(1),
-           -e(2),  e(1),  e(0);
-    res.block<3,3>(0,0) = Tv;
-    res.block<4,3>(3,3) = 0.5 * Tom;
     return res;
 }
 
