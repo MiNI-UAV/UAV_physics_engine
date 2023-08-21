@@ -104,12 +104,7 @@ void Simulation::sendState()
     ss.str("");
     stateOutSock.send(message,zmq::send_flags::none);
 
-#ifdef USE_QUATERIONS
-    Eigen::Vector<double,6> Y = matrices.quaterionsToRPY(_state.getY());
-#else
-    Eigen::Vector<double,6> Y = _state.getY();
-#endif
-    ss << "pos:" << Y.format(commaFormat);
+    ss << "pos:" << _state.getY().format(commaFormat);
     s = ss.str();
     //std::cout << s << std::endl;
     message.rebuild(s.data(), s.size());
@@ -121,6 +116,12 @@ void Simulation::sendState()
     message.rebuild(s.data(), s.size());
     ss.str("");
     stateOutSock.send(message,zmq::send_flags::none);
+
+#ifdef USE_QUATERIONS
+    Eigen::Vector<double,6> Y = matrices.quaterionsToRPY(_state.getY());
+#else
+    Eigen::Vector<double,6> Y = _state.getY();
+#endif
 
     Eigen::Vector<double,6> vn = matrices.TMatrix(Y)*_state.getX(); 
     ss << "vn:" << vn.format(commaFormat);
