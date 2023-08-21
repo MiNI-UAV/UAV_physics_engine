@@ -18,6 +18,10 @@ class Matrices
         Vector<double,6> Ycorrection(Vector<double,6>  y);
         Vector<double,7> Ycorrection(Vector<double,7>  y);
         Vector<double,6> quaterionsToRPY(Vector<double,7>  y);
+        Vector<double,7> RPYtoQuaterion(Vector<double,6> y);
+
+        static Matrix4d OM_conj(Vector<double,6>  x);
+
         void updateMatrices();
         void reduceMass(double mass_delta);
 

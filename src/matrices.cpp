@@ -58,6 +58,43 @@ Vector<double, 6> Matrices::quaterionsToRPY(Vector<double, 7> y)
     return Y_RPY;
 }
 
+Vector<double, 7> Matrices::RPYtoQuaterion(Vector<double, 6> y)
+{
+    Vector<double, 7> Y_quat;
+    Vector4d quat;
+    double halfRoll = y(3) * 0.5;
+    double halfPitch = y(4) * 0.5;
+    double halfYaw = y(5) * 0.5;
+    double sinHalfRoll = std::sin(halfRoll);
+    double cosHalfRoll = std::cos(halfRoll);
+    double sinHalfPitch = std::sin(halfPitch);
+    double cosHalfPitch = std::cos(halfPitch);
+    double sinHalfYaw = std::sin(halfYaw);
+    double cosHalfYaw = std::cos(halfYaw);
+
+    quat(0) = cosHalfRoll * cosHalfPitch * cosHalfYaw + sinHalfRoll * sinHalfPitch * sinHalfYaw; // w
+    quat(1) = sinHalfRoll * cosHalfPitch * cosHalfYaw - cosHalfRoll * sinHalfPitch * sinHalfYaw; // x
+    quat(2) = cosHalfRoll * sinHalfPitch * cosHalfYaw + sinHalfRoll * cosHalfPitch * sinHalfYaw; // y
+    quat(3) = cosHalfRoll * cosHalfPitch * sinHalfYaw - sinHalfRoll * sinHalfPitch * cosHalfYaw; // z
+
+    Y_quat << y.head<3>(), quat;
+    return Y_quat;
+}
+
+Matrix4d Matrices::OM_conj(Vector<double, 6> x)
+{
+    Matrix4d om_conj = Matrix4d::Zero();
+    double P = x(3);
+    double Q = x(4);
+    double R = x(5);
+    om_conj <<  0,  P,  Q,  R,
+               -P,  0, -R,  Q,
+               -Q,  R,  0, -P,
+               -R, -Q,  P,  0;
+
+    return -0.5 *om_conj;
+}
+
 void Matrices::reduceMass(double mass_delta) {
     params.m -= mass_delta;
     updateMatrices();
@@ -120,8 +157,6 @@ Matrix<double,7,6> Matrices::TMatrix(Vector<double,7>  y)
     Tv  << e(0)*e(0)+e(1)*e(1)-e(2)*e(2)-e(3)*e(3)  , 2*(e(1)*e(2)-e(0)*e(3))                   , 2*(e(1)*e(3)+e(0)*e(2)),
            2*(e(1)*e(2)+e(0)*e(3))                  , e(0)*e(0)-e(1)*e(1)+e(2)*e(2)-e(3)*e(3)   , 2*(e(2)*e(3)-e(0)*e(1)),
            2*(e(1)*e(3)-e(0)*e(2))                  , 2*(e(2)*e(3)+e(0)*e(1))                   , e(0)*e(0)-e(1)*e(1)-e(2)*e(2)+e(3)*e(3);
-
-    //Tv.transposeInPlace();
     
     Tom << -e(1), -e(2), -e(3),
             e(0), -e(3),  e(2),
@@ -151,6 +186,5 @@ Matrix<double, 3, 3> Matrices::R_nb(const Vector<double,7>&  y)
     r_nb << e(0)*e(0)+e(1)*e(1)-e(2)*e(2)-e(3)*e(3)  , 2*(e(1)*e(2)+e(0)*e(3))                   , 2*(e(1)*e(3)-e(0)*e(2)),
             2*(e(1)*e(2)-e(0)*e(3))                  , e(0)*e(0)-e(1)*e(1)+e(2)*e(2)-e(3)*e(3)   , 2*(e(2)*e(3)+e(0)*e(1)),
             2*(e(1)*e(3)+e(0)*e(2))                  , 2*(e(2)*e(3)-e(0)*e(1))                   , e(0)*e(0)-e(1)*e(1)-e(2)*e(2)+e(3)*e(3);
-    //r_nb.transposeInPlace();
     return r_nb;
 }

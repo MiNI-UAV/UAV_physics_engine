@@ -79,8 +79,13 @@ Eigen::VectorXd UAVstate::getState()
 {
     Eigen::VectorXd res;
     res.setZero(omOffset+noOfRotors);
+#ifdef USE_QUATERIONS
+    res.segment(0,7) = y;
+    res.segment(7,6) = x;
+#else
     res.segment(0,6) = y;
     res.segment(6,6) = x;
+#endif
     res.segment(omOffset,noOfRotors) = rotorAngularVelocities;
     return res;
 }
@@ -137,7 +142,11 @@ void UAVstate::setY(Eigen::VectorXd &state, Eigen::Vector<double, 6> Y)
 
 void UAVstate::setX(Eigen::VectorXd &state, Eigen::Vector<double, 6> X)
 {
-    state.segment(6,6) = X;
+#ifdef USE_QUATERIONS
+    state.segment<6>(7) = X;
+#else
+    state.segment<6>(6) = X;
+#endif
 }
 
 void UAVstate::setOm(Eigen::VectorXd &state, Eigen::VectorXd Om)
@@ -148,18 +157,22 @@ void UAVstate::setOm(Eigen::VectorXd &state, Eigen::VectorXd Om)
 #ifdef USE_QUATERIONS
 Eigen::Vector<double, 7> UAVstate::getY(const Eigen::VectorXd &state)
 {
-    return state.segment(0,7);
+    return state.segment<7>(0);
 }
 #else
 Eigen::Vector<double, 6> UAVstate::getY(const Eigen::VectorXd &state)
 {
-    return state.segment(0,6);
+    return state.segment<6>(0);
 }
 #endif
 
 Eigen::Vector<double, 6> UAVstate::getX(const Eigen::VectorXd &state)
 {
-    return state.segment(6,6);
+#ifdef USE_QUATERIONS
+    return state.segment<6>(7);
+#else
+    return state.segment<6>(6);
+#endif
 }
 
 Eigen::VectorXd UAVstate::getOm(const Eigen::VectorXd &state)
