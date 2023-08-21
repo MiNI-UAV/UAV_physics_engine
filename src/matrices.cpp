@@ -32,6 +32,54 @@ void Matrices::updateMatrices()
     invMassMatrix = massMatrix.inverse();
 }
 
+Vector<double, 6> Matrices::quaterionsToRPY(Vector<double, 7> y)
+{
+    Vector<double, 6> Y_RPY;
+    Y_RPY.head<3>() = y.head<3>();
+    const Vector4d& e = y.tail<4>();
+    Y_RPY(3) = atan2(2*(e(0)*e(1)+e(2)*e(3)),e(0)*e(0)-e(1)*e(1)-e(2)*e(2)+e(3)*e(3));
+    Y_RPY(4) = asin(2*(e(0)*e(2)-e(1)*e(3)));
+    Y_RPY(5) = atan2(2*(e(0)*e(3)+e(1)*e(2)),e(0)*e(0)+e(1)*e(1)-e(2)*e(2)-e(3)*e(3));
+    return Y_RPY;
+}
+
+Vector<double, 7> Matrices::RPYtoQuaterion(Vector<double, 6> y)
+{
+    Vector<double, 7> Y_quat;
+    Vector4d quat;
+    double halfRoll = y(3) * 0.5;
+    double halfPitch = y(4) * 0.5;
+    double halfYaw = y(5) * 0.5;
+    double sinHalfRoll = std::sin(halfRoll);
+    double cosHalfRoll = std::cos(halfRoll);
+    double sinHalfPitch = std::sin(halfPitch);
+    double cosHalfPitch = std::cos(halfPitch);
+    double sinHalfYaw = std::sin(halfYaw);
+    double cosHalfYaw = std::cos(halfYaw);
+
+    quat(0) = cosHalfRoll * cosHalfPitch * cosHalfYaw + sinHalfRoll * sinHalfPitch * sinHalfYaw; // w
+    quat(1) = sinHalfRoll * cosHalfPitch * cosHalfYaw - cosHalfRoll * sinHalfPitch * sinHalfYaw; // x
+    quat(2) = cosHalfRoll * sinHalfPitch * cosHalfYaw + sinHalfRoll * cosHalfPitch * sinHalfYaw; // y
+    quat(3) = cosHalfRoll * cosHalfPitch * sinHalfYaw - sinHalfRoll * sinHalfPitch * cosHalfYaw; // z
+
+    Y_quat << y.head<3>(), quat;
+    return Y_quat;
+}
+
+Matrix4d Matrices::OM_conj(Vector<double, 6> x)
+{
+    Matrix4d om_conj = Matrix4d::Zero();
+    double P = x(3);
+    double Q = x(4);
+    double R = x(5);
+    om_conj <<  0,  P,  Q,  R,
+               -P,  0, -R,  Q,
+               -Q,  R,  0, -P,
+               -R, -Q,  P,  0;
+
+    return -0.5 *om_conj;
+}
+
 void Matrices::reduceMass(double mass_delta) {
     params.m -= mass_delta;
     updateMatrices();
@@ -92,5 +140,15 @@ Matrix<double, 3, 3> Matrices::R_nb(const Vector<double,6>&  y)
     r_nb << cos(theta)*cos(psi),                            cos(theta)*sin(psi),                           -sin(theta),
             sin(fi)*sin(theta)*cos(psi) - cos(fi)*sin(psi), sin(fi)*sin(theta)*sin(psi) + cos(fi)*cos(psi), sin(fi)*cos(theta),
             cos(fi)*sin(theta)*cos(psi) + sin(fi)*sin(psi), cos(fi)*sin(theta)*sin(psi) - sin(fi)*cos(psi), cos(fi)*cos(theta);
+    return r_nb;
+}
+
+Matrix<double, 3, 3> Matrices::R_nb(const Vector<double,7>&  y)
+{
+    const Vector4d& e = y.tail<4>();
+    Matrix<double, 3, 3> r_nb;
+    r_nb << e(0)*e(0)+e(1)*e(1)-e(2)*e(2)-e(3)*e(3)  , 2*(e(1)*e(2)+e(0)*e(3))                   , 2*(e(1)*e(3)-e(0)*e(2)),
+            2*(e(1)*e(2)-e(0)*e(3))                  , e(0)*e(0)-e(1)*e(1)+e(2)*e(2)-e(3)*e(3)   , 2*(e(2)*e(3)+e(0)*e(1)),
+            2*(e(1)*e(3)+e(0)*e(2))                  , 2*(e(2)*e(3)-e(0)*e(1))                   , e(0)*e(0)-e(1)*e(1)-e(2)*e(2)+e(3)*e(3);
     return r_nb;
 }

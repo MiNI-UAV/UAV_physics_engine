@@ -11,10 +11,11 @@ using namespace Eigen;
 Forces::Forces(UAVparams& params): params{params}
 {}
 
-Vector<double,6> Forces::gravity_loads(Vector<double,6>  y)
+Vector<double,6> Forces::gravity_loads(const Matrix3d& r_nb)
 {
-    Vector<double,6> Fg = {-std::sin(y(4)), std::sin(y(3))*std::cos(y(4)), std::cos(y(3))*std::cos(y(4)), 0.0, 0.0, 0.0};
-    Fg = (params.m*params.g)*Fg;
+    Vector<double,6> Fg;
+    Fg.setZero();
+    Fg.head<3>() = r_nb * Eigen::Vector3d(0.0,0.0,(params.m*params.g));
     return Fg;
 }
 
@@ -42,10 +43,10 @@ double Forces::dynamic_pressure(double Vtot)
     return 0.5*params.ro*Vtot*Vtot;
 }
 
-Vector<double, 6> Forces::aerodynamic_loads(Matrices& matricies, const Vector<double, 6> &x, const Vector<double, 6> &y, Vector3d wind_global)
+Vector<double, 6> Forces::aerodynamic_loads(const Matrix3d& r_nb, const Vector<double, 6> &x, Vector3d wind_global)
 {
     Vector<double, 6> Fa(params.Ci);
-    Vector3d wind = matricies.R_nb(y)*wind_global;
+    Vector3d wind = r_nb*wind_global;
     Vector3d velocity = x.segment(0,3);
     Vector3d diff = velocity-wind;
     double Vtot = diff.norm();

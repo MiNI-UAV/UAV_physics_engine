@@ -9,9 +9,10 @@ class Forces
 {
     public:
         Forces(UAVparams& params);
-        Vector<double,6> gravity_loads(Vector<double,6>  y);
+
+        Vector<double,6> gravity_loads(const Matrix3d& r_nb);
         Vector<double,6> lift_loads(VectorXd rotorAngularVelocity);
-        Vector<double, 6> aerodynamic_loads(Matrices& matricies, const Vector<double, 6> &x, const Vector<double, 6> &y, Vector3d wind_global);
+        Vector<double, 6> aerodynamic_loads(const Matrix3d& r_nb, const Vector<double, 6> &x, Vector3d wind_global);
         VectorXd angularAcceleration(VectorXd demandedAngularVelocity, VectorXd rotorAngularVelocity);
     
     private:

@@ -196,7 +196,7 @@ void calcImpulseForce(UAVstate& state, Matrices& matrices,
     Eigen::Vector3d collisionPoint, Eigen::Vector3d surfaceNormal)
 {
     const std::lock_guard<std::mutex> lock(state.state_mtx);
-    Eigen::Vector<double,6> Y = state.getY();
+    auto Y = state.getY();
     Eigen::Matrix3d R_nb = matrices.R_nb(Y);
     Eigen::Matrix3d R_bn = R_nb.inverse();
     Eigen::Matrix<double,6,6> T, T_inv;

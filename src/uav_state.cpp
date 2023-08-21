@@ -5,6 +5,9 @@
 UAVstate::UAVstate(int rotors): noOfRotors{rotors}
 {
     y.setZero();
+    #ifdef USE_QUATERIONS
+    y(3) = 1.0;
+    #endif
     x.setZero();
     rotorAngularVelocities.setZero(noOfRotors);
     acceleration.setZero();
@@ -32,7 +35,11 @@ UAVstate::~UAVstate()
 
 }
 
+#ifdef USE_QUATERIONS
+Eigen::Vector<double,7> UAVstate::getY()
+#else
 Eigen::Vector<double,6> UAVstate::getY()
+#endif
 {
     return y;
 }
@@ -71,10 +78,15 @@ Eigen::Vector<double, 6> UAVstate::getOuterForce()
 Eigen::VectorXd UAVstate::getState()
 {
     Eigen::VectorXd res;
-    res.setZero(12+noOfRotors);
+    res.setZero(omOffset+noOfRotors);
+#ifdef USE_QUATERIONS
+    res.segment(0,7) = y;
+    res.segment(7,6) = x;
+#else
     res.segment(0,6) = y;
     res.segment(6,6) = x;
-    res.segment(12,noOfRotors) = rotorAngularVelocities;
+#endif
+    res.segment(omOffset,noOfRotors) = rotorAngularVelocities;
     return res;
 }
 
@@ -116,34 +128,56 @@ UAVstate& UAVstate::operator=(Eigen::VectorXd& other)
     return *this;
 }
 
+#ifdef USE_QUATERIONS
+void UAVstate::setY(Eigen::VectorXd &state, Eigen::Vector<double, 7> Y)
+{
+    state.segment(0,7) = Y;
+}
+#else
 void UAVstate::setY(Eigen::VectorXd &state, Eigen::Vector<double, 6> Y)
 {
     state.segment(0,6) = Y;
 }
+#endif
 
 void UAVstate::setX(Eigen::VectorXd &state, Eigen::Vector<double, 6> X)
 {
-    state.segment(6,6) = X;
+#ifdef USE_QUATERIONS
+    state.segment<6>(7) = X;
+#else
+    state.segment<6>(6) = X;
+#endif
 }
 
 void UAVstate::setOm(Eigen::VectorXd &state, Eigen::VectorXd Om)
 {
-    state.segment(12,state.size()-12) = Om;
+    state.segment(omOffset,state.size()-omOffset) = Om;
 }
 
+#ifdef USE_QUATERIONS
+Eigen::Vector<double, 7> UAVstate::getY(const Eigen::VectorXd &state)
+{
+    return state.segment<7>(0);
+}
+#else
 Eigen::Vector<double, 6> UAVstate::getY(const Eigen::VectorXd &state)
 {
-    return state.segment(0,6);
+    return state.segment<6>(0);
 }
+#endif
 
 Eigen::Vector<double, 6> UAVstate::getX(const Eigen::VectorXd &state)
 {
-    return state.segment(6,6);
+#ifdef USE_QUATERIONS
+    return state.segment<6>(7);
+#else
+    return state.segment<6>(6);
+#endif
 }
 
 Eigen::VectorXd UAVstate::getOm(const Eigen::VectorXd &state)
 {
-    return state.segment(12,state.size()-12);
+    return state.segment(omOffset,state.size()-omOffset);
 }
 
 std::ostream& operator << ( std::ostream& outs, const UAVstate& state)

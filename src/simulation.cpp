@@ -54,16 +54,41 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
     {
         VectorXd res;
         res.setZero(local_state.size());
-        UAVstate::setY(res,matrices.TMatrix(UAVstate::getY(local_state))*UAVstate::getX(local_state));
-        Eigen::Vector<double,6> accel = matrices.invMassMatrix*(forces.gravity_loads(UAVstate::getY(local_state)) 
+        auto Y = UAVstate::getY(local_state);
+        auto X = UAVstate::getX(local_state);
+        Matrix3d r_nb = Matrices::R_nb(Y);
+
+        #ifdef USE_QUATERIONS
+        Vector<double,7> newY = Vector<double,7>::Zero();
+        newY.head<3>() = r_nb.transpose() * X.head<3>();
+        Eigen::Vector4d q = Y.tail<4>();
+        newY.tail<4>() = Matrices::OM_conj(X)*q  + (1.0 - q.squaredNorm())*q;
+        UAVstate::setY(res,newY);
+        #else
+        UAVstate::setY(res, Matrices::TMatrix(Y)*X);
+        #endif
+        Eigen::Vector<double,6> accel = matrices.invMassMatrix*(forces.gravity_loads(r_nb) 
            + forces.lift_loads(UAVstate::getOm(local_state))
-           + forces.aerodynamic_loads(matrices,UAVstate::getX(local_state),UAVstate::getY(local_state),_state.getWind())
+           + forces.aerodynamic_loads(r_nb,X,_state.getWind())
            + _state.getOuterForce() 
-           - matrices.gyroMatrix(UAVstate::getX(local_state)) * matrices.massMatrix * UAVstate::getX(local_state));
+           - Matrices::gyroMatrix(X) * matrices.massMatrix * UAVstate::getX(local_state));
         UAVstate::setX(res,accel);
         UAVstate::setOm(res, forces.angularAcceleration(this->_state.getDemandedOm(),UAVstate::getOm(local_state)));
         return res;
     };
+}
+
+void clampOrientation([[maybe_unused]] Eigen::VectorXd& state)
+{
+#ifndef USE_QUATERIONS
+    for (size_t i = 3; i < 6; i++)
+    {
+        double x = fmod(state(i) + std::numbers::pi,2*std::numbers::pi);
+        if (x < 0)
+            x += 2*std::numbers::pi;
+        state(i) =  x - std::numbers::pi;
+    }
+#endif
 }
 
 void Simulation::sendState()
@@ -92,7 +117,13 @@ void Simulation::sendState()
     ss.str("");
     stateOutSock.send(message,zmq::send_flags::none);
 
-    Eigen::Vector<double,6> vn = matrices.TMatrix(_state.getY())*_state.getX(); 
+#ifdef USE_QUATERIONS
+    Eigen::Vector<double,6> Y = matrices.quaterionsToRPY(_state.getY());
+#else
+    Eigen::Vector<double,6> Y = _state.getY();
+#endif
+
+    Eigen::Vector<double,6> vn = matrices.TMatrix(Y)*_state.getX(); 
     ss << "vn:" << vn.format(commaFormat);
     s = ss.str();
     message.rebuild(s.data(), s.size());
@@ -115,17 +146,6 @@ void Simulation::sendIdle()
 {
     zmq::message_t message("idle",4);
     stateOutSock.send(message,zmq::send_flags::none);
-}
-
-void clampOrientation(Eigen::VectorXd& state)
-{
-    for (size_t i = 3; i < 6; i++)
-    {
-        double x = fmod(state(i) + std::numbers::pi,2*std::numbers::pi);
-        if (x < 0)
-            x += 2*std::numbers::pi;
-        state(i) =  x - std::numbers::pi;
-    }
 }
 
 void Simulation::run()

@@ -4,16 +4,25 @@
 #include <condition_variable>
 #include <mutex>
 #include "common.hpp"
-
+#include "uav_params.hpp"
 
 struct UAVstate
 {
     private:
         constexpr static int validityOfForce = 10;
-
+        #ifdef USE_QUATERIONS
+        constexpr static int omOffset = 13;
+        #else
+        constexpr static int omOffset = 12;
+        #endif
+        
         /* @brief Position and attitude of the quadrotor 
         in inerial coordinate system */
-        Eigen::Vector<double,6> y;
+        #ifdef USE_QUATERIONS
+            Eigen::Vector<double,7> y;
+        #else
+            Eigen::Vector<double,6> y;
+        #endif
 
         /* @brief Linear and angular velocity in local coordinate system */
         Eigen::Vector<double,6> x;
@@ -46,7 +55,17 @@ struct UAVstate
 
         std::atomic<double> real_time;
 
-        Eigen::Vector<double,6> getY();
+        #ifdef USE_QUATERIONS
+            Eigen::Vector<double,7> getY();
+            static void setY(Eigen::VectorXd& state, Eigen::Vector<double,7> Y);
+            static Eigen::Vector<double,7> getY(const Eigen::VectorXd& state);
+        #else
+            Eigen::Vector<double,6> getY();
+            static void setY(Eigen::VectorXd& state, Eigen::Vector<double,6> Y);
+            static Eigen::Vector<double,6> getY(const Eigen::VectorXd& state);
+        #endif
+
+
         Eigen::Vector<double,6> getX();
         Eigen::VectorXd getOm();
         Eigen::VectorXd getDemandedOm();
@@ -66,11 +85,10 @@ struct UAVstate
         UAVstate& operator=(Eigen::VectorXd& other);
         friend std::ostream& operator << ( std::ostream& outs, const UAVstate& state);
 
-        static void setY(Eigen::VectorXd& state, Eigen::Vector<double,6> Y);
+ 
         static void setX(Eigen::VectorXd& state, Eigen::Vector<double,6> X);
         static void setOm(Eigen::VectorXd& state, Eigen::VectorXd Om);
 
-        static Eigen::Vector<double,6> getY(const Eigen::VectorXd& state);
         static Eigen::Vector<double,6> getX(const Eigen::VectorXd& state);
         static Eigen::VectorXd getOm(const Eigen::VectorXd& state);
         
