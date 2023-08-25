@@ -33,9 +33,23 @@ UAVparams::UAVparams()
 
     S = 0.1;
     d = 0.001;
+
+    if(singleton != nullptr)
+    {
+        std::cerr << "Only one instance of UAVParams should exist";
+        return;
+    }
+    singleton = this;
 }
 
-void UAVparams::setMass(rapidxml::xml_node<> * interiaNode)
+UAVparams* UAVparams::singleton = nullptr;
+
+UAVparams *UAVparams::getSingleton()
+{
+    return singleton;
+}
+
+void UAVparams::setMass(rapidxml::xml_node<> *interiaNode)
 {
     for (rapidxml::xml_node<>* node = interiaNode->first_node(); node; node = node->next_sibling()) 
     {
@@ -175,6 +189,7 @@ void UAVparams::loadConfig(std::string configFile)
 
 UAVparams::~UAVparams()
 {
+    singleton = nullptr;
     delete[] rotorPos;
     delete[] rotorDir;
 }

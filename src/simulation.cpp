@@ -18,16 +18,14 @@ namespace fs = std::filesystem;
 using namespace std::chrono_literals;
 
 
-Simulation::Simulation(UAVparams& params, UAVstate& state):
-    _params{params},
-    _state{state},
-    forces(params),
-    matrices(params)
+Simulation::Simulation(UAVstate& state):
+    _state{state}
 {
+    UAVparams* params = UAVparams::getSingleton();
     stateOutSock = zmq::socket_t(_ctx, zmq::socket_type::pub);
 
     std::stringstream ss;
-    ss << "/tmp/" << _params.name;
+    ss << "/tmp/" << params->name;
     std::string address = ss.str();
     // try{
     //     fs::remove_all(address);
@@ -38,7 +36,7 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
         std::cerr << "Can not create comunication folder" <<std::endl;
     ss.str("");
 
-    ss << "ipc:///tmp/" << _params.name << "/state";
+    ss << "ipc:///tmp/" << params->name << "/state";
     address = ss.str();
     stateOutSock.bind(address);
     std::cout << "Starting state publisher: " << address << std::endl;
@@ -46,7 +44,7 @@ Simulation::Simulation(UAVparams& params, UAVstate& state):
     //stateOutSock.bind("tcp://*:9090");
 
     ss.str("");
-    ss << "ipc:///tmp/" << _params.name << "/control";
+    ss << "ipc:///tmp/" << params->name << "/control";
     address = ss.str();
     controlListener = std::thread(controlListenerJob,&_ctx, std::string(address),std::ref(_state),std::ref(matrices));
 

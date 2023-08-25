@@ -7,7 +7,7 @@ using namespace Eigen;
 class Matrices
 {
     public:
-        Matrices(UAVparams& params);
+        Matrices();
         Matrix<double,6,6> massMatrix;
         Matrix<double,6,6> invMassMatrix;
 
@@ -21,7 +21,4 @@ class Matrices
 
         void updateMatrices();
         void reduceMass(double mass_delta);
-
-    private:
-        UAVparams& params;
 };
