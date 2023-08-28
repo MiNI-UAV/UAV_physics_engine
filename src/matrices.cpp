@@ -6,7 +6,7 @@
 using namespace Eigen;
 using namespace std;
 
-Matrices::Matrices(UAVparams& params): params{params}
+Matrices::Matrices()
 {   
     updateMatrices();
 }
@@ -14,20 +14,21 @@ Matrices::Matrices(UAVparams& params): params{params}
 
 void Matrices::updateMatrices()
 {
+    UAVparams* params = UAVparams::getSingleton();
     //mass matrix
     massMatrix.setZero();
-    massMatrix(0,0) = params.m;
-    massMatrix(1,1) = params.m;
-    massMatrix(2,2) = params.m;
-    massMatrix(3,3) = params.Ix;
-    massMatrix(4,4) = params.Iy;
-    massMatrix(5,5) = params.Iz;
-    massMatrix(3,4) = -params.Ixy;
-    massMatrix(4,3) = -params.Ixy;
-    massMatrix(3,5) = -params.Ixz;
-    massMatrix(5,3) = -params.Ixz;
-    massMatrix(4,5) = -params.Iyz;
-    massMatrix(5,4) = -params.Iyz;
+    massMatrix(0,0) = params->m;
+    massMatrix(1,1) = params->m;
+    massMatrix(2,2) = params->m;
+    massMatrix(3,3) = params->Ix;
+    massMatrix(4,4) = params->Iy;
+    massMatrix(5,5) = params->Iz;
+    massMatrix(3,4) = -params->Ixy;
+    massMatrix(4,3) = -params->Ixy;
+    massMatrix(3,5) = -params->Ixz;
+    massMatrix(5,3) = -params->Ixz;
+    massMatrix(4,5) = -params->Iyz;
+    massMatrix(5,4) = -params->Iyz;
 
     invMassMatrix = massMatrix.inverse();
 }
@@ -81,7 +82,7 @@ Matrix4d Matrices::OM_conj(Vector<double, 6> x)
 }
 
 void Matrices::reduceMass(double mass_delta) {
-    params.m -= mass_delta;
+    UAVparams::getSingleton()->m -= mass_delta;
     updateMatrices();
 }
 

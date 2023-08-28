@@ -8,7 +8,7 @@ using namespace Eigen;
 class Forces
 {
     public:
-        Forces(UAVparams& params);
+        Forces() = default;
 
         Vector<double,6> gravity_loads(const Matrix3d& r_nb);
         Vector<double,6> lift_loads(VectorXd rotorAngularVelocity);
@@ -16,6 +16,5 @@ class Forces
         VectorXd angularAcceleration(VectorXd demandedAngularVelocity, VectorXd rotorAngularVelocity);
     
     private:
-        UAVparams& params;
         double dynamic_pressure(double Vtot);
 };

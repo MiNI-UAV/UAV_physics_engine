@@ -10,12 +10,11 @@
 class Simulation
 {
     public:
-        Simulation(UAVparams& params, UAVstate& state);
+        Simulation(UAVstate& state);
         ~Simulation();
         void run();
 
     private:
-        UAVparams& _params;
         UAVstate& _state;
         zmq::context_t _ctx;
         zmq::socket_t stateOutSock;

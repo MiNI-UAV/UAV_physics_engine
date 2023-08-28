@@ -37,10 +37,14 @@ struct UAVparams
         double S, d;
         double Ci[6] = {1.0,1.0,1.0,0.0,0.0,0.0};
 
+        static UAVparams* getSingleton();
+
     private:
         
         void setMass(rapidxml::xml_node<> * interiaNode);
         void setRotors(rapidxml::xml_node<> * rotorsNode);
         void setAero(rapidxml::xml_node<> * aeroNode);
+
+        static UAVparams* singleton;
 
 };
