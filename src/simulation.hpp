@@ -21,11 +21,9 @@ class Simulation
         const double step_time = 0.001;
         std::thread controlListener;
 
-        Forces forces;
         Matrices matrices;
         std::function<VectorXd(double,VectorXd)> RHS;
 
         void sendState();
         void sendIdle();
-        void countDown();
 };

@@ -4,7 +4,7 @@
 #include <condition_variable>
 #include <mutex>
 #include "common.hpp"
-#include "uav_params.hpp"
+#include "defines.hpp"
 
 struct UAVstate
 {

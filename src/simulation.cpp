@@ -6,6 +6,8 @@
 #include <mutex>
 #include <filesystem>
 namespace fs = std::filesystem;
+#include <chrono>
+using namespace std::chrono_literals;
 
 #include "simulation.hpp"
 #include "uav_params.hpp"
@@ -14,8 +16,8 @@ namespace fs = std::filesystem;
 #include "matrices.hpp"
 #include "common.hpp"
 #include "control.hpp"
-#include <chrono>
-using namespace std::chrono_literals;
+#include "defines.hpp"
+
 
 
 Simulation::Simulation(UAVstate& state):
@@ -65,13 +67,13 @@ Simulation::Simulation(UAVstate& state):
         #else
         UAVstate::setY(res, Matrices::TMatrix(Y)*X);
         #endif
-        Eigen::Vector<double,6> accel = matrices.invMassMatrix*(forces.gravity_loads(r_nb) 
-           + forces.lift_loads(UAVstate::getOm(local_state))
-           + forces.aerodynamic_loads(r_nb,X,_state.getWind())
+        Eigen::Vector<double,6> accel = matrices.invMassMatrix*(Forces::gravity_loads(r_nb) 
+           + Forces::lift_loads(UAVstate::getOm(local_state))
+           + Forces::aerodynamic_loads(r_nb,X,_state.getWind())
            + _state.getOuterForce() 
            - Matrices::gyroMatrix(X) * matrices.massMatrix * UAVstate::getX(local_state));
         UAVstate::setX(res,accel);
-        UAVstate::setOm(res, forces.angularAcceleration(this->_state.getDemandedOm(),UAVstate::getOm(local_state)));
+        UAVstate::setOm(res, Forces::angularAcceleration(this->_state.getDemandedOm(),UAVstate::getOm(local_state)));
         return res;
     };
 }

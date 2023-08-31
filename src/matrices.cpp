@@ -14,22 +14,7 @@ Matrices::Matrices()
 
 void Matrices::updateMatrices()
 {
-    UAVparams* params = UAVparams::getSingleton();
-    //mass matrix
-    massMatrix.setZero();
-    massMatrix(0,0) = params->m;
-    massMatrix(1,1) = params->m;
-    massMatrix(2,2) = params->m;
-    massMatrix(3,3) = params->Ix;
-    massMatrix(4,4) = params->Iy;
-    massMatrix(5,5) = params->Iz;
-    massMatrix(3,4) = -params->Ixy;
-    massMatrix(4,3) = -params->Ixy;
-    massMatrix(3,5) = -params->Ixz;
-    massMatrix(5,3) = -params->Ixz;
-    massMatrix(4,5) = -params->Iyz;
-    massMatrix(5,4) = -params->Iyz;
-
+    massMatrix = massMatrix2();
     invMassMatrix = massMatrix.inverse();
 }
 
@@ -86,7 +71,28 @@ void Matrices::reduceMass(double mass_delta) {
     updateMatrices();
 }
 
-Matrix<double,6,6> Matrices::gyroMatrix(Vector<double,6> x)
+Matrix<double, 6, 6> Matrices::massMatrix2()
+{
+    UAVparams* params = UAVparams::getSingleton();
+    //mass matrix
+    Matrix<double, 6, 6> massMatrix;
+    massMatrix.setZero();
+    massMatrix(0,0) = params->m;
+    massMatrix(1,1) = params->m;
+    massMatrix(2,2) = params->m;
+    massMatrix(3,3) = params->Ix;
+    massMatrix(4,4) = params->Iy;
+    massMatrix(5,5) = params->Iz;
+    massMatrix(3,4) = -params->Ixy;
+    massMatrix(4,3) = -params->Ixy;
+    massMatrix(3,5) = -params->Ixz;
+    massMatrix(5,3) = -params->Ixz;
+    massMatrix(4,5) = -params->Iyz;
+    massMatrix(5,4) = -params->Iyz;
+    return massMatrix;
+}
+
+Matrix<double, 6, 6> Matrices::gyroMatrix(Vector<double, 6> x)
 {
     Matrix<double,6,6> gyro;
     gyro.setZero();

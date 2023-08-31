@@ -11,6 +11,8 @@ class Matrices
         Matrix<double,6,6> massMatrix;
         Matrix<double,6,6> invMassMatrix;
 
+
+        static Matrix<double,6,6> massMatrix2();
         static Matrix<double,6,6> gyroMatrix(Vector<double,6>  x);
         static Matrix<double,6,6> TMatrix(Vector<double,6>  y);
         static Matrix<double,3,3> R_nb(const Vector<double,6>&  y);

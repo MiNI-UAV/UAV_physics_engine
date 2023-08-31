@@ -12,6 +12,7 @@ set(LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 set(BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build)
 
 file(GLOB SOURCES ${SOURCE_DIR}/*.cpp)
+file(GLOB SOURCES2 ${SOURCE_DIR}/aircrafts/*.cpp)
 
 include_directories(${INCLUDE_DIR})
 link_directories(${LIB_DIR})
@@ -21,7 +22,7 @@ link_directories("/usr/lib/x86_64-linux-gnu")
 link_directories("/usr/local/lib")
 link_directories("/usr/local/include")
 
-add_executable(uav ${SOURCES})
+add_executable(uav ${SOURCES} ${SOURCES2})
 set_property(TARGET uav PROPERTY CXX_STANDARD 20)
 target_include_directories(uav PUBLIC include)
 target_compile_features(uav PUBLIC cxx_std_20)
