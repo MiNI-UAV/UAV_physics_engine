@@ -28,6 +28,7 @@ struct UAVparams
         double forceCoff;
         double torqueCoff;
         Eigen::Vector3d* rotorPos;
+        Eigen::Vector3d* rotorAxes;
         int* rotorDir;
         Eigen::VectorXd rotorTimeConstant;
 

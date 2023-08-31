@@ -20,15 +20,19 @@ Vector<double,6> Forces::gravity_loads(const Matrix3d& r_nb)
 
 Vector<double,6> Forces::lift_loads(VectorXd rotorAngularVelocity)
 {
+    static const double forceCoff = UAVparams::getSingleton()->forceCoff;
+    static const double torqueCoff = UAVparams::getSingleton()->torqueCoff;
+
+    double rho = getRho();
     UAVparams* params = UAVparams::getSingleton();
     Vector3d Fr = {0.0, 0.0, 0.0};
     Vector3d Mr = {0.0, 0.0, 0.0};
     for (int i = 0; i < params->noOfRotors; i++)
     {
         double om2 = std::pow(rotorAngularVelocity(i),2);
-        Vector3d Fi = {0.0, 0.0, -params->ro*params->forceCoff*om2};
+        auto Fi = params->rotorAxes[i]*(rho*forceCoff*om2);
         Fr += Fi;
-        Mr(2) += params->rotorDir[i]*params->ro*params->torqueCoff*om2;
+        Mr += params->rotorAxes[i]*(-(params->rotorDir[i]*rho*torqueCoff*om2));
         Mr += params->rotorPos[i].cross(Fi);
     }
     // std::cout << "Fr:\n" << Fr << std::endl;
@@ -41,8 +45,14 @@ Vector<double,6> Forces::lift_loads(VectorXd rotorAngularVelocity)
 double Forces::dynamic_pressure([[maybe_unused]]double height, double Vtot)
 {
     //TODO: More advanced model
+    return 0.5*getRho()*Vtot*Vtot;
+}
+
+double Forces::getRho()
+{
+    //TODO: More advanced model
     static const double rho = UAVparams::getSingleton()->ro;
-    return 0.5*rho*Vtot*Vtot;
+    return rho;
 }
 
 Vector<double, 6> Forces::aerodynamic_loads(const Matrix3d& r_nb, const Vector<double, 6> &x, Vector3d wind_global)

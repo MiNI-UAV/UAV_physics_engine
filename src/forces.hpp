@@ -15,4 +15,5 @@ class Forces
     
     private:
         static double dynamic_pressure(double height, double Vtot);
+        static double getRho();
 };

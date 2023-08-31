@@ -24,10 +24,14 @@ UAVparams::UAVparams()
     forceCoff = 1.0;
     torqueCoff = 1.0;
     noOfRotors = 4;
-    rotorPos = new Eigen::Vector3d[noOfRotors]{{ 0.1, 0.1, 0.0},
-                                               {-0.1, 0.1, 0.0},
-                                               {-0.1,-0.1, 0.0},
-                                               { 0.1,-0.1, 0.0}};
+    rotorPos = new Eigen::Vector3d[noOfRotors]{ { 0.1, 0.1, 0.0},
+                                                {-0.1, 0.1, 0.0},
+                                                {-0.1,-0.1, 0.0},
+                                                { 0.1,-0.1, 0.0}};
+    rotorAxes = new Eigen::Vector3d[noOfRotors]{{ 0.0, 0.0,-1.0},
+                                                { 0.0, 0.0,-1.0},
+                                                { 0.0, 0.0,-1.0},
+                                                { 0.0, 0.0,-1.0}};
     rotorDir = new int[noOfRotors] {1,-1, 1,-1};
     rotorTimeConstant.setConstant(noOfRotors,0.05);
 
@@ -91,8 +95,15 @@ void UAVparams::setRotors(rapidxml::xml_node<> * rotorsNode)
         if(std::strcmp(node->name(),"no") == 0)
         {
             noOfRotors = std::stod(node->value());
-            rotorPos = new Eigen::Vector3d[noOfRotors];
-            rotorDir = new int[noOfRotors];
+            if(noOfRotors != 4)
+            {
+                delete[] rotorPos;
+                delete[] rotorDir;
+                delete[] rotorAxes;
+                rotorPos = new Eigen::Vector3d[noOfRotors];
+                rotorAxes = new Eigen::Vector3d[noOfRotors];
+                rotorDir = new int[noOfRotors];
+            }
             rotorTimeConstant.setZero(noOfRotors);
         }
         if(std::strcmp(node->name(),"forceCoff") == 0)
@@ -111,6 +122,17 @@ void UAVparams::setRotors(rapidxml::xml_node<> * rotorsNode)
                 double x,y,z;
                 std::sscanf(posNode->value(),"%lf %lf %lf",&x,&y,&z);
                 rotorPos[i] << x,y,z;
+            }   
+        }
+        if(std::strcmp(node->name(),"axes") == 0)
+        {
+            int i = 0;
+            for (rapidxml::xml_node<>* posNode = node->first_node(); posNode; i++, posNode = posNode->next_sibling()) 
+            {
+                double x,y,z;
+                std::sscanf(posNode->value(),"%lf %lf %lf",&x,&y,&z);
+                rotorAxes[i] << x,y,z;
+                rotorAxes[i].normalize();
             }   
         }
         if(std::strcmp(node->name(),"direction") == 0)
@@ -153,9 +175,6 @@ void UAVparams::setAero(rapidxml::xml_node<> * aeroNode)
 
 void UAVparams::loadConfig(std::string configFile)
 {
-    delete[] rotorPos;
-    delete[] rotorDir;
-    
     if(!std::filesystem::exists(configFile))
     {  
         throw std::runtime_error("Config file not exist!");
