@@ -6,8 +6,9 @@
 #include "common.hpp"
 
 
-void parseArgs(int argc, char** argv, bool& instantRunFlag)
+void parseArgs(int argc, char** argv)
 {
+    UAVparams* params = UAVparams::getSingleton();
     cxxopts::Options options("uav", "Process representing movement of one UAV with rigid frame and constant propellers");
     options.add_options()
         ("c,config", "Path of config file", cxxopts::value<std::string>()->default_value("config.xml"))
@@ -20,26 +21,23 @@ void parseArgs(int argc, char** argv, bool& instantRunFlag)
         std::cout << options.help() << std::endl;
         exit(0);
     }
-    instantRunFlag = result["instant-run"].as<bool>();
+    params->instantRun = result["instant-run"].as<bool>();
     if(result.count("config"))
     {
-        UAVparams::getSingleton()->loadConfig(result["config"].as<std::string>());
+        params->loadConfig(result["config"].as<std::string>());
     }
     if(result.count("name"))
     {
-        UAVparams::getSingleton()->name = result["name"].as<std::string>();
+        params->name = result["name"].as<std::string>();
     }
-    std::cout << "Name: " << UAVparams::getSingleton()->name <<std::endl;
+    std::cout << "Name: " << params->name <<std::endl;
 }
 
 int main(int argc, char** argv)
 {
     UAVparams params;
-    bool instantRun = false;
-    parseArgs(argc,argv,instantRun);
-    UAVstate state(params.noOfRotors);
-    if(instantRun) state.setStatus(Status::running);
+    parseArgs(argc,argv);
     std::cout << "Starting simulation!" <<std::endl;
-    Simulation sim(state);
-    sim.run();
+    Simulation simulation;
+    simulation.run();
 }

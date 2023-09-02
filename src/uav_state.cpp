@@ -1,10 +1,15 @@
 #include <Eigen/Dense>
 #include "uav_state.hpp"
+#include "uav_params.hpp"
 #include "common.hpp"
 #include "defines.hpp"
 
-UAVstate::UAVstate(int rotors): noOfRotors{rotors}
+UAVstate::UAVstate()
 {
+    UAVparams* params = UAVparams::getSingleton();
+    if(params->instantRun) setStatus(Status::running);
+    noOfRotors = params->noOfRotors;
+
     y.setZero();
     #ifdef USE_QUATERIONS
     y(3) = 1.0;

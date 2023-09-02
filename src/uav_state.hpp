@@ -50,7 +50,7 @@ struct UAVstate
         std::atomic_int forceValidityCounter;
 
     public:
-        UAVstate(int rotors);
+        UAVstate();
         ~UAVstate();
 
         std::atomic<double> real_time;

@@ -10,9 +10,6 @@ UAVparams::UAVparams()
 {
     name = "default";
 
-    g = 9.81;
-    ro = 1.204;
-
     m = 5;
     Ix = 10;
     Iy = 11;

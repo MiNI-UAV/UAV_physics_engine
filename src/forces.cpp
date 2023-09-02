@@ -51,8 +51,7 @@ double Forces::dynamic_pressure([[maybe_unused]]double height, double Vtot)
 double Forces::getRho()
 {
     //TODO: More advanced model
-    static const double rho = UAVparams::getSingleton()->ro;
-    return rho;
+    return DEFAULT_RHO;
 }
 
 Vector<double, 6> Forces::aerodynamic_loads(const Matrix3d& r_nb, const Vector<double, 6> &x, Vector3d wind_global)

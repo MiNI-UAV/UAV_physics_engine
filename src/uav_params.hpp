@@ -11,8 +11,8 @@ struct UAVparams
 
         std::string name;
 
-        double g;
-        double ro;
+        bool instantRun;
+
 
         //Mass params
         double m;
