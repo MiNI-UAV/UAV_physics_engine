@@ -74,6 +74,12 @@ void setForce(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& sock)
 void setSpeed(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& sock)
 {
     int n = aircraft->state.getNoOfRotors();
+    zmq::message_t response("error",5);
+    if(n == 0)
+    {
+        sock.send(response,zmq::send_flags::none);
+        return;
+    }
     Eigen::VectorXd speed;
     speed.setZero(n);
     std::istringstream f(msg_str.substr(2));
@@ -88,7 +94,6 @@ void setSpeed(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& sock)
         }
         speed(i) = std::stod(s);
     }
-    zmq::message_t response("error",5);
     if(i == n)
     {
         //std::cout << "Setting speed to: " << speed.transpose() << std::endl;

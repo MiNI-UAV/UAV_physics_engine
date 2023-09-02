@@ -97,9 +97,12 @@ void UAVparams::setRotors(rapidxml::xml_node<> * rotorsNode)
                 delete[] rotorPos;
                 delete[] rotorDir;
                 delete[] rotorAxes;
-                rotorPos = new Eigen::Vector3d[noOfRotors];
-                rotorAxes = new Eigen::Vector3d[noOfRotors];
-                rotorDir = new int[noOfRotors];
+                if(noOfRotors > 0)
+                {
+                    rotorPos = new Eigen::Vector3d[noOfRotors];
+                    rotorAxes = new Eigen::Vector3d[noOfRotors];
+                    rotorDir = new int[noOfRotors];
+                }
             }
             rotorTimeConstant.setZero(noOfRotors);
         }
@@ -114,7 +117,9 @@ void UAVparams::setRotors(rapidxml::xml_node<> * rotorsNode)
         if(std::strcmp(node->name(),"positions") == 0)
         {
             int i = 0;
-            for (rapidxml::xml_node<>* posNode = node->first_node(); posNode; i++, posNode = posNode->next_sibling()) 
+            for (rapidxml::xml_node<>* posNode = node->first_node();
+                posNode && i < noOfRotors;
+                i++, posNode = posNode->next_sibling()) 
             {
                 double x,y,z;
                 std::sscanf(posNode->value(),"%lf %lf %lf",&x,&y,&z);
@@ -124,10 +129,12 @@ void UAVparams::setRotors(rapidxml::xml_node<> * rotorsNode)
         if(std::strcmp(node->name(),"axes") == 0)
         {
             int i = 0;
-            for (rapidxml::xml_node<>* posNode = node->first_node(); posNode; i++, posNode = posNode->next_sibling()) 
+            for (rapidxml::xml_node<>* axisNode = node->first_node();
+                axisNode && i < noOfRotors;
+                i++, axisNode = axisNode->next_sibling()) 
             {
                 double x,y,z;
-                std::sscanf(posNode->value(),"%lf %lf %lf",&x,&y,&z);
+                std::sscanf(axisNode->value(),"%lf %lf %lf",&x,&y,&z);
                 rotorAxes[i] << x,y,z;
                 rotorAxes[i].normalize();
             }   
@@ -135,7 +142,9 @@ void UAVparams::setRotors(rapidxml::xml_node<> * rotorsNode)
         if(std::strcmp(node->name(),"direction") == 0)
         {
             int i = 0;
-            for (rapidxml::xml_node<>* dirNode = node->first_node(); dirNode; i++, dirNode = dirNode->next_sibling()) 
+            for (rapidxml::xml_node<>* dirNode = node->first_node();
+                dirNode && i < noOfRotors;
+                i++, dirNode = dirNode->next_sibling())
             {
                 rotorDir[i] = std::stoi(dirNode->value());
             } 
@@ -143,7 +152,7 @@ void UAVparams::setRotors(rapidxml::xml_node<> * rotorsNode)
         if(std::strcmp(node->name(),"timeConstants") == 0)
         {
             int i = 0;
-            for (rapidxml::xml_node<>* timeNode = node->first_node(); timeNode; i++, timeNode = timeNode->next_sibling()) 
+            for (rapidxml::xml_node<>* timeNode = node->first_node(); timeNode && i < noOfRotors; i++, timeNode = timeNode->next_sibling()) 
             {
                 rotorTimeConstant(i) = std::stod(timeNode->value());
             }

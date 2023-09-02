@@ -7,7 +7,6 @@
 UAVstate::UAVstate()
 {
     UAVparams* params = UAVparams::getSingleton();
-    if(params->instantRun) setStatus(Status::running);
     noOfRotors = params->noOfRotors;
 
     y.setZero();
@@ -34,6 +33,7 @@ UAVstate::UAVstate()
     forceValidityCounter = 0;
 
     status = Status::idle;
+    if(params->instantRun) setStatus(Status::running);
 }
 
 UAVstate::~UAVstate()
