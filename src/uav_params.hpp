@@ -1,6 +1,44 @@
 #pragma once
 #include <Eigen/Dense>
+#include <mutex>
+#include <memory>
 #include "rapidxml/rapidxml.hpp"
+
+
+class Hinge
+{
+public:
+    Hinge() = default;
+    Hinge(Eigen::Vector3d axis, double max, double min, double trim);
+    Hinge(const Hinge& old);
+    Hinge& operator=(const Hinge& old);
+
+    void updateValue(double newValue);
+    const Eigen::Matrix3d getRot();
+
+private:
+    Eigen::Vector3d axis;
+    double max;
+    double min;
+
+    std::mutex mtx;
+    double value;
+    Eigen::Matrix3d rot;
+};
+
+
+struct Rotor
+{
+    double forceCoff;
+    double torqueCoff;
+    Eigen::Vector3d position;
+    Eigen::Vector3d axis;
+    int direction;
+    double timeConstant;
+    double maxSpeed;
+    int noOfHinges;
+    Hinge hinges[2];
+};
 
 struct UAVparams
 {
@@ -25,12 +63,9 @@ struct UAVparams
 
         //Rotor params
         int noOfRotors;
-        double forceCoff;
-        double torqueCoff;
-        Eigen::Vector3d* rotorPos;
-        Eigen::Vector3d* rotorAxes;
-        int* rotorDir;
-        Eigen::VectorXd rotorTimeConstant;
+        std::vector<Rotor> rotors;
+        Eigen::VectorXd getTimeContants();
+        Eigen::VectorXd getMaxSpeeds();
 
         //Aerodynamic params
         double S, d;

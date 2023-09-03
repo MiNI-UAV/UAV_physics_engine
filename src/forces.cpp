@@ -20,23 +20,25 @@ Vector<double,6> Forces::gravity_loads(const Matrix3d& r_nb)
 
 Vector<double,6> Forces::lift_loads(VectorXd rotorAngularVelocity)
 {
-    static const double forceCoff = UAVparams::getSingleton()->forceCoff;
-    static const double torqueCoff = UAVparams::getSingleton()->torqueCoff;
-
     double rho = getRho();
     UAVparams* params = UAVparams::getSingleton();
     Vector3d Fr = {0.0, 0.0, 0.0};
     Vector3d Mr = {0.0, 0.0, 0.0};
+
     for (int i = 0; i < params->noOfRotors; i++)
     {
+        Rotor& rotor = params->rotors[i];
         double om2 = std::pow(rotorAngularVelocity(i),2);
-        auto Fi = params->rotorAxes[i]*(rho*forceCoff*om2);
+        auto axis = rotor.axis;
+        for (int j = 0; j < rotor.noOfHinges; j++)
+        {
+            axis = rotor.hinges[j].getRot()*axis;
+        }
+        auto Fi = axis*(rho*rotor.forceCoff*om2);
         Fr += Fi;
-        Mr += params->rotorAxes[i]*(-(params->rotorDir[i]*rho*torqueCoff*om2));
-        Mr += params->rotorPos[i].cross(Fi);
+        Mr += axis*(-(rotor.direction*rho*rotor.torqueCoff*om2));
+        Mr += rotor.position.cross(Fi);
     }
-    // std::cout << "Fr:\n" << Fr << std::endl;
-    // std::cout << "Mr:\n" << Mr << std::endl << std::endl;
     Vector<double,6> res;
     res << Fr, Mr;
     return res; 
@@ -83,7 +85,7 @@ Vector<double, 6> Forces::aerodynamic_loads(const Matrix3d& r_nb, const Vector<d
 
 VectorXd Forces::angularAcceleration(VectorXd demandedAngularVelocity, VectorXd rotorAngularVelocity)
 {
-    static const VectorXd rotorTimeConstants = UAVparams::getSingleton()->rotorTimeConstant;
+    static const VectorXd rotorTimeConstants = UAVparams::getSingleton()->getTimeContants();
     VectorXd res;
     res = (demandedAngularVelocity - rotorAngularVelocity);
     return res.cwiseQuotient(rotorTimeConstants);

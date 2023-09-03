@@ -57,6 +57,7 @@ void Aircraft::sendState(zmq::socket_t* socket)
 
     ss << "om:" << state.getOm().format(commaFormat);
     s = ss.str();
+    //std::cout << s << std::endl;
     message.rebuild(s.data(), s.size());
     socket->send(message,zmq::send_flags::none);
 }

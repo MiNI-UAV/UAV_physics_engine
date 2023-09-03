@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
+#include <mutex>
 #include "rapidxml/rapidxml.hpp"
 
 /// @brief Initialize default data
@@ -18,19 +19,7 @@ UAVparams::UAVparams()
     Ixz = 2;
     Iyz = 3;
 
-    forceCoff = 1.0;
-    torqueCoff = 1.0;
-    noOfRotors = 4;
-    rotorPos = new Eigen::Vector3d[noOfRotors]{ { 0.1, 0.1, 0.0},
-                                                {-0.1, 0.1, 0.0},
-                                                {-0.1,-0.1, 0.0},
-                                                { 0.1,-0.1, 0.0}};
-    rotorAxes = new Eigen::Vector3d[noOfRotors]{{ 0.0, 0.0,-1.0},
-                                                { 0.0, 0.0,-1.0},
-                                                { 0.0, 0.0,-1.0},
-                                                { 0.0, 0.0,-1.0}};
-    rotorDir = new int[noOfRotors] {1,-1, 1,-1};
-    rotorTimeConstant.setConstant(noOfRotors,0.05);
+    noOfRotors = 0;
 
     S = 0.1;
     d = 0.001;
@@ -44,6 +33,27 @@ UAVparams::UAVparams()
 }
 
 UAVparams* UAVparams::singleton = nullptr;
+
+Eigen::VectorXd UAVparams::getTimeContants()
+{
+    auto vec = Eigen::VectorXd(noOfRotors);
+    for (int i = 0; i < noOfRotors; i++)
+    {
+        vec(i) = rotors[i].timeConstant;
+    }
+    return vec;
+}
+
+Eigen::VectorXd UAVparams::getMaxSpeeds()
+{
+    Eigen::VectorXd vec;
+    vec.setZero(noOfRotors);
+    for (int i = 0; i < noOfRotors; i++)
+    {
+        vec(i) = rotors[i].maxSpeed;
+    }
+    return vec;
+}
 
 UAVparams *UAVparams::getSingleton()
 {
@@ -85,78 +95,104 @@ void UAVparams::setMass(rapidxml::xml_node<> *interiaNode)
     }
 }
 
+void parseHinge(rapidxml::xml_node<>* hingeNode, Hinge* hinge)
+{
+    Eigen::Vector3d axis(1.0,0.0,0.0);
+    double max = 0.0;
+    double min = 0.0;
+    double trim = 0.0;
+    for (rapidxml::xml_node<>* node = hingeNode->first_node(); node; node = node->next_sibling()) 
+    {
+        if(std::strcmp(node->name(),"axis") == 0)
+        {
+            double x,y,z;
+            std::sscanf(node->value(),"%lf %lf %lf",&x,&y,&z);
+            axis << x,y,z;
+        }
+
+        if(std::strcmp(node->name(),"min") == 0)
+        {
+            min = std::stod(node->value());
+        }
+
+        if(std::strcmp(node->name(),"max") == 0)
+        {
+            max = std::stod(node->value());
+        }
+
+        if(std::strcmp(node->name(),"trim") == 0)
+        {
+            trim = std::stod(node->value());
+        }
+
+    }
+    *hinge = Hinge(axis,max,min,trim);
+}
+
 void UAVparams::setRotors(rapidxml::xml_node<> * rotorsNode)
 {
-    for (rapidxml::xml_node<>* node = rotorsNode->first_node(); node; node = node->next_sibling()) 
+    noOfRotors = std::stoi(rotorsNode->first_attribute()->value());
+
+    for (rapidxml::xml_node<>* rotorNode = rotorsNode->first_node(); rotorNode; rotorNode = rotorNode->next_sibling()) 
     {
-        if(std::strcmp(node->name(),"no") == 0)
+        if(std::strcmp(rotorNode->name(),"rotor") != 0) continue;
+
+        Rotor rotor;
+
+        for(rapidxml::xml_node<>* node = rotorNode->first_node(); node; node = node->next_sibling())
         {
-            noOfRotors = std::stod(node->value());
-            if(noOfRotors != 4)
+
+
+            if(std::strcmp(node->name(),"forceCoff") == 0)
             {
-                delete[] rotorPos;
-                delete[] rotorDir;
-                delete[] rotorAxes;
-                if(noOfRotors > 0)
+                rotor.forceCoff = std::stod(node->value());
+            }
+
+            if(std::strcmp(node->name(),"torqueCoff") == 0)
+            {
+                rotor.torqueCoff = std::stod(node->value());
+            }
+
+            if(std::strcmp(node->name(),"position") == 0)
+            {
+                double x,y,z;
+                std::sscanf(node->value(),"%lf %lf %lf",&x,&y,&z);
+                rotor.position << x,y,z;
+            }
+
+            if(std::strcmp(node->name(),"axis") == 0)
+            {
+                double x,y,z;
+                std::sscanf(node->value(),"%lf %lf %lf",&x,&y,&z);
+                rotor.axis << x,y,z;
+            }
+
+            if(std::strcmp(node->name(),"direction") == 0)
+            {
+                rotor.direction = std::stoi(node->value());
+            }
+
+            if(std::strcmp(node->name(),"timeConstant") == 0)
+            {
+                rotor.timeConstant = std::stod(node->value());
+            }
+
+            if(std::strcmp(node->name(),"maxSpeed") == 0)
+            {
+                rotor.maxSpeed = std::stod(node->value());
+            }
+
+            if(std::strcmp(node->name(),"hinges") == 0)
+            {
+                rotor.noOfHinges = std::stod(node->first_attribute()->value());
+                int i = 0;
+                for(rapidxml::xml_node<>* hingeNode = node->first_node(); hingeNode && i < rotor.noOfHinges; hingeNode = hingeNode->next_sibling(), i++)
                 {
-                    rotorPos = new Eigen::Vector3d[noOfRotors];
-                    rotorAxes = new Eigen::Vector3d[noOfRotors];
-                    rotorDir = new int[noOfRotors];
+                    parseHinge(hingeNode, &rotor.hinges[i]);
                 }
             }
-            rotorTimeConstant.setZero(noOfRotors);
         }
-        if(std::strcmp(node->name(),"forceCoff") == 0)
-        {
-            forceCoff = std::stod(node->value());
-        }
-        if(std::strcmp(node->name(),"torqueCoff") == 0)
-        {
-            torqueCoff = std::stod(node->value());
-        }
-        if(std::strcmp(node->name(),"positions") == 0)
-        {
-            int i = 0;
-            for (rapidxml::xml_node<>* posNode = node->first_node();
-                posNode && i < noOfRotors;
-                i++, posNode = posNode->next_sibling()) 
-            {
-                double x,y,z;
-                std::sscanf(posNode->value(),"%lf %lf %lf",&x,&y,&z);
-                rotorPos[i] << x,y,z;
-            }   
-        }
-        if(std::strcmp(node->name(),"axes") == 0)
-        {
-            int i = 0;
-            for (rapidxml::xml_node<>* axisNode = node->first_node();
-                axisNode && i < noOfRotors;
-                i++, axisNode = axisNode->next_sibling()) 
-            {
-                double x,y,z;
-                std::sscanf(axisNode->value(),"%lf %lf %lf",&x,&y,&z);
-                rotorAxes[i] << x,y,z;
-                rotorAxes[i].normalize();
-            }   
-        }
-        if(std::strcmp(node->name(),"direction") == 0)
-        {
-            int i = 0;
-            for (rapidxml::xml_node<>* dirNode = node->first_node();
-                dirNode && i < noOfRotors;
-                i++, dirNode = dirNode->next_sibling())
-            {
-                rotorDir[i] = std::stoi(dirNode->value());
-            } 
-        }
-        if(std::strcmp(node->name(),"timeConstants") == 0)
-        {
-            int i = 0;
-            for (rapidxml::xml_node<>* timeNode = node->first_node(); timeNode && i < noOfRotors; i++, timeNode = timeNode->next_sibling()) 
-            {
-                rotorTimeConstant(i) = std::stod(timeNode->value());
-            }
-        }
+        rotors.push_back(rotor);
     }
 }
 
@@ -215,6 +251,44 @@ void UAVparams::loadConfig(std::string configFile)
 UAVparams::~UAVparams()
 {
     singleton = nullptr;
-    delete[] rotorPos;
-    delete[] rotorDir;
+}
+
+Hinge::Hinge(Eigen::Vector3d axis, double max, double min, double trim):
+    axis{axis}, max{max}, min{min}, value{trim}
+{
+    updateValue(value);
+}
+
+Hinge::Hinge(const Hinge &old)
+{
+    this->axis = old.axis;
+    this->min = old.min;
+    this->max = old.max;
+    updateValue(old.value);
+}
+
+Hinge &Hinge::operator=(const Hinge &old)
+{
+    this->axis = old.axis;
+    this->min = old.min;
+    this->max = old.max;
+    updateValue(old.value);
+    return *this;
+}
+
+void Hinge::updateValue(double newValue) 
+{
+    static const Eigen::Matrix3d crossProductMatrix = axis.asSkewSymmetric().toDenseMatrix();
+    static const Eigen::Matrix3d outerProduct = axis * axis.transpose();
+    std::scoped_lock lck(mtx);
+    value = newValue;
+    rot = cos(value) * Eigen::Matrix3d::Identity() 
+        + sin(value) * crossProductMatrix
+        + (1 - cos(value)) * outerProduct;
+}
+
+const Eigen::Matrix3d Hinge::getRot()
+{
+   std::scoped_lock lck(mtx);
+   return rot;
 }
