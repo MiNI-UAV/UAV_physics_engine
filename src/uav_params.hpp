@@ -40,6 +40,17 @@ struct Rotor
     Hinge hinges[2];
 };
 
+struct Jet
+{
+    Eigen::Vector3d position;
+    Eigen::Vector3d axis;
+    int phases;
+    Eigen::VectorXd thrust;
+    Eigen::VectorXd time;
+    int noOfHinges;
+    Hinge hinges[2];
+};
+
 struct UAVparams
 {
     public:
@@ -64,8 +75,12 @@ struct UAVparams
         //Rotor params
         int noOfRotors;
         std::vector<Rotor> rotors;
-        Eigen::VectorXd getTimeContants();
-        Eigen::VectorXd getMaxSpeeds();
+        Eigen::VectorXd getRotorTimeContants();
+        Eigen::VectorXd getRotorMaxSpeeds();
+
+        //Jet params
+        int noOfJets;
+        std::vector<Jet> jets;
 
         //Aerodynamic params
         double S, d;
@@ -77,6 +92,7 @@ struct UAVparams
         
         void setMass(rapidxml::xml_node<> * interiaNode);
         void setRotors(rapidxml::xml_node<> * rotorsNode);
+        void setJets(rapidxml::xml_node<> * rotorsNode);
         void setAero(rapidxml::xml_node<> * aeroNode);
 
         static UAVparams* singleton;

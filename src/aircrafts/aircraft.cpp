@@ -69,7 +69,7 @@ Eigen::VectorXd Aircraft::RHS(double, Eigen::VectorXd local_state) {
     Eigen::Vector<double, 6> accel = invMassMatrix *
         (
             Forces::gravity_loads(r_nb) +
-            Forces::lift_loads(UAVstate::getOm(local_state)) +
+            Forces::rotor_lift_loads(UAVstate::getOm(local_state)) +
             Forces::aerodynamic_loads(r_nb, X, state.getWind()) +
             state.getOuterForce() -
             Matrices::gyroMatrix(X) * massMatrix * UAVstate::getX(local_state)

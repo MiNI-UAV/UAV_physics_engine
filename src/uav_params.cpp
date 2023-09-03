@@ -34,7 +34,7 @@ UAVparams::UAVparams()
 
 UAVparams* UAVparams::singleton = nullptr;
 
-Eigen::VectorXd UAVparams::getTimeContants()
+Eigen::VectorXd UAVparams::getRotorTimeContants()
 {
     auto vec = Eigen::VectorXd(noOfRotors);
     for (int i = 0; i < noOfRotors; i++)
@@ -44,7 +44,7 @@ Eigen::VectorXd UAVparams::getTimeContants()
     return vec;
 }
 
-Eigen::VectorXd UAVparams::getMaxSpeeds()
+Eigen::VectorXd UAVparams::getRotorMaxSpeeds()
 {
     Eigen::VectorXd vec;
     vec.setZero(noOfRotors);
@@ -196,6 +196,85 @@ void UAVparams::setRotors(rapidxml::xml_node<> * rotorsNode)
     }
 }
 
+Eigen::VectorXd parseVectorXd(std::string str, int noOfElem)
+{
+    Eigen::VectorXd res;
+    res.setZero(noOfElem);
+    std::istringstream f(str);
+    std::string s;
+    int i;
+    for (i = 0; i < noOfElem; i++)
+    {
+        if(!getline(f, s, ' '))
+        {
+            std::cerr << "Parse VectorXd error" << std::endl;
+            break;
+        }
+        res(i) = std::stod(s);
+    }
+    if(i != noOfElem)
+    {
+        std::cerr << "Parse VectorXd error" << std::endl;
+        return Eigen::VectorXd(0);
+    }
+    return res;
+}
+
+void UAVparams::setJets(rapidxml::xml_node<> * jetsNode)
+{
+    noOfJets = std::stoi(jetsNode->first_attribute()->value());
+
+    for (rapidxml::xml_node<>* jetNode = jetsNode->first_node(); jetNode; jetNode = jetNode->next_sibling()) 
+    {
+        if(std::strcmp(jetNode->name(),"jet") != 0) continue;
+
+        Jet jet;
+
+        for(rapidxml::xml_node<>* node = jetNode->first_node(); node; node = node->next_sibling())
+        {
+            if(std::strcmp(node->name(),"position") == 0)
+            {
+                double x,y,z;
+                std::sscanf(node->value(),"%lf %lf %lf",&x,&y,&z);
+                jet.position << x,y,z;
+            }
+
+            if(std::strcmp(node->name(),"axis") == 0)
+            {
+                double x,y,z;
+                std::sscanf(node->value(),"%lf %lf %lf",&x,&y,&z);
+                jet.axis << x,y,z;
+            }
+
+            if(std::strcmp(node->name(),"phases") == 0)
+            {
+                jet.phases = std::stoi(node->value());
+            }
+
+            if(std::strcmp(node->name(),"thrust") == 0)
+            {
+                jet.thrust = parseVectorXd(node->value(),jet.phases);
+            }
+
+            if(std::strcmp(node->name(),"time") == 0)
+            {
+                jet.time = parseVectorXd(node->value(),jet.phases);
+            }
+
+            if(std::strcmp(node->name(),"hinges") == 0)
+            {
+                jet.noOfHinges = std::stod(node->first_attribute()->value());
+                int i = 0;
+                for(rapidxml::xml_node<>* hingeNode = node->first_node(); hingeNode && i < jet.noOfHinges; hingeNode = hingeNode->next_sibling(), i++)
+                {
+                    parseHinge(hingeNode, &jet.hinges[i]);
+                }
+            }
+        }
+        jets.push_back(jet);
+    }
+}
+
 void UAVparams::setAero(rapidxml::xml_node<> * aeroNode)
 {
     for (rapidxml::xml_node<>* node = aeroNode->first_node(); node; node = node->next_sibling()) 
@@ -240,6 +319,10 @@ void UAVparams::loadConfig(std::string configFile)
         if(std::strcmp(node->name(),"rotors") == 0)
         {
             setRotors(node);
+        }
+        if(std::strcmp(node->name(),"jets") == 0)
+        {
+            setJets(node);
         }
         if(std::strcmp(node->name(),"aero") == 0)
         {

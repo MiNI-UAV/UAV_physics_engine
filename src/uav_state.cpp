@@ -99,7 +99,7 @@ Eigen::VectorXd UAVstate::getState()
 void UAVstate::setX(Eigen::Vector<double,6> new_x) {x = new_x;}
 
 void UAVstate::setDemandedOm(Eigen::VectorXd newDemandedOm) {
-    static auto maxSpeeds = UAVparams::getSingleton()->getMaxSpeeds();
+    static auto maxSpeeds = UAVparams::getSingleton()->getRotorMaxSpeeds();
     newDemandedOm = newDemandedOm.cwiseMin(maxSpeeds);
     demandedAngularBuf[demandedBufSwitch] = newDemandedOm;
     demanded_ptr = demandedAngularBuf + demandedBufSwitch;

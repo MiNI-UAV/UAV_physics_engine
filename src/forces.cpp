@@ -18,7 +18,7 @@ Vector<double,6> Forces::gravity_loads(const Matrix3d& r_nb)
     return Fg;
 }
 
-Vector<double,6> Forces::lift_loads(VectorXd rotorAngularVelocity)
+Vector<double,6> Forces::rotor_lift_loads(VectorXd rotorAngularVelocity)
 {
     double rho = getRho();
     UAVparams* params = UAVparams::getSingleton();
@@ -85,7 +85,7 @@ Vector<double, 6> Forces::aerodynamic_loads(const Matrix3d& r_nb, const Vector<d
 
 VectorXd Forces::angularAcceleration(VectorXd demandedAngularVelocity, VectorXd rotorAngularVelocity)
 {
-    static const VectorXd rotorTimeConstants = UAVparams::getSingleton()->getTimeContants();
+    static const VectorXd rotorTimeConstants = UAVparams::getSingleton()->getRotorTimeContants();
     VectorXd res;
     res = (demandedAngularVelocity - rotorAngularVelocity);
     return res.cwiseQuotient(rotorTimeConstants);
