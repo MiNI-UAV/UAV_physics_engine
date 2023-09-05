@@ -40,7 +40,7 @@ struct Rotor
     Hinge hinges[2];
 };
 
-struct Jet
+struct JetParams
 {
     Eigen::Vector3d position;
     Eigen::Vector3d axis;
@@ -74,13 +74,13 @@ struct UAVparams
 
         //Rotor params
         int noOfRotors;
-        std::vector<Rotor> rotors;
+        std::unique_ptr<Rotor[]> rotors;
         Eigen::VectorXd getRotorTimeContants();
         Eigen::VectorXd getRotorMaxSpeeds();
 
-        //Jet params
+        //JetParams params
         int noOfJets;
-        std::vector<Jet> jets;
+        std::unique_ptr<JetParams[]> jets;
 
         //Aerodynamic params
         double S, d;

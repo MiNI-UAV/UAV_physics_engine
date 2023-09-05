@@ -133,11 +133,15 @@ void UAVparams::setRotors(rapidxml::xml_node<> * rotorsNode)
 {
     noOfRotors = std::stoi(rotorsNode->first_attribute()->value());
 
-    for (rapidxml::xml_node<>* rotorNode = rotorsNode->first_node(); rotorNode; rotorNode = rotorNode->next_sibling()) 
+    if(noOfRotors == 0) return; 
+
+    rotors = std::make_unique<Rotor[]>(noOfRotors);
+
+    int i = 0;
+    for (rapidxml::xml_node<>* rotorNode = rotorsNode->first_node(); rotorNode && i < noOfRotors; rotorNode = rotorNode->next_sibling(), i++) 
     {
         if(std::strcmp(rotorNode->name(),"rotor") != 0) continue;
 
-        Rotor rotor;
 
         for(rapidxml::xml_node<>* node = rotorNode->first_node(); node; node = node->next_sibling())
         {
@@ -145,54 +149,53 @@ void UAVparams::setRotors(rapidxml::xml_node<> * rotorsNode)
 
             if(std::strcmp(node->name(),"forceCoff") == 0)
             {
-                rotor.forceCoff = std::stod(node->value());
+                rotors[i].forceCoff = std::stod(node->value());
             }
 
             if(std::strcmp(node->name(),"torqueCoff") == 0)
             {
-                rotor.torqueCoff = std::stod(node->value());
+                rotors[i].torqueCoff = std::stod(node->value());
             }
 
             if(std::strcmp(node->name(),"position") == 0)
             {
                 double x,y,z;
                 std::sscanf(node->value(),"%lf %lf %lf",&x,&y,&z);
-                rotor.position << x,y,z;
+                rotors[i].position << x,y,z;
             }
 
             if(std::strcmp(node->name(),"axis") == 0)
             {
                 double x,y,z;
                 std::sscanf(node->value(),"%lf %lf %lf",&x,&y,&z);
-                rotor.axis << x,y,z;
+                rotors[i].axis << x,y,z;
             }
 
             if(std::strcmp(node->name(),"direction") == 0)
             {
-                rotor.direction = std::stoi(node->value());
+                rotors[i].direction = std::stoi(node->value());
             }
 
             if(std::strcmp(node->name(),"timeConstant") == 0)
             {
-                rotor.timeConstant = std::stod(node->value());
+                rotors[i].timeConstant = std::stod(node->value());
             }
 
             if(std::strcmp(node->name(),"maxSpeed") == 0)
             {
-                rotor.maxSpeed = std::stod(node->value());
+                rotors[i].maxSpeed = std::stod(node->value());
             }
 
             if(std::strcmp(node->name(),"hinges") == 0)
             {
-                rotor.noOfHinges = std::stod(node->first_attribute()->value());
-                int i = 0;
-                for(rapidxml::xml_node<>* hingeNode = node->first_node(); hingeNode && i < rotor.noOfHinges; hingeNode = hingeNode->next_sibling(), i++)
+                rotors[i].noOfHinges = std::stod(node->first_attribute()->value());
+                int j = 0;
+                for(rapidxml::xml_node<>* hingeNode = node->first_node(); hingeNode && j < rotors[i].noOfHinges; hingeNode = hingeNode->next_sibling(), j++)
                 {
-                    parseHinge(hingeNode, &rotor.hinges[i]);
+                    parseHinge(hingeNode, &(rotors[i].hinges[j]));
                 }
             }
         }
-        rotors.push_back(rotor);
     }
 }
 
@@ -224,11 +227,14 @@ void UAVparams::setJets(rapidxml::xml_node<> * jetsNode)
 {
     noOfJets = std::stoi(jetsNode->first_attribute()->value());
 
-    for (rapidxml::xml_node<>* jetNode = jetsNode->first_node(); jetNode; jetNode = jetNode->next_sibling()) 
+    if(noOfJets == 0) return; 
+
+    jets = std::make_unique<JetParams[]>(noOfJets);
+
+    int i = 0;
+    for (rapidxml::xml_node<>* jetNode = jetsNode->first_node(); jetNode && i < noOfJets; jetNode = jetNode->next_sibling(), i++) 
     {
         if(std::strcmp(jetNode->name(),"jet") != 0) continue;
-
-        Jet jet;
 
         for(rapidxml::xml_node<>* node = jetNode->first_node(); node; node = node->next_sibling())
         {
@@ -236,42 +242,41 @@ void UAVparams::setJets(rapidxml::xml_node<> * jetsNode)
             {
                 double x,y,z;
                 std::sscanf(node->value(),"%lf %lf %lf",&x,&y,&z);
-                jet.position << x,y,z;
+                jets[i].position << x,y,z;
             }
 
             if(std::strcmp(node->name(),"axis") == 0)
             {
                 double x,y,z;
                 std::sscanf(node->value(),"%lf %lf %lf",&x,&y,&z);
-                jet.axis << x,y,z;
+                jets[i].axis << x,y,z;
             }
 
             if(std::strcmp(node->name(),"phases") == 0)
             {
-                jet.phases = std::stoi(node->value());
+                jets[i].phases = std::stoi(node->value());
             }
 
             if(std::strcmp(node->name(),"thrust") == 0)
             {
-                jet.thrust = parseVectorXd(node->value(),jet.phases);
+                jets[i].thrust = parseVectorXd(node->value(),jets[i].phases);
             }
 
             if(std::strcmp(node->name(),"time") == 0)
             {
-                jet.time = parseVectorXd(node->value(),jet.phases);
+                jets[i].time = parseVectorXd(node->value(),jets[i].phases);
             }
 
             if(std::strcmp(node->name(),"hinges") == 0)
             {
-                jet.noOfHinges = std::stod(node->first_attribute()->value());
-                int i = 0;
-                for(rapidxml::xml_node<>* hingeNode = node->first_node(); hingeNode && i < jet.noOfHinges; hingeNode = hingeNode->next_sibling(), i++)
+                jets[i].noOfHinges = std::stod(node->first_attribute()->value());
+                int j = 0;
+                for(rapidxml::xml_node<>* hingeNode = node->first_node(); hingeNode && j < jets[i].noOfHinges; hingeNode = hingeNode->next_sibling(), j++)
                 {
-                    parseHinge(hingeNode, &jet.hinges[i]);
+                    parseHinge(hingeNode, &(jets[i].hinges[j]));
                 }
             }
         }
-        jets.push_back(jet);
     }
 }
 
