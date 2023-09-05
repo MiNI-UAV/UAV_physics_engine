@@ -5,6 +5,7 @@
 #include "forces.hpp"
 #include "matrices.hpp"
 #include "defines.hpp"
+#include "drives/drive.hpp"
 
 
 using namespace Eigen;
@@ -18,16 +19,15 @@ Vector<double,6> Forces::gravity_loads(const Matrix3d& r_nb)
     return Fg;
 }
 
-Vector<double,6> Forces::rotor_lift_loads(VectorXd rotorAngularVelocity)
+Vector<double,6> Forces::rotor_lift_loads(int noOfRotors, Rotor* rotors, VectorXd rotorAngularVelocity)
 {
     double rho = getRho();
-    UAVparams* params = UAVparams::getSingleton();
     Vector3d Fr = {0.0, 0.0, 0.0};
     Vector3d Mr = {0.0, 0.0, 0.0};
 
-    for (int i = 0; i < params->noOfRotors; i++)
+    for (int i = 0; i < noOfRotors; i++)
     {
-        Rotor& rotor = params->rotors[i];
+        Rotor& rotor = rotors[i];
         double om2 = std::pow(rotorAngularVelocity(i),2);
         auto axis = rotor.axis;
         for (int j = 0; j < rotor.noOfHinges; j++)
@@ -42,6 +42,30 @@ Vector<double,6> Forces::rotor_lift_loads(VectorXd rotorAngularVelocity)
     Vector<double,6> res;
     res << Fr, Mr;
     return res; 
+}
+
+Vector<double, 6> Forces::jet_lift_loads(int noOfJets, Jet *jets, double time)
+{
+    Vector3d Fr = {0.0, 0.0, 0.0};
+    Vector3d Mr = {0.0, 0.0, 0.0};
+
+    for (int i = 0; i < noOfJets; i++)
+    {
+        Jet& jet = jets[i];
+        double thrust = jet.getThrust(time);
+        if(thrust == 0.0) continue;
+        auto axis = jet.axis;
+        for (int j = 0; j < jet.noOfHinges; j++)
+        {
+            axis = jet.hinges[j].getRot()*axis;
+        }
+        auto Fi = axis*thrust;
+        Fr += Fi;
+        Mr += jet.position.cross(Fi);
+    }
+    Vector<double,6> res;
+    res << Fr, Mr;
+    return res;
 }
 
 double Forces::dynamic_pressure([[maybe_unused]]double height, double Vtot)

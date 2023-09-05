@@ -6,18 +6,6 @@
 using namespace Eigen;
 using namespace std;
 
-Matrices::Matrices()
-{   
-    updateMatrices();
-}
-
-
-void Matrices::updateMatrices()
-{
-    massMatrix = massMatrix2();
-    invMassMatrix = massMatrix.inverse();
-}
-
 Vector<double, 6> Matrices::quaterionsToRPY(Vector<double, 7> y)
 {
     Vector<double, 6> Y_RPY;
@@ -66,12 +54,7 @@ Matrix4d Matrices::OM_conj(Vector<double, 6> x)
     return -0.5 *om_conj;
 }
 
-void Matrices::reduceMass(double mass_delta) {
-    UAVparams::getSingleton()->m -= mass_delta;
-    updateMatrices();
-}
-
-Matrix<double, 6, 6> Matrices::massMatrix2()
+Matrix<double, 6, 6> Matrices::massMatrix()
 {
     UAVparams* params = UAVparams::getSingleton();
     //mass matrix

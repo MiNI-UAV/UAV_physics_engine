@@ -4,52 +4,7 @@
 #include <memory>
 #include "rapidxml/rapidxml.hpp"
 
-
-class Hinge
-{
-public:
-    Hinge() = default;
-    Hinge(Eigen::Vector3d axis, double max, double min, double trim);
-    Hinge(const Hinge& old);
-    Hinge& operator=(const Hinge& old);
-
-    void updateValue(double newValue);
-    const Eigen::Matrix3d getRot();
-
-private:
-    Eigen::Vector3d axis;
-    double max;
-    double min;
-
-    std::mutex mtx;
-    double value;
-    Eigen::Matrix3d rot;
-};
-
-
-struct Rotor
-{
-    double forceCoff;
-    double torqueCoff;
-    Eigen::Vector3d position;
-    Eigen::Vector3d axis;
-    int direction;
-    double timeConstant;
-    double maxSpeed;
-    int noOfHinges;
-    Hinge hinges[2];
-};
-
-struct JetParams
-{
-    Eigen::Vector3d position;
-    Eigen::Vector3d axis;
-    int phases;
-    Eigen::VectorXd thrust;
-    Eigen::VectorXd time;
-    int noOfHinges;
-    Hinge hinges[2];
-};
+#include "drives/drive.hpp"
 
 struct UAVparams
 {
@@ -78,9 +33,9 @@ struct UAVparams
         Eigen::VectorXd getRotorTimeContants();
         Eigen::VectorXd getRotorMaxSpeeds();
 
-        //JetParams params
+        //Jet params
         int noOfJets;
-        std::unique_ptr<JetParams[]> jets;
+        std::unique_ptr<Jet[]> jets;
 
         //Aerodynamic params
         double S, d;

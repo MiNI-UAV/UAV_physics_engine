@@ -8,11 +8,20 @@
 #include "../matrices.hpp"
 #include "../forces.hpp"
 #include "../defines.hpp"
+#include "../drives/drive.hpp"
 
 
-Aircraft::Aircraft()
+Aircraft::Aircraft():
 {
-    massMatrix = Matrices::massMatrix2();
+    UAVparams* params = UAVparams::getSingleton();
+    noOfRotors = params->noOfRotors;
+    noOfJets = params->noOfJets;
+    rotors = std::make_unique<Rotor[]>(noOfRotors); 
+    jets = std::make_unique<Jet[]>(noOfJets); 
+    std::copy(params->rotors.get(), params->rotors.get() + noOfRotors, rotors.get());
+    std::copy(params->jets.get(), params->jets.get() + noOfJets, jets.get());
+
+    massMatrix = Matrices::massMatrix();
     invMassMatrix = massMatrix.inverse();
 }
 
@@ -50,7 +59,7 @@ void Aircraft::reduceMass(double delta_m)
     invMassMatrix = massMatrix.inverse();
 }
 
-Eigen::VectorXd Aircraft::RHS(double, Eigen::VectorXd local_state) {
+Eigen::VectorXd Aircraft::RHS(double time, Eigen::VectorXd local_state) {
     VectorXd res;
     res.setZero(local_state.size());
     auto Y = UAVstate::getY(local_state);
@@ -69,7 +78,8 @@ Eigen::VectorXd Aircraft::RHS(double, Eigen::VectorXd local_state) {
     Eigen::Vector<double, 6> accel = invMassMatrix *
         (
             Forces::gravity_loads(r_nb) +
-            Forces::rotor_lift_loads(UAVstate::getOm(local_state)) +
+            Forces::rotor_lift_loads(noOfRotors, rotors.get(),UAVstate::getOm(local_state)) +
+            Forces::jet_lift_loads(noOfJets, jets.get(), time) +
             Forces::aerodynamic_loads(r_nb, X, state.getWind()) +
             state.getOuterForce() -
             Matrices::gyroMatrix(X) * massMatrix * UAVstate::getX(local_state)

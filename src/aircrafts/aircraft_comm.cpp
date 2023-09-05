@@ -61,3 +61,9 @@ void Aircraft::sendState(zmq::socket_t* socket)
     message.rebuild(s.data(), s.size());
     socket->send(message,zmq::send_flags::none);
 }
+
+void Aircraft::startJet(int index)
+{
+    if(index < 0 || index >= noOfJets) return;
+    jets[index].start(state.real_time);
+}
