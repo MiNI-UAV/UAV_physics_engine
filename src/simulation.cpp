@@ -24,7 +24,7 @@ Simulation::Simulation()
 {
     aircraft = new Aircraft();
 
-    UAVparams* params = UAVparams::getSingleton();
+    const UAVparams* params = UAVparams::getSingleton();
     stateOutSock = zmq::socket_t(_ctx, zmq::socket_type::pub);
 
     std::stringstream ss;

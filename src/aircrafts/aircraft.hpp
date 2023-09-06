@@ -6,8 +6,8 @@
 #include "../uav_state.hpp"
 #include "../uav_params.hpp"
 #include "../matrices.hpp"
-#include "../drives/drive.hpp"
-
+#include "../components/drive.hpp"
+#include "../components/control_surfaces.hpp"
 
 class Aircraft
 {
@@ -35,6 +35,7 @@ protected:
     std::unique_ptr<Rotor[]> rotors;
     int noOfJets;
     std::unique_ptr<Jet[]> jets;
+    ControlSurfaces surfaces;
 
     void reduceMass(double delta_m);
     virtual Eigen::VectorXd RHS(double, Eigen::VectorXd);

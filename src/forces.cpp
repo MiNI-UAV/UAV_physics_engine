@@ -5,14 +5,14 @@
 #include "forces.hpp"
 #include "matrices.hpp"
 #include "defines.hpp"
-#include "drives/drive.hpp"
+#include "components/drive.hpp"
 
 
 using namespace Eigen;
 
 Vector<double,6> Forces::gravity_loads(const Matrix3d& r_nb)
 {
-    UAVparams* params = UAVparams::getSingleton();
+    const UAVparams* params = UAVparams::getSingleton();
     Vector<double,6> Fg;
     Fg.setZero();
     Fg.head<3>() = r_nb * Eigen::Vector3d(0.0,0.0,(params->m*GRAVITY_CONST));
@@ -68,6 +68,37 @@ Vector<double, 6> Forces::jet_lift_loads(int noOfJets, Jet *jets, double time)
     return res;
 }
 
+Vector<double, 6> Forces::aerodynamic_loads(const Vector<double, 6> &x, Vector3d wind_body,
+    const ControlSurfaces &surface, double height)
+{   
+    static const double S = UAVparams::getSingleton()->S;
+    static const double d = UAVparams::getSingleton()->d;
+
+    Vector<double, 6> C = Vector<double, 6>::Zero();
+    Vector3d velocity = x.segment(0,3);
+    Vector3d diff = velocity-wind_body;
+    double Vtot = diff.norm();
+    if(Vtot == 0.0)
+    {
+        return Vector<double, 6>::Zero();
+    }
+    double alpha = atan2(diff(2),diff(0));
+    double beta = asin(diff(1)/Vtot);
+    double pd = dynamic_pressure(height,Vtot);
+    auto r_wb = Matrices::R_wind_b(alpha,beta);
+    if(surface.getNoOfSurface() > 0)
+    {
+        C += surface.getCofficients();
+    }
+
+    //TODO: Implement static cofficients here
+
+    Vector<double, 6> Fa = Vector<double, 6>::Zero();
+    Fa.head<3>() = pd*S*(r_wb*C.head<3>());
+    Fa.tail<3>() = pd*S*d*(r_wb*C.tail<3>());
+    return Fa;
+}
+
 double Forces::dynamic_pressure([[maybe_unused]]double height, double Vtot)
 {
     //TODO: More advanced model
@@ -80,7 +111,8 @@ double Forces::getRho()
     return DEFAULT_RHO;
 }
 
-Vector<double, 6> Forces::aerodynamic_loads(const Matrix3d& r_nb, const Vector<double, 6> &x, Vector3d wind_global)
+Vector<double, 6> Forces::aerodynamic_loads(const Matrix3d& r_nb, const Vector<double, 6> &x,
+    Vector3d wind_global)
 {
     static const double Ci[6] = {UAVparams::getSingleton()->Ci[0],UAVparams::getSingleton()->Ci[1],UAVparams::getSingleton()->Ci[2],
         UAVparams::getSingleton()->Ci[3],UAVparams::getSingleton()->Ci[4],UAVparams::getSingleton()->Ci[5]}; //TODO: fix it...

@@ -6,9 +6,8 @@
 #include "common.hpp"
 
 
-void parseArgs(int argc, char** argv)
+void parseArgs(int argc, char** argv, UAVparams* params)
 {
-    UAVparams* params = UAVparams::getSingleton();
     cxxopts::Options options("uav", "Process representing movement of one UAV with rigid frame and constant propellers");
     options.add_options()
         ("c,config", "Path of config file", cxxopts::value<std::string>()->default_value("config.xml"))
@@ -36,7 +35,7 @@ void parseArgs(int argc, char** argv)
 int main(int argc, char** argv)
 {
     UAVparams params;
-    parseArgs(argc,argv);
+    parseArgs(argc,argv,&params);
     std::cout << "Starting simulation!" <<std::endl;
     Simulation simulation;
     simulation.run();

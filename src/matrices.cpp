@@ -56,7 +56,7 @@ Matrix4d Matrices::OM_conj(Vector<double, 6> x)
 
 Matrix<double, 6, 6> Matrices::massMatrix()
 {
-    UAVparams* params = UAVparams::getSingleton();
+    const UAVparams* params = UAVparams::getSingleton();
     //mass matrix
     Matrix<double, 6, 6> massMatrix;
     massMatrix.setZero();
@@ -141,4 +141,18 @@ Matrix<double, 3, 3> Matrices::R_nb(const Vector<double,7>&  y)
             2*(e(1)*e(2)-e(0)*e(3))                  , e(0)*e(0)-e(1)*e(1)+e(2)*e(2)-e(3)*e(3)   , 2*(e(2)*e(3)+e(0)*e(1)),
             2*(e(1)*e(3)+e(0)*e(2))                  , 2*(e(2)*e(3)-e(0)*e(1))                   , e(0)*e(0)-e(1)*e(1)-e(2)*e(2)+e(3)*e(3);
     return r_nb;
+}
+
+Matrix<double, 3, 3> Matrices::R_wind_b(double alpha, double beta)
+{
+    Matrix<double, 3, 3> r_wind_b;
+    double ca = cos(alpha);
+    double sa = sin(alpha);
+    double cb = cos(beta);
+    double sb = sin(beta);
+
+    r_wind_b << ca*cb , -ca*sb, -sa,
+                sb    , cb    , 0.0,
+                sa*cb , -sa*sb,  ca;
+    return r_wind_b;
 }

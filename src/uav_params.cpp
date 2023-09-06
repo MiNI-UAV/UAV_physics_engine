@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <mutex>
 #include "rapidxml/rapidxml.hpp"
+#include "common.hpp"
 
 /// @brief Initialize default data
 UAVparams::UAVparams() 
@@ -34,7 +35,7 @@ UAVparams::UAVparams()
 
 UAVparams* UAVparams::singleton = nullptr;
 
-Eigen::VectorXd UAVparams::getRotorTimeContants()
+Eigen::VectorXd UAVparams::getRotorTimeContants() const
 {
     auto vec = Eigen::VectorXd(noOfRotors);
     for (int i = 0; i < noOfRotors; i++)
@@ -44,7 +45,7 @@ Eigen::VectorXd UAVparams::getRotorTimeContants()
     return vec;
 }
 
-Eigen::VectorXd UAVparams::getRotorMaxSpeeds()
+Eigen::VectorXd UAVparams::getRotorMaxSpeeds() const
 {
     Eigen::VectorXd vec;
     vec.setZero(noOfRotors);
@@ -55,7 +56,7 @@ Eigen::VectorXd UAVparams::getRotorMaxSpeeds()
     return vec;
 }
 
-UAVparams *UAVparams::getSingleton()
+const UAVparams *UAVparams::getSingleton()
 {
     return singleton;
 }
@@ -199,30 +200,6 @@ void UAVparams::setRotors(rapidxml::xml_node<> * rotorsNode)
     }
 }
 
-Eigen::VectorXd parseVectorXd(std::string str, int noOfElem)
-{
-    Eigen::VectorXd res;
-    res.setZero(noOfElem);
-    std::istringstream f(str);
-    std::string s;
-    int i;
-    for (i = 0; i < noOfElem; i++)
-    {
-        if(!getline(f, s, ' '))
-        {
-            std::cerr << "Parse VectorXd error" << std::endl;
-            break;
-        }
-        res(i) = std::stod(s);
-    }
-    if(i != noOfElem)
-    {
-        std::cerr << "Parse VectorXd error" << std::endl;
-        return Eigen::VectorXd(0);
-    }
-    return res;
-}
-
 void UAVparams::setJets(rapidxml::xml_node<> * jetsNode)
 {
     noOfJets = std::stoi(jetsNode->first_attribute()->value());
@@ -299,6 +276,43 @@ void UAVparams::setAero(rapidxml::xml_node<> * aeroNode)
     }
 }
 
+void UAVparams::setControlSurface(rapidxml::xml_node<> *surfaceNode)
+{
+    int noOfSurface = std::stoi(surfaceNode->first_attribute()->value());
+
+    if(noOfSurface == 0) return; 
+
+    Eigen::Matrix<double,6,-1> matrix;
+    Eigen::VectorXd min, max, trim;
+    matrix.setZero(6,0);
+    max.setZero(0);
+    min.setZero(0);
+    trim.setZero(0);
+
+    for (rapidxml::xml_node<>* node = surfaceNode->first_node(); node; node = node->next_sibling()) 
+    {
+        if(std::strcmp(node->name(),"matrix") == 0)
+        {
+            matrix = parseMatrixXd(node->value(),6,noOfSurface,',');
+        }
+        if(std::strcmp(node->name(),"min") == 0)
+        {
+            min = parseVectorXd(node->value(),noOfSurface,',');
+        }
+        if(std::strcmp(node->name(),"max") == 0)
+        {
+            max = parseVectorXd(node->value(),noOfSurface,',');
+        }
+        if(std::strcmp(node->name(),"trim") == 0)
+        {
+            trim = parseVectorXd(node->value(),noOfSurface,',');
+        }
+    }
+
+
+    surfaces = ControlSurfaces(noOfSurface,matrix,min,max,trim);
+}
+
 void UAVparams::loadConfig(std::string configFile)
 {
     if(!std::filesystem::exists(configFile))
@@ -332,6 +346,10 @@ void UAVparams::loadConfig(std::string configFile)
         if(std::strcmp(node->name(),"aero") == 0)
         {
             setAero(node);
+        }
+        if(std::strcmp(node->name(),"surface") == 0)
+        {
+            setControlSurface(node);
         }
     }
 }

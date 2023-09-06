@@ -6,7 +6,7 @@
 
 UAVstate::UAVstate()
 {
-    UAVparams* params = UAVparams::getSingleton();
+    const UAVparams* params = UAVparams::getSingleton();
     noOfRotors = params->noOfRotors;
 
     y.setZero();
