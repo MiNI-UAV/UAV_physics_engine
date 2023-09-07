@@ -11,20 +11,7 @@
 UAVparams::UAVparams() 
 {
     name = "default";
-
-    m = 5;
-    Ix = 10;
-    Iy = 11;
-    Iz = 12;
-    Ixy = 1;
-    Ixz = 2;
-    Iyz = 3;
-
-    noOfRotors = 0;
-
-    S = 0.1;
-    d = 0.001;
-
+    
     if(singleton != nullptr)
     {
         std::cerr << "Only one instance of UAVParams should exist";
@@ -263,15 +250,27 @@ void UAVparams::setAero(rapidxml::xml_node<> * aeroNode)
     {
         if(std::strcmp(node->name(),"S") == 0)
         {
-            S = std::stod(node->value());
+            aero_coffs.S = std::stod(node->value());
         }
         if(std::strcmp(node->name(),"d") == 0)
         {
-            d = std::stod(node->value());
+            aero_coffs.d = std::stod(node->value());
         }
-        if(std::strcmp(node->name(),"C") == 0)
+        if(std::strcmp(node->name(),"eAR") == 0)
         {
-            std::sscanf(node->value(),"%lf %lf %lf %lf %lf %lf",&Ci[0],&Ci[1],&Ci[2],&Ci[3],&Ci[4],&Ci[5]);
+            aero_coffs.eAR = std::stod(node->value());
+        }
+        if(std::strcmp(node->name(),"C0") == 0)
+        {
+            aero_coffs.C0 =  parseVectorXd(node->value(), 6, ',');
+        }
+        if(std::strcmp(node->name(),"Cpqr") == 0)
+        {
+            aero_coffs.Cpqr =  parseMatrixXd(node->value(), 6,3, ',');
+        }
+        if(std::strcmp(node->name(),"Cab") == 0)
+        {
+            aero_coffs.Cab =  parseMatrixXd(node->value(), 6,4, ',');
         }
     }
 }

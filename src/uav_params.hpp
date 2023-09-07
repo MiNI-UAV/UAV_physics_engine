@@ -4,8 +4,7 @@
 #include <memory>
 #include "rapidxml/rapidxml.hpp"
 
-#include "components/drive.hpp"
-#include "components/control_surfaces.hpp"
+#include "components/components.hpp"
 
 struct UAVparams
 {
@@ -42,8 +41,7 @@ struct UAVparams
         ControlSurfaces surfaces;
 
         //Aerodynamic params
-        double S, d;
-        double Ci[6] = {1.0,1.0,1.0,0.0,0.0,0.0};
+        AeroCofficients aero_coffs;
 
         const static UAVparams* getSingleton();
 

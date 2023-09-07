@@ -8,7 +8,7 @@
 #include "../matrices.hpp"
 #include "../forces.hpp"
 #include "../defines.hpp"
-#include "../components/drive.hpp"
+#include "../components/components.hpp"
 
 
 Aircraft::Aircraft()
@@ -21,6 +21,7 @@ Aircraft::Aircraft()
     std::copy(params->rotors.get(), params->rotors.get() + noOfRotors, rotors.get());
     std::copy(params->jets.get(), params->jets.get() + noOfJets, jets.get());
     surfaces = params->surfaces;
+    aero = params->aero_coffs;
 
     massMatrix = Matrices::massMatrix();
     invMassMatrix = massMatrix.inverse();
@@ -81,8 +82,7 @@ Eigen::VectorXd Aircraft::RHS(double time, Eigen::VectorXd local_state) {
             Forces::gravity_loads(r_nb) +
             Forces::rotor_lift_loads(noOfRotors, rotors.get(),UAVstate::getOm(local_state)) +
             Forces::jet_lift_loads(noOfJets, jets.get(), time) +
-            Forces::aerodynamic_loads(X,r_nb*state.getWind(),surfaces,-Y.z()) +
-            Forces::aerodynamic_loads(r_nb, X, state.getWind()) +
+            Forces::aerodynamic_loads(X,r_nb*state.getWind(),surfaces, aero, -Y.z()) +
             state.getOuterForce() -
             Matrices::gyroMatrix(X) * massMatrix * UAVstate::getX(local_state)
         );

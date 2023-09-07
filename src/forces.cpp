@@ -1,11 +1,12 @@
 #include <Eigen/Dense>
 #include <cmath>
 #include <iostream>
+#include <numbers>
 #include "uav_params.hpp"
 #include "forces.hpp"
 #include "matrices.hpp"
 #include "defines.hpp"
-#include "components/drive.hpp"
+#include "components/components.hpp"
 
 
 using namespace Eigen;
@@ -69,16 +70,14 @@ Vector<double, 6> Forces::jet_lift_loads(int noOfJets, Jet *jets, double time)
 }
 
 Vector<double, 6> Forces::aerodynamic_loads(const Vector<double, 6> &x, Vector3d wind_body,
-    const ControlSurfaces &surface, double height)
+    const ControlSurfaces &surface, const AeroCofficients &aero, double height)
 {   
-    static const double S = UAVparams::getSingleton()->S;
-    static const double d = UAVparams::getSingleton()->d;
-
-    Vector<double, 6> C = Vector<double, 6>::Zero();
+    //C0
+    Vector<double, 6> C = aero.C0;
     Vector3d velocity = x.segment(0,3);
     Vector3d diff = velocity-wind_body;
     double Vtot = diff.norm();
-    if(Vtot == 0.0)
+    if(Vtot <= DOUBLE_EPS)
     {
         return Vector<double, 6>::Zero();
     }
@@ -86,16 +85,31 @@ Vector<double, 6> Forces::aerodynamic_loads(const Vector<double, 6> &x, Vector3d
     double beta = asin(diff(1)/Vtot);
     double pd = dynamic_pressure(height,Vtot);
     auto r_wb = Matrices::R_wind_b(alpha,beta);
+
+    //Cpqr
+    C += (1.0/(2.0*Vtot))*(aero.Cpqr*x.tail<3>());
+
+    //Cab
+    C += aero.Cab * Vector4d(alpha,beta,alpha*alpha,beta*beta);
+
+    //Cab
+    C += aero.Cab * Vector4d(alpha,beta,alpha*alpha,beta*beta);
+
+    //Control surface
     if(surface.getNoOfSurface() > 0)
     {
         C += surface.getCofficients();
     }
 
-    //TODO: Implement static cofficients here
+    //eAR
+    if(aero.eAR > DOUBLE_EPS)
+    {
+        C(0) += (C(2)*C(2))/(std::numbers::pi * aero.eAR);
+    }
 
     Vector<double, 6> Fa = Vector<double, 6>::Zero();
-    Fa.head<3>() = pd*S*(r_wb*C.head<3>());
-    Fa.tail<3>() = pd*S*d*(r_wb*C.tail<3>());
+    Fa.head<3>() = pd*aero.S*(r_wb*C.head<3>());
+    Fa.tail<3>() = pd*aero.S*aero.d*(r_wb*C.tail<3>());
     return Fa;
 }
 
@@ -109,34 +123,6 @@ double Forces::getRho()
 {
     //TODO: More advanced model
     return DEFAULT_RHO;
-}
-
-Vector<double, 6> Forces::aerodynamic_loads(const Matrix3d& r_nb, const Vector<double, 6> &x,
-    Vector3d wind_global)
-{
-    static const double Ci[6] = {UAVparams::getSingleton()->Ci[0],UAVparams::getSingleton()->Ci[1],UAVparams::getSingleton()->Ci[2],
-        UAVparams::getSingleton()->Ci[3],UAVparams::getSingleton()->Ci[4],UAVparams::getSingleton()->Ci[5]}; //TODO: fix it...
-    static const double S = UAVparams::getSingleton()->S;
-    static const double d = UAVparams::getSingleton()->d;
-
-    Vector<double, 6> Fa(Ci);
-    Vector3d wind = r_nb*wind_global;
-    Vector3d velocity = x.segment(0,3);
-    Vector3d diff = velocity-wind;
-    double Vtot = diff.norm();
-    if(Vtot == 0.0)
-    {
-        Fa.setZero();
-        return Fa;
-    }
-    double alpha = atan2(diff(2),diff(0));
-    double beta = asin(diff(1)/Vtot);
-    Fa(0) *= (cos(alpha)*cos(beta));
-    Fa(1) *= sin(beta);
-    Fa(2) *= (sin(alpha)*cos(beta));
-    Fa.segment(3,3) *= d;
-    Fa *= -(dynamic_pressure(-x(2),Vtot)*S);
-    return Fa;
 }
 
 VectorXd Forces::angularAcceleration(VectorXd demandedAngularVelocity, VectorXd rotorAngularVelocity)

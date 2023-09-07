@@ -6,3 +6,4 @@
 #define USE_QUATERIONS 1
 #define FRICTION_EPS 0.001
 #define GENTLY_PUSH 0.15
+#define DOUBLE_EPS 1e-5
