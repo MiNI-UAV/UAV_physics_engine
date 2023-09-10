@@ -7,6 +7,7 @@
 #include "common.hpp"
 #include "matrices.hpp"
 #include "aircrafts/aircraft.hpp"
+#include "defines.hpp"
 
 void setWind(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& sock)
 {
@@ -224,6 +225,46 @@ void solidSurfColision(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& 
     return; 
 }
 
+void setControlSurface(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& sock)
+{
+    zmq::message_t response("error",5);
+    std::string msg = msg_str.substr(2);
+    if(strcmp(msg.data(),"trim") == 0)
+    {
+        aircraft->trim();
+        response.rebuild("ok",2);
+    }
+    else
+    {
+        std::istringstream f(msg);
+        std::string res;
+        Eigen::VectorXd surface(CONTROL_SURFACE_LIMIT);
+        int i = 0;
+        while(getline(f, res, ','))
+        {
+            surface[i] = std::stod(res);
+            i++;
+        }
+        surface = surface.head(i);
+        if(aircraft->setSurface(surface))
+            response.rebuild("ok",2);
+    }
+    sock.send(response,zmq::send_flags::none);
+    return; 
+}
+
+void startJet(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& sock)
+{
+    zmq::message_t response("error",5);
+    int index = std::stoi(msg_str.substr(2));
+    if(aircraft->startJet(index))
+    {
+        response.rebuild("ok",2);
+    }
+    sock.send(response,zmq::send_flags::none);
+    return; 
+}
+
 void controlListenerJob(zmq::context_t* ctx, std::string address, Aircraft* aircraft)
 {
     std::cout << "Starting control subscriber: " << address << std::endl;
@@ -259,6 +300,12 @@ void controlListenerJob(zmq::context_t* ctx, std::string address, Aircraft* airc
             break;
             case 'j':
                 solidSurfColision(aircraft,msg_str,controlInSock);
+            break;
+            case 'e':
+                setControlSurface(aircraft,msg_str,controlInSock);
+            break;
+            case 't':
+                startJet(aircraft,msg_str,controlInSock);
             break;
             default:
                 zmq::message_t response("error",5);

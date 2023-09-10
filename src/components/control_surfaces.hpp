@@ -15,6 +15,7 @@ public:
     bool setValues(Eigen::VectorXd new_values);
     void restoreTrim();
     int getNoOfSurface() const {return noOfSurfaces;}
+    Eigen::VectorXd getValues() const {return values;}
 
 private:
     int noOfSurfaces;

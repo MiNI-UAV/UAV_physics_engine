@@ -55,15 +55,52 @@ void Aircraft::sendState(zmq::socket_t* socket)
     ss.str("");
     socket->send(message,zmq::send_flags::none);
 
-    ss << "om:" << state.getOm().format(commaFormat);
-    s = ss.str();
-    //std::cout << s << std::endl;
-    message.rebuild(s.data(), s.size());
-    socket->send(message,zmq::send_flags::none);
+    if(noOfRotors > 0)
+    {
+        ss << "om:" << state.getOm().format(commaFormat);
+        s = ss.str();
+        //std::cout << s << std::endl;
+        message.rebuild(s.data(), s.size());
+        socket->send(message,zmq::send_flags::none);
+    }
+
+    if(surfaces.getNoOfSurface() > 0)
+    {
+        ss << "cs:" << surfaces.getValues().format(commaFormat);
+        s = ss.str();
+        //std::cout << s << std::endl;
+        message.rebuild(s.data(), s.size());
+        socket->send(message,zmq::send_flags::none);
+    }
+
+    if(noOfJets > 0)
+    {
+        ss << "jt:";
+        for (int i = 0; i < noOfJets; i++)
+        {
+            ss << jets[i].getLastThrust() << ",";
+        }
+        
+        s = ss.str();
+        s.pop_back();
+        //std::cout << s << std::endl;
+        message.rebuild(s.data(), s.size());
+        socket->send(message,zmq::send_flags::none);
+    }
 }
 
-void Aircraft::startJet(int index)
+bool Aircraft::startJet(int index)
 {
-    if(index < 0 || index >= noOfJets) return;
-    jets[index].start(state.real_time);
+    if(index < 0 || index >= noOfJets) return false;
+    return jets[index].start(state.real_time);
+}
+
+void Aircraft::trim() 
+{
+    surfaces.restoreTrim();
+}
+
+bool Aircraft::setSurface(Eigen::VectorXd new_surface) 
+{ 
+    return surfaces.setValues(new_surface);
 }

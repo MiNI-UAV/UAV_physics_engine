@@ -28,8 +28,9 @@ public:
     Eigen::VectorXd time;
     
 
-    void start(double time);
+    bool start(double time);
     double getThrust(double time);
+    double getLastThrust() {return lastThrust;};
     
 private:
     enum JetState
@@ -40,4 +41,5 @@ private:
     } state = JetState::READY; 
     int currentPhase = 0;
     double startTime = -1.0; 
+    double lastThrust = 0.0;
 };

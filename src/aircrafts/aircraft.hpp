@@ -17,7 +17,10 @@ public:
     void update();
     void sendState(zmq::socket_t* socket);
 
-    void startJet(int index);
+    bool startJet(int index);
+
+    void trim();
+    bool setSurface(Eigen::VectorXd);
 
     void calcImpulseForce(double COR, double mi_static, double mi_dynamic,
         Eigen::Vector3d collisionPoint, Eigen::Vector3d surfaceNormal);

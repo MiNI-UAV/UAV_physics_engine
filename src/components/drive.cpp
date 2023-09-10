@@ -1,12 +1,14 @@
 #include "drive.hpp"
 
-void Jet::start(double time)
+bool Jet::start(double time)
 {
     if(state == JetState::READY)
     {
         startTime = time;
         state = JetState::WORKING;
+        return true;
     }
+    return false;
 }
 
 double Jet::getThrust(double sim_time)
@@ -20,5 +22,6 @@ double Jet::getThrust(double sim_time)
         (thrust(currentPhase+1)-thrust(currentPhase)) *
         (local_time-time(currentPhase)) /
         (time(currentPhase+1)-time(currentPhase));
+    lastThrust = thrust_val;
     return thrust_val;
 }

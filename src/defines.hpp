@@ -7,3 +7,4 @@
 #define FRICTION_EPS 0.001
 #define GENTLY_PUSH 0.15
 #define DOUBLE_EPS 1e-5
+#define CONTROL_SURFACE_LIMIT 10
