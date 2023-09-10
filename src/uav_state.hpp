@@ -4,7 +4,7 @@
 #include <condition_variable>
 #include <mutex>
 #include "common.hpp"
-#include "uav_params.hpp"
+#include "defines.hpp"
 
 struct UAVstate
 {
@@ -50,7 +50,7 @@ struct UAVstate
         std::atomic_int forceValidityCounter;
 
     public:
-        UAVstate(int rotors);
+        UAVstate();
         ~UAVstate();
 
         std::atomic<double> real_time;

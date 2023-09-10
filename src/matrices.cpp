@@ -6,33 +6,6 @@
 using namespace Eigen;
 using namespace std;
 
-Matrices::Matrices()
-{   
-    updateMatrices();
-}
-
-
-void Matrices::updateMatrices()
-{
-    UAVparams* params = UAVparams::getSingleton();
-    //mass matrix
-    massMatrix.setZero();
-    massMatrix(0,0) = params->m;
-    massMatrix(1,1) = params->m;
-    massMatrix(2,2) = params->m;
-    massMatrix(3,3) = params->Ix;
-    massMatrix(4,4) = params->Iy;
-    massMatrix(5,5) = params->Iz;
-    massMatrix(3,4) = -params->Ixy;
-    massMatrix(4,3) = -params->Ixy;
-    massMatrix(3,5) = -params->Ixz;
-    massMatrix(5,3) = -params->Ixz;
-    massMatrix(4,5) = -params->Iyz;
-    massMatrix(5,4) = -params->Iyz;
-
-    invMassMatrix = massMatrix.inverse();
-}
-
 Vector<double, 6> Matrices::quaterionsToRPY(Vector<double, 7> y)
 {
     Vector<double, 6> Y_RPY;
@@ -81,12 +54,28 @@ Matrix4d Matrices::OM_conj(Vector<double, 6> x)
     return -0.5 *om_conj;
 }
 
-void Matrices::reduceMass(double mass_delta) {
-    UAVparams::getSingleton()->m -= mass_delta;
-    updateMatrices();
+Matrix<double, 6, 6> Matrices::massMatrix()
+{
+    const UAVparams* params = UAVparams::getSingleton();
+    //mass matrix
+    Matrix<double, 6, 6> massMatrix;
+    massMatrix.setZero();
+    massMatrix(0,0) = params->m;
+    massMatrix(1,1) = params->m;
+    massMatrix(2,2) = params->m;
+    massMatrix(3,3) = params->Ix;
+    massMatrix(4,4) = params->Iy;
+    massMatrix(5,5) = params->Iz;
+    massMatrix(3,4) = -params->Ixy;
+    massMatrix(4,3) = -params->Ixy;
+    massMatrix(3,5) = -params->Ixz;
+    massMatrix(5,3) = -params->Ixz;
+    massMatrix(4,5) = -params->Iyz;
+    massMatrix(5,4) = -params->Iyz;
+    return massMatrix;
 }
 
-Matrix<double,6,6> Matrices::gyroMatrix(Vector<double,6> x)
+Matrix<double, 6, 6> Matrices::gyroMatrix(Vector<double, 6> x)
 {
     Matrix<double,6,6> gyro;
     gyro.setZero();
@@ -152,4 +141,18 @@ Matrix<double, 3, 3> Matrices::R_nb(const Vector<double,7>&  y)
             2*(e(1)*e(2)-e(0)*e(3))                  , e(0)*e(0)-e(1)*e(1)+e(2)*e(2)-e(3)*e(3)   , 2*(e(2)*e(3)+e(0)*e(1)),
             2*(e(1)*e(3)+e(0)*e(2))                  , 2*(e(2)*e(3)-e(0)*e(1))                   , e(0)*e(0)-e(1)*e(1)-e(2)*e(2)+e(3)*e(3);
     return r_nb;
+}
+
+Matrix<double, 3, 3> Matrices::R_wind_b(double alpha, double beta)
+{
+    Matrix<double, 3, 3> r_wind_b;
+    double ca = cos(alpha);
+    double sa = sin(alpha);
+    double cb = cos(beta);
+    double sb = sin(beta);
+
+    r_wind_b << ca*cb , -ca*sb, -sa,
+                sb    , cb    , 0.0,
+                sa*cb , -sa*sb,  ca;
+    return r_wind_b;
 }

@@ -11,17 +11,45 @@ set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 set(BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build)
 
-file(GLOB SOURCES ${SOURCE_DIR}/*.cpp)
+set(SOURCE_FILES
+    ${SOURCE_DIR}/aircrafts/aircraft_comm.cpp
+    ${SOURCE_DIR}/aircrafts/aircraft.cpp
+    ${SOURCE_DIR}/aircrafts/aircraft_impulse.cpp
+    ${SOURCE_DIR}/aircrafts/copter.hpp
+    ${SOURCE_DIR}/aircrafts/rocket.hpp
+    ${SOURCE_DIR}/components/aero_cofficients.hpp
+    ${SOURCE_DIR}/components/components.hpp
+    ${SOURCE_DIR}/components/control_surfaces.cpp
+    ${SOURCE_DIR}/components/control_surfaces.hpp
+    ${SOURCE_DIR}/components/drive.cpp
+    ${SOURCE_DIR}/components/drive.hpp
+    ${SOURCE_DIR}/components/hinge.cpp
+    ${SOURCE_DIR}/components/hinge.hpp
+    ${SOURCE_DIR}/control.cpp
+    ${SOURCE_DIR}/control.hpp
+    ${SOURCE_DIR}/defines.hpp
+    ${SOURCE_DIR}/forces.cpp
+    ${SOURCE_DIR}/forces.hpp
+    ${SOURCE_DIR}/main.cpp
+    ${SOURCE_DIR}/matrices.cpp
+    ${SOURCE_DIR}/matrices.hpp
+    ${SOURCE_DIR}/simulation.cpp
+    ${SOURCE_DIR}/simulation.hpp
+    ${SOURCE_DIR}/uav_params.cpp
+    ${SOURCE_DIR}/uav_params.hpp
+    ${SOURCE_DIR}/uav_state.cpp
+    ${SOURCE_DIR}/uav_state.hpp
+)
+
 
 include_directories(${INCLUDE_DIR})
-link_directories(${LIB_DIR})
-link_directories(${CMAKE_SOURCE_DIR}/lib/UAV_common)
+link_directories(${LIB_DIR}/UAV_common)
 
 link_directories("/usr/lib/x86_64-linux-gnu")
 link_directories("/usr/local/lib")
 link_directories("/usr/local/include")
 
-add_executable(uav ${SOURCES})
+add_executable(uav ${SOURCE_FILES})
 set_property(TARGET uav PROPERTY CXX_STANDARD 20)
 target_include_directories(uav PUBLIC include)
 target_compile_features(uav PUBLIC cxx_std_20)

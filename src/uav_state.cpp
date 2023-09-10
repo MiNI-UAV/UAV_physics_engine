@@ -1,9 +1,14 @@
 #include <Eigen/Dense>
 #include "uav_state.hpp"
+#include "uav_params.hpp"
 #include "common.hpp"
+#include "defines.hpp"
 
-UAVstate::UAVstate(int rotors): noOfRotors{rotors}
+UAVstate::UAVstate()
 {
+    const UAVparams* params = UAVparams::getSingleton();
+    noOfRotors = params->noOfRotors;
+
     y.setZero();
     #ifdef USE_QUATERIONS
     y(3) = 1.0;
@@ -28,6 +33,7 @@ UAVstate::UAVstate(int rotors): noOfRotors{rotors}
     forceValidityCounter = 0;
 
     status = Status::idle;
+    if(params->instantRun) setStatus(Status::running);
 }
 
 UAVstate::~UAVstate()
@@ -93,9 +99,11 @@ Eigen::VectorXd UAVstate::getState()
 void UAVstate::setX(Eigen::Vector<double,6> new_x) {x = new_x;}
 
 void UAVstate::setDemandedOm(Eigen::VectorXd newDemandedOm) {
-  demandedAngularBuf[demandedBufSwitch] = newDemandedOm;
-  demanded_ptr = demandedAngularBuf + demandedBufSwitch;
-  demandedBufSwitch = 1 - demandedBufSwitch;
+    static auto maxSpeeds = UAVparams::getSingleton()->getRotorMaxSpeeds();
+    newDemandedOm = newDemandedOm.cwiseMin(maxSpeeds);
+    demandedAngularBuf[demandedBufSwitch] = newDemandedOm;
+    demanded_ptr = demandedAngularBuf + demandedBufSwitch;
+    demandedBufSwitch = 1 - demandedBufSwitch;
 }
 
 void UAVstate::setWind(Eigen::Vector3d wind)

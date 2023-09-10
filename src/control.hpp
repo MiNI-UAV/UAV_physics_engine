@@ -2,8 +2,7 @@
 #include <zmq.hpp>
 #include "uav_state.hpp"
 #include "matrices.hpp"
+#include "defines.hpp"
+#include "aircrafts/aircraft.hpp"
 
-#define FRICTION_EPS 0.001
-#define GENTLY_PUSH 0.15
-
-void controlListenerJob(zmq::context_t* ctx, std::string address,UAVstate& state, Matrices& matricies);
+void controlListenerJob(zmq::context_t* ctx, std::string address, Aircraft* aircraft);

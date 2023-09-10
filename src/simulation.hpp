@@ -1,31 +1,26 @@
 #pragma once
 
 #include <zmq.hpp>
+#include <memory>
 #include "uav_params.hpp"
 #include "uav_state.hpp"
 #include "forces.hpp"
 #include "matrices.hpp"
-#include <thread>
+#include "aircrafts/aircraft.hpp"
 
 class Simulation
 {
     public:
-        Simulation(UAVstate& state);
+        Simulation();
         ~Simulation();
         void run();
 
     private:
-        UAVstate& _state;
         zmq::context_t _ctx;
         zmq::socket_t stateOutSock;
-        const double step_time = 0.001;
         std::thread controlListener;
 
-        Forces forces;
-        Matrices matrices;
-        std::function<VectorXd(double,VectorXd)> RHS;
+        Aircraft* aircraft;
 
-        void sendState();
         void sendIdle();
-        void countDown();
 };
