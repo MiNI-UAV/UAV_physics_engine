@@ -59,8 +59,8 @@ void Aircraft::sendState(zmq::socket_t* socket)
     {
         ss << "om:" << state.getOm().format(commaFormat);
         s = ss.str();
-        //std::cout << s << std::endl;
         message.rebuild(s.data(), s.size());
+        ss.str("");
         socket->send(message,zmq::send_flags::none);
     }
 
@@ -68,8 +68,8 @@ void Aircraft::sendState(zmq::socket_t* socket)
     {
         ss << "cs:" << surfaces.getValues().format(commaFormat);
         s = ss.str();
-        //std::cout << s << std::endl;
         message.rebuild(s.data(), s.size());
+        ss.str("");
         socket->send(message,zmq::send_flags::none);
     }
 
@@ -83,8 +83,8 @@ void Aircraft::sendState(zmq::socket_t* socket)
         
         s = ss.str();
         s.pop_back();
-        //std::cout << s << std::endl;
         message.rebuild(s.data(), s.size());
+        ss.str("");
         socket->send(message,zmq::send_flags::none);
     }
 }
