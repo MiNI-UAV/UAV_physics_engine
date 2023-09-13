@@ -40,10 +40,6 @@ struct UAVstate
         Eigen::VectorXd demandedAngularBuf[2];
         std::atomic<Eigen::VectorXd*> demanded_ptr;
 
-        int windBufSwitch = 0;
-        Eigen::Vector3d windBuf[2];
-        std::atomic<Eigen::Vector3d*> wind_ptr;
-
         int forceBufSwitch = 0;
         Eigen::Vector<double,6> forceBuf[2];
         std::atomic<Eigen::Vector<double,6>*> force_ptr;
@@ -69,7 +65,6 @@ struct UAVstate
         Eigen::Vector<double,6> getX();
         Eigen::VectorXd getOm();
         Eigen::VectorXd getDemandedOm();
-        Eigen::Vector3d getWind();
         Eigen::Vector<double,6> getOuterForce();
         Eigen::VectorXd getState();
         inline int getNoOfRotors(){return noOfRotors;}
@@ -78,7 +73,6 @@ struct UAVstate
 
         void setX(Eigen::Vector<double,6>);
         void setDemandedOm(Eigen::VectorXd);
-        void setWind(Eigen::Vector3d);
         void setForce(Eigen::Vector3d force, Eigen::Vector3d torque = Eigen::Vector3d(0.0,0.0,0.0));
         void setAcceleration(Eigen::Vector<double,6>);
 

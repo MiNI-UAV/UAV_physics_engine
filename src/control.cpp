@@ -8,27 +8,46 @@
 #include "matrices.hpp"
 #include "aircrafts/aircraft.hpp"
 #include "defines.hpp"
+#include "atmosphere.hpp"
 
-void setWind(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& sock)
+void setAtmosphere(std::string& msg_str, zmq::socket_t& sock)
 {
-    Eigen::Vector3d wind;
+    static auto atmosphere = Atmosphere::getSingleton();
+    AtmosphereInfo info;
+
     std::istringstream f(msg_str.substr(2));
     std::string s;
     int i; 
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 6; i++)
     {
         if(!getline(f, s, ','))
         {
             std::cerr << "Invalid wind command" << std::endl;
             break;
         }
-        wind(i) = std::stod(s);
+        switch(i)
+        {
+            case 0:
+            case 1:
+            case 2:
+                info.wind(i) = std::stod(s);
+            break;
+            case 3:
+                info.air_temperature = std::stod(s);
+            break;
+            case 4:
+                info.air_pressure = std::stod(s);
+            break;
+            case 5:
+                info.air_density = std::stod(s);
+            break;
+        }
+        
     }
     zmq::message_t response("error",5);
-    if(i == 3)
+    if(i == 6)
     {
-        //std::cout << "Setting wind to: " << wind.transpose() << std::endl;
-        aircraft->state.setWind(wind);
+        atmosphere->update(info);
         response.rebuild("ok",2);
     }
     sock.send(response,zmq::send_flags::none);
@@ -283,8 +302,8 @@ void controlListenerJob(zmq::context_t* ctx, std::string address, Aircraft* airc
         std::string msg_str =  std::string(static_cast<char*>(msg.data()), msg.size());
         switch(msg_str[0])
         {
-            case 'w':
-                setWind(aircraft,msg_str,controlInSock);
+            case 'a':
+                setAtmosphere(msg_str,controlInSock);
             break;
             case 's':
                 setSpeed(aircraft,msg_str, controlInSock);

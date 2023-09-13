@@ -7,6 +7,7 @@
 #include "forces.hpp"
 #include "matrices.hpp"
 #include "aircrafts/aircraft.hpp"
+#include "atmosphere.hpp"
 
 class Simulation
 {
@@ -21,6 +22,8 @@ class Simulation
         std::thread controlListener;
 
         Aircraft* aircraft;
+
+        Atmosphere atmosphere;
 
         void sendIdle();
 };

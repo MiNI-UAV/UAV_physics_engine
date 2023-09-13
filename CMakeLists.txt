@@ -25,6 +25,8 @@ set(SOURCE_FILES
     ${SOURCE_DIR}/components/drive.hpp
     ${SOURCE_DIR}/components/hinge.cpp
     ${SOURCE_DIR}/components/hinge.hpp
+    ${SOURCE_DIR}/atmosphere.cpp
+    ${SOURCE_DIR}/atmosphere.hpp
     ${SOURCE_DIR}/control.cpp
     ${SOURCE_DIR}/control.hpp
     ${SOURCE_DIR}/defines.hpp

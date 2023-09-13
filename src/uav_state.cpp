@@ -22,11 +22,6 @@ UAVstate::UAVstate()
     demandedAngularBuf[1].setZero(noOfRotors);
     demanded_ptr = demandedAngularBuf + 1;
 
-    windBuf[0].setZero();
-    windBuf[1].setZero();
-    wind_ptr = windBuf+1;
-
-
     forceBuf[0].setZero();
     forceBuf[1].setZero();
     force_ptr = force_ptr+1;
@@ -65,11 +60,6 @@ Eigen::VectorXd UAVstate::getDemandedOm()
     return (*(demanded_ptr.load()));
 }
 
-Eigen::Vector3d UAVstate::getWind()
-{
-    return (*(wind_ptr.load()));
-}
-
 Eigen::Vector<double, 6> UAVstate::getOuterForce()
 {   
     if(forceValidityCounter.load() > 0)
@@ -104,13 +94,6 @@ void UAVstate::setDemandedOm(Eigen::VectorXd newDemandedOm) {
     demandedAngularBuf[demandedBufSwitch] = newDemandedOm;
     demanded_ptr = demandedAngularBuf + demandedBufSwitch;
     demandedBufSwitch = 1 - demandedBufSwitch;
-}
-
-void UAVstate::setWind(Eigen::Vector3d wind)
-{
-    windBuf[windBufSwitch] = wind;
-    wind_ptr = windBuf + windBufSwitch;
-    windBufSwitch = 1 - windBufSwitch;
 }
 
 void UAVstate::setForce(Eigen::Vector3d force, Eigen::Vector3d torque)

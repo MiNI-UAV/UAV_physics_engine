@@ -7,6 +7,7 @@
 #include "matrices.hpp"
 #include "defines.hpp"
 #include "components/components.hpp"
+#include "atmosphere.hpp"
 
 
 using namespace Eigen;
@@ -115,14 +116,13 @@ Vector<double, 6> Forces::aerodynamic_loads(const Vector<double, 6> &x, Vector3d
 
 double Forces::dynamic_pressure([[maybe_unused]]double height, double Vtot)
 {
-    //TODO: More advanced model
     return 0.5*getRho()*Vtot*Vtot;
 }
 
 double Forces::getRho()
 {
-    //TODO: More advanced model
-    return DEFAULT_RHO;
+    static auto atmosphere = Atmosphere::getSingleton();
+    return atmosphere->getAirDensity();
 }
 
 VectorXd Forces::angularAcceleration(VectorXd demandedAngularVelocity, VectorXd rotorAngularVelocity)
