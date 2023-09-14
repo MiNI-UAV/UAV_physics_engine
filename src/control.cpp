@@ -274,11 +274,11 @@ void setControlSurface(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& 
 
 void startJet(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& sock)
 {
-    zmq::message_t response("error",5);
+    zmq::message_t response("ok",2);
     int index = std::stoi(msg_str.substr(2));
-    if(aircraft->startJet(index))
+    if(!aircraft->startJet(index))
     {
-        response.rebuild("ok",2);
+        response.rebuild("ok;denied",9);
     }
     sock.send(response,zmq::send_flags::none);
     return; 
