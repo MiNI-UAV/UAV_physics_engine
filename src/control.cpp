@@ -284,6 +284,29 @@ void startJet(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& sock)
     return; 
 }
 
+void setHinges(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& sock)
+{
+    zmq::message_t response("ok",2);
+    std::string msg = msg_str.substr(2);
+    std::istringstream f(msg);
+    std::string res;
+    while(getline(f, res, ';'))
+    {
+        char drive_type = 0;
+        int index = -1;
+        int hinge_index = -1;
+        double value = 0.0;
+        std::sscanf(res.data(),"%c,%d,%d,%lf",&drive_type,&index,&hinge_index,&value);
+        if(!aircraft->setHinge(drive_type,index,hinge_index,value))
+        {
+            response.rebuild("error",5);
+            break;
+        }
+    }
+    sock.send(response,zmq::send_flags::none);
+    return; 
+}
+
 void controlListenerJob(zmq::context_t* ctx, std::string address, Aircraft* aircraft)
 {
     std::cout << "Starting control subscriber: " << address << std::endl;
@@ -325,6 +348,9 @@ void controlListenerJob(zmq::context_t* ctx, std::string address, Aircraft* airc
             break;
             case 't':
                 startJet(aircraft,msg_str,controlInSock);
+            break;
+            case 'h':
+                setHinges(aircraft,msg_str,controlInSock);
             break;
             default:
                 zmq::message_t response("error",5);

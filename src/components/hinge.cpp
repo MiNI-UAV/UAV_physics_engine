@@ -40,7 +40,7 @@ void Hinge::updateValue(double newValue)
     static const Eigen::Matrix3d crossProductMatrix = asSkewMatrix(axis);
     static const Eigen::Matrix3d outerProduct = axis * axis.transpose();
     std::scoped_lock lck(mtx);
-    value = newValue;
+    value = std::clamp(newValue,min,max);
     rot = cos(value) * Eigen::Matrix3d::Identity() 
         + sin(value) * crossProductMatrix
         + (1 - cos(value)) * outerProduct;

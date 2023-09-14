@@ -91,16 +91,42 @@ void Aircraft::sendState(zmq::socket_t* socket)
 
 bool Aircraft::startJet(int index)
 {
+    std::scoped_lock lck(mtx);
     if(index < 0 || index >= noOfJets) return false;
     return jets[index].start(state.real_time);
 }
 
 void Aircraft::trim() 
 {
+    std::scoped_lock lck(mtx);
     surfaces.restoreTrim();
 }
 
 bool Aircraft::setSurface(Eigen::VectorXd new_surface) 
 { 
+    std::scoped_lock lck(mtx);
     return surfaces.setValues(new_surface);
+}
+
+bool Aircraft::setHinge(char type, int index, int hinge_index, double value)
+{
+    std::scoped_lock lck(mtx);
+    switch (type)
+    {
+    case 'r':
+        if(index < noOfRotors && hinge_index < rotors[index].noOfHinges)
+        {
+            rotors[index].hinges[hinge_index].updateValue(value);
+            return true;
+        }
+        break;
+    case 'j':
+        if(index < noOfJets && hinge_index < jets[index].noOfHinges)
+        {
+            jets[index].hinges[hinge_index].updateValue(value);
+            return true;
+        }
+        break;
+    }
+    return false;
 }

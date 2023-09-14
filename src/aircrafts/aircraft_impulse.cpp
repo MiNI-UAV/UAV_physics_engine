@@ -13,6 +13,7 @@
 void Aircraft::calcImpulseForce(double COR, double mi_static, double mi_dynamic,
     Eigen::Vector3d collisionPoint, Eigen::Vector3d surfaceNormal)
 {
+    std::scoped_lock lck(mtx);
     const std::lock_guard<std::mutex> lock(state.state_mtx);
     auto Y = state.getY();
     Eigen::Matrix3d R_nb = Matrices::R_nb(Y);
@@ -62,6 +63,7 @@ void Aircraft::calcImpulseForce(double COR, double mi_static, double mi_dynamic,
 
 Eigen::Vector3d Aircraft::calcMomentumConservanceConservation(double m, double speed, Vector3d r)
 {
+    std::scoped_lock lck(mtx);
     const std::lock_guard<std::mutex> lock(state.state_mtx);
     Matrix3d R_nb = Matrices::R_nb(state.getY());
     Matrix3d R_bn = R_nb.inverse();

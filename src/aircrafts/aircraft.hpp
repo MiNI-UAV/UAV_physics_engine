@@ -3,6 +3,7 @@
 #include <Eigen/Dense>
 #include <zmq.hpp>
 #include <memory>
+#include <mutex>
 #include "../uav_state.hpp"
 #include "../uav_params.hpp"
 #include "../matrices.hpp"
@@ -22,6 +23,8 @@ public:
     void trim();
     bool setSurface(Eigen::VectorXd);
 
+    bool setHinge(char type, int index, int hinge_index, double value);
+
     void calcImpulseForce(double COR, double mi_static, double mi_dynamic,
         Eigen::Vector3d collisionPoint, Eigen::Vector3d surfaceNormal);
     Eigen::Vector3d calcMomentumConservanceConservation(double m, double speed, Vector3d r);
@@ -32,6 +35,8 @@ protected:
 
     Matrix<double,6,6> massMatrix;
     Matrix<double,6,6> invMassMatrix;
+
+    std::mutex mtx;
 
     int noOfRotors;
     std::unique_ptr<Rotor[]> rotors;
