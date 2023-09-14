@@ -23,9 +23,21 @@ Hinge &Hinge::operator=(const Hinge &old)
     return *this;
 }
 
+Eigen::Matrix3d asSkewMatrix(Eigen::Vector3d v)
+{
+    Eigen::Matrix3d dst = Eigen::Matrix3d::Zero();
+    dst(0, 1) = -v(2);
+    dst(1, 0) = v(2);
+    dst(0, 2) = v(1);
+    dst(2, 0) = -v(1);
+    dst(1, 2) = -v(0);
+    dst(2, 1) = v(0);
+    return dst;
+}
+
 void Hinge::updateValue(double newValue) 
 {
-    static const Eigen::Matrix3d crossProductMatrix = axis.asSkewSymmetric().toDenseMatrix();
+    static const Eigen::Matrix3d crossProductMatrix = asSkewMatrix(axis);
     static const Eigen::Matrix3d outerProduct = axis * axis.transpose();
     std::scoped_lock lck(mtx);
     value = newValue;
