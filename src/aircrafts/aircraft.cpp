@@ -4,12 +4,11 @@
 
 #include "aircraft.hpp"
 #include "../uav_state.hpp"
-#include "../uav_params.hpp"
 #include "../matrices.hpp"
 #include "../forces.hpp"
 #include "../defines.hpp"
-#include "../components/components.hpp"
 #include "../atmosphere.hpp"
+#include "common.hpp"
 
 
 Aircraft::Aircraft()

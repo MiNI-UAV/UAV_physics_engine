@@ -17,14 +17,6 @@ set(SOURCE_FILES
     ${SOURCE_DIR}/aircrafts/aircraft_impulse.cpp
     ${SOURCE_DIR}/aircrafts/copter.hpp
     ${SOURCE_DIR}/aircrafts/rocket.hpp
-    ${SOURCE_DIR}/components/aero_cofficients.hpp
-    ${SOURCE_DIR}/components/components.hpp
-    ${SOURCE_DIR}/components/control_surfaces.cpp
-    ${SOURCE_DIR}/components/control_surfaces.hpp
-    ${SOURCE_DIR}/components/drive.cpp
-    ${SOURCE_DIR}/components/drive.hpp
-    ${SOURCE_DIR}/components/hinge.cpp
-    ${SOURCE_DIR}/components/hinge.hpp
     ${SOURCE_DIR}/atmosphere.cpp
     ${SOURCE_DIR}/atmosphere.hpp
     ${SOURCE_DIR}/control.cpp
@@ -37,8 +29,6 @@ set(SOURCE_FILES
     ${SOURCE_DIR}/matrices.hpp
     ${SOURCE_DIR}/simulation.cpp
     ${SOURCE_DIR}/simulation.hpp
-    ${SOURCE_DIR}/uav_params.cpp
-    ${SOURCE_DIR}/uav_params.hpp
     ${SOURCE_DIR}/uav_state.cpp
     ${SOURCE_DIR}/uav_state.hpp
 )

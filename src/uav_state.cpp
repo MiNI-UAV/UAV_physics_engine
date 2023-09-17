@@ -1,6 +1,5 @@
 #include <Eigen/Dense>
 #include "uav_state.hpp"
-#include "uav_params.hpp"
 #include "common.hpp"
 #include "defines.hpp"
 

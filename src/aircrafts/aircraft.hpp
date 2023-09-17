@@ -5,9 +5,8 @@
 #include <memory>
 #include <mutex>
 #include "../uav_state.hpp"
-#include "../uav_params.hpp"
+#include "common.hpp"
 #include "../matrices.hpp"
-#include "../components/components.hpp"
 
 class Aircraft
 {

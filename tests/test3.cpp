@@ -3,7 +3,7 @@
 #include "constants.hpp"
 #include "forces.hpp"
 #include "RK4.hpp"
-//#include "uav_params.hpp"
+#include "common.hpp"
 
 Eigen::Vector4d fun(double t , Eigen::Vector4d om)
 {

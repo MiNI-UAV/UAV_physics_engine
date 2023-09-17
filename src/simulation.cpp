@@ -10,7 +10,6 @@ namespace fs = std::filesystem;
 using namespace std::chrono_literals;
 
 #include "simulation.hpp"
-#include "uav_params.hpp"
 #include "uav_state.hpp"
 #include "forces.hpp"
 #include "matrices.hpp"

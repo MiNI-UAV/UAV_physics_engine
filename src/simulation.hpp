@@ -2,7 +2,7 @@
 
 #include <zmq.hpp>
 #include <memory>
-#include "uav_params.hpp"
+#include "common.hpp"
 #include "uav_state.hpp"
 #include "forces.hpp"
 #include "matrices.hpp"

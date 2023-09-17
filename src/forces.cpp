@@ -2,12 +2,11 @@
 #include <cmath>
 #include <iostream>
 #include <numbers>
-#include "uav_params.hpp"
 #include "forces.hpp"
 #include "matrices.hpp"
 #include "defines.hpp"
-#include "components/components.hpp"
 #include "atmosphere.hpp"
+#include "common.hpp"
 
 
 using namespace Eigen;
