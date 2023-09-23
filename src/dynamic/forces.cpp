@@ -4,8 +4,8 @@
 #include <numbers>
 #include "forces.hpp"
 #include "matrices.hpp"
-#include "defines.hpp"
-#include "atmosphere.hpp"
+#include "../defines.hpp"
+#include "../simulation/atmosphere.hpp"
 #include "common.hpp"
 
 

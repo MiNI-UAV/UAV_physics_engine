@@ -12,25 +12,24 @@ set(LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 set(BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build)
 
 set(SOURCE_FILES
-    ${SOURCE_DIR}/aircrafts/aircraft_comm.cpp
-    ${SOURCE_DIR}/aircrafts/aircraft.cpp
-    ${SOURCE_DIR}/aircrafts/aircraft_impulse.cpp
-    ${SOURCE_DIR}/aircrafts/copter.hpp
-    ${SOURCE_DIR}/aircrafts/rocket.hpp
-    ${SOURCE_DIR}/atmosphere.cpp
-    ${SOURCE_DIR}/atmosphere.hpp
-    ${SOURCE_DIR}/control.cpp
-    ${SOURCE_DIR}/control.hpp
+    ${SOURCE_DIR}/aircraft/aircraft_comm.cpp
+    ${SOURCE_DIR}/aircraft/aircraft.cpp
+    ${SOURCE_DIR}/aircraft/aircraft.hpp
+    ${SOURCE_DIR}/aircraft/aircraft_impulse.cpp
     ${SOURCE_DIR}/defines.hpp
-    ${SOURCE_DIR}/forces.cpp
-    ${SOURCE_DIR}/forces.hpp
+    ${SOURCE_DIR}/dynamic/forces.cpp
+    ${SOURCE_DIR}/dynamic/forces.hpp
+    ${SOURCE_DIR}/dynamic/matrices.cpp
+    ${SOURCE_DIR}/dynamic/matrices.hpp
     ${SOURCE_DIR}/main.cpp
-    ${SOURCE_DIR}/matrices.cpp
-    ${SOURCE_DIR}/matrices.hpp
-    ${SOURCE_DIR}/simulation.cpp
-    ${SOURCE_DIR}/simulation.hpp
-    ${SOURCE_DIR}/uav_state.cpp
-    ${SOURCE_DIR}/uav_state.hpp
+    ${SOURCE_DIR}/simulation/atmosphere.cpp
+    ${SOURCE_DIR}/simulation/atmosphere.hpp
+    ${SOURCE_DIR}/simulation/control.cpp
+    ${SOURCE_DIR}/simulation/control.hpp
+    ${SOURCE_DIR}/simulation/simulation.cpp
+    ${SOURCE_DIR}/simulation/simulation.hpp
+    ${SOURCE_DIR}/simulation/uav_state.cpp
+    ${SOURCE_DIR}/simulation/uav_state.hpp
 )
 
 

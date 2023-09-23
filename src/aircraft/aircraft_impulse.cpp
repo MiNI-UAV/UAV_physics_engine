@@ -1,14 +1,4 @@
-#include <Eigen/Dense>
-#include <zmq.hpp>
-#include <iostream>
-
 #include "aircraft.hpp"
-#include "../uav_state.hpp"
-#include "../matrices.hpp"
-#include "../forces.hpp"
-#include "../defines.hpp"
-#include "common.hpp"
-
 
 void Aircraft::calcImpulseForce(double COR, double mi_static, double mi_dynamic,
     Eigen::Vector3d collisionPoint, Eigen::Vector3d surfaceNormal)

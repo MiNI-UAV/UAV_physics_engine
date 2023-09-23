@@ -5,9 +5,9 @@
 #include "control.hpp"
 #include "uav_state.hpp"
 #include "common.hpp"
-#include "matrices.hpp"
-#include "aircrafts/aircraft.hpp"
-#include "defines.hpp"
+#include "../dynamic/matrices.hpp"
+#include "../aircraft/aircraft.hpp"
+#include "../defines.hpp"
 #include "atmosphere.hpp"
 
 void setAtmosphere(std::string& msg_str, zmq::socket_t& sock)

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cxxopts.hpp>
-#include "simulation.hpp"
-#include "uav_state.hpp"
+#include "simulation/simulation.hpp"
+#include "simulation/uav_state.hpp"
 #include "common.hpp"
 
 

@@ -8,14 +8,11 @@
 namespace fs = std::filesystem;
 #include <chrono>
 using namespace std::chrono_literals;
-
 #include "simulation.hpp"
 #include "uav_state.hpp"
-#include "forces.hpp"
-#include "matrices.hpp"
 #include "common.hpp"
 #include "control.hpp"
-#include "defines.hpp"
+#include "../defines.hpp"
 
 
 

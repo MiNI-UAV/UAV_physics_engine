@@ -1,7 +1,4 @@
-#include <Eigen/Dense>
 #include "uav_state.hpp"
-#include "common.hpp"
-#include "defines.hpp"
 
 UAVstate::UAVstate()
 {

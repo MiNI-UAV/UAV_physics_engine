@@ -1,12 +1,16 @@
 #pragma once
 
 #include <Eigen/Dense>
-#include <zmq.hpp>
 #include <memory>
 #include <mutex>
-#include "../uav_state.hpp"
+#include <zmq.hpp>
+#include <iostream>
 #include "common.hpp"
-#include "../matrices.hpp"
+#include "../defines.hpp"
+#include "../dynamic/forces.hpp"
+#include "../dynamic/matrices.hpp"
+#include "../simulation/atmosphere.hpp"
+#include "../simulation/uav_state.hpp"
 
 class Aircraft
 {
