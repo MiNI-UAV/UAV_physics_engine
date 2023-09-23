@@ -32,11 +32,11 @@ void clampOrientationIfNessessery([[maybe_unused]] Eigen::VectorXd& state)
 void Aircraft::update() {
     std::scoped_lock lck(mtx);
     VectorXd next = RK4_step(state.real_time, state.getState(),
-                            std::bind_front(&Aircraft::RHS, this), STEP_TIME);
+                            std::bind_front(&Aircraft::RHS, this), def::STEP_TIME);
     clampOrientationIfNessessery(next);
-    state.setAcceleration((UAVstate::getX(next) - state.getX()) / STEP_TIME);
+    state.setAcceleration((UAVstate::getX(next) - state.getX()) / def::STEP_TIME);
     state = next;
-    state.real_time += STEP_TIME;
+    state.real_time += def::STEP_TIME;
 }
 
 void Aircraft::reduceMass(double delta_m) 
