@@ -297,6 +297,7 @@ void setHinges(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& sock)
         int hinge_index = -1;
         double value = 0.0;
         std::sscanf(res.data(),"%c,%d,%d,%lf",&drive_type,&index,&hinge_index,&value);
+        //std::cout << drive_type << index << hinge_index << value << std::endl;
         if(!aircraft->setHinge(drive_type,index,hinge_index,value))
         {
             response.rebuild("error",5);
