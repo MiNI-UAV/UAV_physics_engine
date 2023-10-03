@@ -1,6 +1,7 @@
 #pragma once
 #include <Eigen/Dense>
 #include <atomic>
+#include "common.hpp"
 
 struct AtmosphereInfo
 {
@@ -28,6 +29,7 @@ private:
     int atmosphereBufSwitch = 0;
     AtmosphereInfo atmosphereBuf[2];
     std::atomic<AtmosphereInfo*> atmosphere_ptr;
+    Logger logger;
 
     static Atmosphere* singleton;
 };

@@ -3,7 +3,7 @@
 
 Atmosphere* Atmosphere::singleton = nullptr;
 
-Atmosphere::Atmosphere()
+Atmosphere::Atmosphere(): logger("atmosphere.csv","time,temperature,pressure,density")
 {
     atmosphere_ptr = atmosphereBuf + 1;
     if(singleton != nullptr)
@@ -41,6 +41,7 @@ void Atmosphere::update(AtmosphereInfo info)
     atmosphereBuf[atmosphereBufSwitch] = info;
     atmosphere_ptr = atmosphereBuf + atmosphereBufSwitch;
     atmosphereBufSwitch = 1 - atmosphereBufSwitch;
+    logger.log(0.0,{info.air_temperature,info.air_pressure, info.air_density});
 }
 
 Atmosphere *Atmosphere::getSingleton()
