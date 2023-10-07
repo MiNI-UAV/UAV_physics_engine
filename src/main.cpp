@@ -1,8 +1,7 @@
 #include <iostream>
 #include <cxxopts.hpp>
-#include "simulation.hpp"
-#include "uav_params.hpp"
-#include "uav_state.hpp"
+#include "simulation/simulation.hpp"
+#include "simulation/uav_state.hpp"
 #include "common.hpp"
 
 
@@ -36,6 +35,7 @@ int main(int argc, char** argv)
 {
     UAVparams params;
     parseArgs(argc,argv,&params);
+    Logger::setLogDirectory(params.name);
     std::cout << "Starting simulation!" <<std::endl;
     Simulation simulation;
     simulation.run();

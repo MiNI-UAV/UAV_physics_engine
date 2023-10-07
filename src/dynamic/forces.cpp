@@ -2,12 +2,11 @@
 #include <cmath>
 #include <iostream>
 #include <numbers>
-#include "uav_params.hpp"
 #include "forces.hpp"
 #include "matrices.hpp"
-#include "defines.hpp"
-#include "components/components.hpp"
-#include "atmosphere.hpp"
+#include "../defines.hpp"
+#include "../simulation/atmosphere.hpp"
+#include "common.hpp"
 
 
 using namespace Eigen;
@@ -17,7 +16,7 @@ Vector<double,6> Forces::gravity_loads(const Matrix3d& r_nb)
     const UAVparams* params = UAVparams::getSingleton();
     Vector<double,6> Fg;
     Fg.setZero();
-    Fg.head<3>() = r_nb * Eigen::Vector3d(0.0,0.0,(params->m*GRAVITY_CONST));
+    Fg.head<3>() = r_nb * Eigen::Vector3d(0.0,0.0,(params->m*def::GRAVITY_CONST));
     return Fg;
 }
 
@@ -78,7 +77,7 @@ Vector<double, 6> Forces::aerodynamic_loads(const Vector<double, 6> &x, Vector3d
     Vector3d velocity = x.segment(0,3);
     Vector3d diff = velocity-wind_body;
     double Vtot = diff.norm();
-    if(Vtot <= DOUBLE_EPS)
+    if(Vtot <= def::DOUBLE_EPS)
     {
         return Vector<double, 6>::Zero();
     }
@@ -103,7 +102,7 @@ Vector<double, 6> Forces::aerodynamic_loads(const Vector<double, 6> &x, Vector3d
     }
 
     //eAR
-    if(aero.eAR > DOUBLE_EPS)
+    if(aero.eAR > def::DOUBLE_EPS)
     {
         C(0) += (C(2)*C(2))/(std::numbers::pi * aero.eAR);
     }

@@ -5,9 +5,9 @@
 #include "control.hpp"
 #include "uav_state.hpp"
 #include "common.hpp"
-#include "matrices.hpp"
-#include "aircrafts/aircraft.hpp"
-#include "defines.hpp"
+#include "../dynamic/matrices.hpp"
+#include "../aircraft/aircraft.hpp"
+#include "../defines.hpp"
 #include "atmosphere.hpp"
 
 void setAtmosphere(std::string& msg_str, zmq::socket_t& sock)
@@ -257,14 +257,15 @@ void setControlSurface(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& 
     {
         std::istringstream f(msg);
         std::string res;
-        Eigen::VectorXd surface(CONTROL_SURFACE_LIMIT);
+        Eigen::VectorXd surface;
+        surface.setZero(def::CONTROL_SURFACE_LIMIT);
         int i = 0;
         while(getline(f, res, ','))
         {
             surface[i] = std::stod(res);
             i++;
         }
-        surface = surface.head(i);
+        surface = surface.head(i).eval();
         if(aircraft->setSurface(surface))
             response.rebuild("ok",2);
     }
@@ -297,6 +298,7 @@ void setHinges(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& sock)
         int hinge_index = -1;
         double value = 0.0;
         std::sscanf(res.data(),"%c,%d,%d,%lf",&drive_type,&index,&hinge_index,&value);
+        //std::cout << drive_type << index << hinge_index << value << std::endl;
         if(!aircraft->setHinge(drive_type,index,hinge_index,value))
         {
             response.rebuild("error",5);

@@ -1,14 +1,4 @@
-#include <Eigen/Dense>
-#include <zmq.hpp>
-#include <iostream>
-
 #include "aircraft.hpp"
-#include "../uav_state.hpp"
-#include "../uav_params.hpp"
-#include "../matrices.hpp"
-#include "../forces.hpp"
-#include "../defines.hpp"
-
 
 void Aircraft::calcImpulseForce(double COR, double mi_static, double mi_dynamic,
     Eigen::Vector3d collisionPoint, Eigen::Vector3d surfaceNormal)
@@ -36,14 +26,14 @@ void Aircraft::calcImpulseForce(double COR, double mi_static, double mi_dynamic,
     std::cout << "Energy before collision: " << X_g.transpose()*massMatrix*X_g << std::endl;
     double den_n = (invMassMatrix(0,0) 
         + ((invMassMatrix.block<3,3>(3,3)*r.cross(surfaceNormal)).cross(r)).dot(surfaceNormal));
-    if(vn > -GENTLY_PUSH) vn = -GENTLY_PUSH;
+    if(vn > -def::GENTLY_PUSH) vn = -def::GENTLY_PUSH;
     double jr = (-(1+COR)*vn)/den_n;
     Eigen::Vector<double,6> delta_n;
     delta_n << surfaceNormal, r.cross(surfaceNormal);
     X_g = X_g + jr*invMassMatrix*delta_n;
 
     Eigen::Vector3d vt = vr - (vr.dot(surfaceNormal))*surfaceNormal;
-    if(vt.squaredNorm() > FRICTION_EPS)
+    if(vt.squaredNorm() > def::FRICTION_EPS)
     {
         Eigen::Vector3d tangent = vt.normalized();
         double js = mi_static*jr;

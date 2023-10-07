@@ -1,6 +1,6 @@
 #pragma once
 #include <Eigen/Dense>
-#include "uav_params.hpp"
+#include "common.hpp"
 
 using namespace Eigen;
 

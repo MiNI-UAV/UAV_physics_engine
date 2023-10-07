@@ -1,7 +1,7 @@
 #include <Eigen/Dense>
 #include <cmath>
 #include "matrices.hpp"
-#include "uav_params.hpp"
+#include "common.hpp"
 
 using namespace Eigen;
 using namespace std;

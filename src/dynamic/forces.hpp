@@ -1,8 +1,7 @@
 #pragma once
 #include <Eigen/Dense>
-#include "uav_params.hpp"
+#include "common.hpp"
 #include "matrices.hpp"
-#include "components/components.hpp"
 
 using namespace Eigen;
 

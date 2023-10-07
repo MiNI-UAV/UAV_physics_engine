@@ -8,15 +8,11 @@
 namespace fs = std::filesystem;
 #include <chrono>
 using namespace std::chrono_literals;
-
 #include "simulation.hpp"
-#include "uav_params.hpp"
 #include "uav_state.hpp"
-#include "forces.hpp"
-#include "matrices.hpp"
 #include "common.hpp"
 #include "control.hpp"
-#include "defines.hpp"
+#include "../defines.hpp"
 
 
 
@@ -53,7 +49,7 @@ void Simulation::sendIdle()
 
 void Simulation::run()
 {
-    TimedLoop loop(std::round(STEP_TIME*1000.0), [this](){
+    TimedLoop loop(std::round(def::STEP_TIME*1000.0), [this](){
         aircraft->update();
         aircraft->sendState(&stateOutSock);
     },  aircraft->state.status);

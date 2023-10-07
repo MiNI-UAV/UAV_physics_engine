@@ -1,14 +1,4 @@
-#include <Eigen/Dense>
-#include <zmq.hpp>
-#include <iostream>
-
 #include "aircraft.hpp"
-#include "../uav_state.hpp"
-#include "../uav_params.hpp"
-#include "../matrices.hpp"
-#include "../forces.hpp"
-#include "../defines.hpp"
-
 
 void Aircraft::sendState(zmq::socket_t* socket)
 {

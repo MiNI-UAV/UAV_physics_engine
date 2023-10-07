@@ -1,19 +1,22 @@
-#include <Eigen/Dense>
 #include "uav_state.hpp"
-#include "uav_params.hpp"
-#include "common.hpp"
-#include "defines.hpp"
+#include "../dynamic/matrices.hpp"
 
 UAVstate::UAVstate()
 {
     const UAVparams* params = UAVparams::getSingleton();
     noOfRotors = params->noOfRotors;
 
-    y.setZero();
+    Eigen::Vector<double,6> pos;
+    pos.setZero();
+    pos.head<3>() = params->initialPosition;
+    pos.tail<3>() = params->initialOrientation;
     #ifdef USE_QUATERIONS
-    y(3) = 1.0;
+    y = Matrices::RPYtoQuaterion(pos);
+    #else
+    y = pos;
     #endif
     x.setZero();
+    x.head<3>() = params->initialVelocity;
     rotorAngularVelocities.setZero(noOfRotors);
     acceleration.setZero();
 

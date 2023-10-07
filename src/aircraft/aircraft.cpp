@@ -1,16 +1,4 @@
-#include <Eigen/Dense>
-#include <zmq.hpp>
-#include <iostream>
-
 #include "aircraft.hpp"
-#include "../uav_state.hpp"
-#include "../uav_params.hpp"
-#include "../matrices.hpp"
-#include "../forces.hpp"
-#include "../defines.hpp"
-#include "../components/components.hpp"
-#include "../atmosphere.hpp"
-
 
 Aircraft::Aircraft()
 {
@@ -42,13 +30,16 @@ void clampOrientationIfNessessery([[maybe_unused]] Eigen::VectorXd& state)
 }
 
 void Aircraft::update() {
+    static Logger rotor_logger("rotors.csv", "time,rotors_om");
+
     std::scoped_lock lck(mtx);
     VectorXd next = RK4_step(state.real_time, state.getState(),
-                            std::bind_front(&Aircraft::RHS, this), STEP_TIME);
+                            std::bind_front(&Aircraft::RHS, this), def::STEP_TIME);
     clampOrientationIfNessessery(next);
-    state.setAcceleration((UAVstate::getX(next) - state.getX()) / STEP_TIME);
+    state.setAcceleration((UAVstate::getX(next) - state.getX()) / def::STEP_TIME);
     state = next;
-    state.real_time += STEP_TIME;
+    state.real_time += def::STEP_TIME;
+    rotor_logger.log(state.real_time, {state.getOm()});
 }
 
 void Aircraft::reduceMass(double delta_m) 
