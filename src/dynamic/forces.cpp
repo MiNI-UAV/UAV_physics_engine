@@ -72,8 +72,6 @@ Vector<double, 6> Forces::jet_lift_loads(int noOfJets, Jet *jets, double time)
 Vector<double, 6> Forces::aerodynamic_loads(const Vector<double, 6> &x, Vector3d wind_body,
     const ControlSurfaces &surface, const AeroCofficients &aero, double height)
 {   
-    //C0
-    Vector<double, 6> C = aero.C0;
     Vector3d velocity = x.segment(0,3);
     Vector3d diff = velocity-wind_body;
     double Vtot = diff.norm();
@@ -86,11 +84,29 @@ Vector<double, 6> Forces::aerodynamic_loads(const Vector<double, 6> &x, Vector3d
     double pd = dynamic_pressure(height,Vtot);
     auto r_wb = Matrices::R_wind_b(alpha,beta);
 
-    //Cpqr
-    C += (1.0/(2.0*Vtot))*(aero.Cpqr*x.tail<3>());
+    Vector<double, 6>  C = calc_aero_cofficients(surface,aero,alpha,beta,Vtot,x.tail<3>());
 
-    //Cab
-    C += aero.Cab * Vector4d(alpha,beta,alpha*alpha,beta*beta);
+    Vector<double, 6> Fa = Vector<double, 6>::Zero();
+    Fa.head<3>() = pd*aero.S*(r_wb*C.head<3>());
+    Fa.tail<3>() = pd*aero.S*aero.d*(r_wb*C.tail<3>());
+    return Fa;
+}
+
+Vector<double, 6> Forces::calc_aero_cofficients(const ControlSurfaces &surface,
+                                                 const AeroCofficients &aero,
+                                                 double alpha,
+                                                 double beta,
+                                                 double Vtot,
+                                                 Vector3d PQR)
+{
+    //C0
+    Vector<double, 6> C = aero.C0;
+
+    //Cpqr
+    if(Vtot > def::DOUBLE_EPS)
+    {
+        C += (1.0/(2.0*Vtot))*(aero.Cpqr*PQR);
+    }
 
     //Cab
     C += aero.Cab * Vector4d(alpha,beta,alpha*alpha,beta*beta);
@@ -107,10 +123,15 @@ Vector<double, 6> Forces::aerodynamic_loads(const Vector<double, 6> &x, Vector3d
         C(0) += (C(2)*C(2))/(std::numbers::pi * aero.eAR);
     }
 
-    Vector<double, 6> Fa = Vector<double, 6>::Zero();
-    Fa.head<3>() = pd*aero.S*(r_wb*C.head<3>());
-    Fa.tail<3>() = pd*aero.S*aero.d*(r_wb*C.tail<3>());
-    return Fa;
+    //https://aviation.stackexchange.com/questions/64490/is-there-a-simple-relationship-between-angle-of-attack-and-lift-coefficient
+    if(!(aero.stallLimit < def::DOUBLE_EPS))
+    {
+        double scale = 0.5 + 0.5*tanh((abs(alpha) - aero.stallLimit)/def::MIXING_FUNCTION);
+        C(0) = (1.0 - scale) * C(0) + scale*(cos(2*alpha) - 1);
+        C(2) = (1.0 - scale) * C(2) + scale*(-sin(2*alpha));
+    }
+
+    return C;
 }
 
 double Forces::dynamic_pressure([[maybe_unused]]double height, double Vtot)
@@ -130,4 +151,17 @@ VectorXd Forces::angularAcceleration(VectorXd demandedAngularVelocity, VectorXd 
     VectorXd res;
     res = (demandedAngularVelocity - rotorAngularVelocity);
     return res.cwiseQuotient(rotorTimeConstants);
+}
+
+void Forces::generateCharacteristics(const ControlSurfaces &surface, const AeroCofficients &aero)
+{
+    std::cout << "Preparing characteristics" << std::endl;
+    Logger aoa_logger("aoa.csv","AOA, CLift, CY, CDrag, CL, CM, CN");
+    Logger aos_logger("aos.csv","AOS, CLift, CY, CDrag, CL, CM, CN");
+
+    for(double angle = -std::numbers::pi; angle <= std::numbers::pi; angle += 0.01)
+    {
+        aoa_logger.log(angle,{calc_aero_cofficients(surface,aero,angle,0.0,0.0,Eigen::Vector3d::Zero())});
+        aos_logger.log(angle,{calc_aero_cofficients(surface,aero,0.0,angle,0.0,Eigen::Vector3d::Zero())});
+    }
 }

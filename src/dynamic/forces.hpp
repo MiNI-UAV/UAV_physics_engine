@@ -18,8 +18,16 @@ public:
                                              double height);
   static VectorXd angularAcceleration(VectorXd demandedAngularVelocity,
                                       VectorXd rotorAngularVelocity);
+  static void generateCharacteristics(const ControlSurfaces &surface,
+                                      const AeroCofficients &aero);
 
 private:
   static double dynamic_pressure(double height, double Vtot);
   static double getRho();
+  static Vector<double, 6> calc_aero_cofficients(const ControlSurfaces &surface,
+                                                 const AeroCofficients &aero,
+                                                 double alpha,
+                                                 double beta,
+                                                 double Vtot,
+                                                 Vector3d PQR);
 };

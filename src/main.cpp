@@ -2,6 +2,7 @@
 #include <cxxopts.hpp>
 #include "simulation/simulation.hpp"
 #include "simulation/uav_state.hpp"
+#include "dynamic/forces.hpp"
 #include "common.hpp"
 
 
@@ -36,6 +37,7 @@ int main(int argc, char** argv)
     UAVparams params;
     parseArgs(argc,argv,&params);
     Logger::setLogDirectory(params.name);
+    Forces::generateCharacteristics(params.surfaces, params.aero_coffs);
     std::cout << "Starting simulation!" <<std::endl;
     Simulation simulation;
     simulation.run();
