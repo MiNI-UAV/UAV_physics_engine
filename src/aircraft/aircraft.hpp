@@ -43,10 +43,19 @@ protected:
 
     int noOfRotors;
     std::unique_ptr<Rotor[]> rotors;
+
     int noOfJets;
     std::unique_ptr<Jet[]> jets;
+
     ControlSurfaces surfaces;
+
     AeroCofficients aero;
+
+    int noOfAmmo;
+    std::unique_ptr<Ammo[]> ammo;
+    
+    int noOfCargo;
+    std::unique_ptr<Cargo[]> cargo;
 
     void reduceMass(double delta_m);
     virtual Eigen::VectorXd RHS(double, Eigen::VectorXd);
