@@ -97,7 +97,7 @@ Aircraft::calcMomentumConservanceConservation(double m, Eigen::Vector3d speed,
     T_inv.block<3, 3>(0, 0) = R_nb;
     T_inv.block<3, 3>(3, 3) = R_nb;
     Vector<double, 6> momentum = massMatrix * (T * state.getX());
-    Vector3d obj_vel = state.getX().head<3>();
+    Vector3d obj_vel = state.getX().head<3>() + state.getX().tail<3>().cross(r);
     obj_vel += speed;
     Vector3d obj_linear_speed = R_bn * obj_vel;
     Vector3d obj_linear_momentum = m * obj_linear_speed;
