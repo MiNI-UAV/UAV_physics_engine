@@ -51,6 +51,16 @@ void Aircraft::calcImpulseForce(double COR, double mi_static, double mi_dynamic,
     state.setX(newX);
 }
 
+std::tuple<int, Eigen::Vector3d> Aircraft::dropCargo(int index)
+{
+    return std::tuple<int, Eigen::Vector3d>();
+}
+
+std::tuple<int, Eigen::Vector3d> Aircraft::shootAmmo(int index)
+{
+    return std::tuple<int, Eigen::Vector3d>();
+}
+
 Eigen::Vector3d Aircraft::calcMomentumConservanceConservation(double m, double speed, Vector3d r)
 {
     std::scoped_lock lck(mtx);

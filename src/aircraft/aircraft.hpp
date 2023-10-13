@@ -30,7 +30,9 @@ public:
 
     void calcImpulseForce(double COR, double mi_static, double mi_dynamic,
         Eigen::Vector3d collisionPoint, Eigen::Vector3d surfaceNormal);
-    Eigen::Vector3d calcMomentumConservanceConservation(double m, double speed, Vector3d r);
+
+    std::tuple<int, Eigen::Vector3d> dropCargo(int index);
+    std::tuple<int, Eigen::Vector3d> shootAmmo(int index);
 
     UAVstate state;
 
@@ -58,5 +60,7 @@ protected:
     std::unique_ptr<Cargo[]> cargo;
 
     void reduceMass(double delta_m);
+    Eigen::Vector3d calcMomentumConservanceConservation(double m, double speed, Vector3d r);
+
     virtual Eigen::VectorXd RHS(double, Eigen::VectorXd);
 };
