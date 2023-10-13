@@ -60,7 +60,9 @@ protected:
     std::unique_ptr<Cargo[]> cargo;
 
     void reduceMass(double delta_m);
-    Eigen::Vector3d calcMomentumConservanceConservation(double m, double speed, Vector3d r);
+    Eigen::Vector3d calcMomentumConservanceConservation(double m,
+                                                        Eigen::Vector3d speed,
+                                                        Eigen::Vector3d r);
 
     virtual Eigen::VectorXd RHS(double, Eigen::VectorXd);
 };
