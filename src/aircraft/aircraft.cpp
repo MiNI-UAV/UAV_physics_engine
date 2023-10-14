@@ -3,12 +3,22 @@
 Aircraft::Aircraft()
 {
     const UAVparams* params = UAVparams::getSingleton();
+
     noOfRotors = params->noOfRotors;
     noOfJets = params->noOfJets;
+    noOfAmmo = params->noOfAmmo;
+    noOfCargo = params->noOfCargo;
+
     rotors = std::make_unique<Rotor[]>(noOfRotors); 
-    jets = std::make_unique<Jet[]>(noOfJets); 
+    jets = std::make_unique<Jet[]>(noOfJets);
+    ammo = std::make_unique<Ammo[]>(noOfAmmo); 
+    cargo = std::make_unique<Cargo[]>(noOfCargo);
+
     std::copy(params->rotors.get(), params->rotors.get() + noOfRotors, rotors.get());
     std::copy(params->jets.get(), params->jets.get() + noOfJets, jets.get());
+    std::copy(params->ammo.get(), params->ammo.get() + noOfAmmo, ammo.get());
+    std::copy(params->cargo.get(), params->cargo.get() + noOfCargo, cargo.get());
+
     surfaces = params->surfaces;
     aero = params->aero_coffs;
 

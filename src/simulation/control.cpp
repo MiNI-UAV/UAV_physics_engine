@@ -154,39 +154,29 @@ bool control(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& sock)
     return false;
 }
 
-void shot(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& sock)
+void shoot(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& sock)
 {
-    std::istringstream f(msg_str.substr(2));
+    int index = std::stoi(msg_str.substr(2));
 
-    double m = 0.03;
-    double speed = 150.0;
-    Vector3d r(0.0, 0.0, 0.1);
-
-    std::string res;
-    for (int i = 0; i < 5; i++)
-    {
-        if(!getline(f, res, ',')) break;
-        switch (i)
-        {
-        case 0:
-            m = std::stod(res);
-            break;
-        case 1:
-            speed = std::stod(res);
-            break;
-        case 2:
-        case 3:
-        case 4:
-            r(i-2) = std::stod(res);
-            break;
-        }
-    }
-
-    Vector3d linear_speed = aircraft->calcMomentumConservanceConservation(m,speed,r);
+    auto [res, linear_speed] = aircraft->shootAmmo(index);
 
     static Eigen::IOFormat commaFormat(3, Eigen::DontAlignCols," ",",");
     std::stringstream ss;
-    ss << "ok;" << linear_speed.format(commaFormat);
+    ss << "ok;" << res << "," << linear_speed.format(commaFormat);
+    std::string s = ss.str();
+    zmq::message_t response(s.data(), s.size()); 
+    sock.send(response,zmq::send_flags::none);
+}
+
+void dropCargo(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& sock)
+{
+    int index = std::stoi(msg_str.substr(2));
+
+    auto [res, linear_speed] = aircraft->dropCargo(index);
+
+    static Eigen::IOFormat commaFormat(3, Eigen::DontAlignCols," ",",");
+    std::stringstream ss;
+    ss << "ok;" << res << "," << linear_speed.format(commaFormat);
     std::string s = ss.str();
     zmq::message_t response(s.data(), s.size()); 
     sock.send(response,zmq::send_flags::none);
@@ -336,8 +326,11 @@ void controlListenerJob(zmq::context_t* ctx, std::string address, Aircraft* airc
             case 'c':
                 run = control(aircraft,msg_str,controlInSock);
             break;
+            case 'g':
+                dropCargo(aircraft,msg_str,controlInSock);
+            break;
             case 'd':
-                shot(aircraft,msg_str,controlInSock);
+                shoot(aircraft,msg_str,controlInSock);
             break;
             case 'f':
                 setForce(aircraft,msg_str,controlInSock);
