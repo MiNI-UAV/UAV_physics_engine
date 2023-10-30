@@ -247,17 +247,16 @@ void setControlSurface(Aircraft* aircraft, std::string& msg_str, zmq::socket_t& 
     {
         std::istringstream f(msg);
         std::string res;
-        Eigen::VectorXd surface;
-        surface.setZero(def::CONTROL_SURFACE_LIMIT);
-        int i = 0;
+        std::vector<double> surface_vec;
         while(getline(f, res, ','))
         {
-            surface[i] = std::stod(res);
-            i++;
+            surface_vec.push_back(std::stod(res));
         }
-        surface = surface.head(i).eval();
-        if(aircraft->setSurface(surface))
-            response.rebuild("ok",2);
+        if(aircraft->setSurface(Eigen::Map<Eigen::VectorXd, Eigen::Unaligned>(
+                surface_vec.data(), surface_vec.size())))
+        {
+            response.rebuild("ok", 2);
+        }
     }
     sock.send(response,zmq::send_flags::none);
     return; 

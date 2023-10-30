@@ -5,7 +5,10 @@
 #include "dynamic/forces.hpp"
 #include "common.hpp"
 
-
+/// @brief Parse CL arguments
+/// @param argc number of argument
+/// @param argv argument array
+/// @param params pointer to UAVparams instant that should be filled
 void parseArgs(int argc, char** argv, UAVparams* params)
 {
     cxxopts::Options options("uav", "Process representing movement of one UAV with rigid frame and constant propellers");
