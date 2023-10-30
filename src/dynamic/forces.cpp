@@ -70,7 +70,7 @@ Vector<double, 6> Forces::jet_lift_loads(int noOfJets, Jet *jets, double time)
 }
 
 Vector<double, 6> Forces::aerodynamic_loads(const Vector<double, 6> &x, Vector3d wind_body,
-    const ControlSurfaces &surface, const AeroCofficients &aero, double height)
+    const ControlSurfaces &surface, const AeroCoefficients &aero, double height)
 {   
     Vector3d velocity = x.segment(0,3);
     Vector3d diff = velocity-wind_body;
@@ -84,7 +84,7 @@ Vector<double, 6> Forces::aerodynamic_loads(const Vector<double, 6> &x, Vector3d
     double pd = dynamic_pressure(height,Vtot);
     auto r_wb = Matrices::R_wind_b(alpha,beta);
 
-    Vector<double, 6>  C = calc_aero_cofficients(surface,aero,alpha,beta,Vtot,x.tail<3>());
+    Vector<double, 6>  C = calc_aero_coefficients(surface,aero,alpha,beta,Vtot,x.tail<3>());
 
     Vector<double, 6> Fa = Vector<double, 6>::Zero();
     Fa.head<3>() = pd*aero.S*(r_wb*C.head<3>());
@@ -92,8 +92,8 @@ Vector<double, 6> Forces::aerodynamic_loads(const Vector<double, 6> &x, Vector3d
     return Fa;
 }
 
-Vector<double, 6> Forces::calc_aero_cofficients(const ControlSurfaces &surface,
-                                                 const AeroCofficients &aero,
+Vector<double, 6> Forces::calc_aero_coefficients(const ControlSurfaces &surface,
+                                                 const AeroCoefficients &aero,
                                                  double alpha,
                                                  double beta,
                                                  double Vtot,
@@ -114,7 +114,7 @@ Vector<double, 6> Forces::calc_aero_cofficients(const ControlSurfaces &surface,
     //Control surface
     if(surface.getNoOfSurface() > 0)
     {
-        C += surface.getCofficients();
+        C += surface.getCoefficients();
     }
 
     //eAR
@@ -153,7 +153,7 @@ VectorXd Forces::angularAcceleration(VectorXd demandedAngularVelocity, VectorXd 
     return res.cwiseQuotient(rotorTimeConstants);
 }
 
-void Forces::generateCharacteristics(const ControlSurfaces &surface, const AeroCofficients &aero)
+void Forces::generateCharacteristics(const ControlSurfaces &surface, const AeroCoefficients &aero)
 {
     std::cout << "Preparing characteristics" << std::endl;
     Logger aoa_logger("aoa.csv","AOA, CLift, CY, CDrag, CL, CM, CN");
@@ -161,7 +161,7 @@ void Forces::generateCharacteristics(const ControlSurfaces &surface, const AeroC
 
     for(double angle = -std::numbers::pi; angle <= std::numbers::pi; angle += 0.01)
     {
-        aoa_logger.log(angle,{calc_aero_cofficients(surface,aero,angle,0.0,0.0,Eigen::Vector3d::Zero())});
-        aos_logger.log(angle,{calc_aero_cofficients(surface,aero,0.0,angle,0.0,Eigen::Vector3d::Zero())});
+        aoa_logger.log(angle,{calc_aero_coefficients(surface,aero,angle,0.0,0.0,Eigen::Vector3d::Zero())});
+        aos_logger.log(angle,{calc_aero_coefficients(surface,aero,0.0,angle,0.0,Eigen::Vector3d::Zero())});
     }
 }

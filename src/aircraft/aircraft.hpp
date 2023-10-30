@@ -51,7 +51,7 @@ protected:
 
     ControlSurfaces surfaces;
 
-    AeroCofficients aero;
+    AeroCoefficients aero;
 
     int noOfAmmo;
     std::unique_ptr<Ammo[]> ammo;
@@ -65,4 +65,6 @@ protected:
                                                         Eigen::Vector3d r);
 
     virtual Eigen::VectorXd RHS(double, Eigen::VectorXd);
+
+    std::unique_ptr<ODE> ode;
 };
