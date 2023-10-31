@@ -104,7 +104,7 @@ void UAVstate::setForce(Eigen::Vector3d force, Eigen::Vector3d torque)
     Eigen::Vector<double,6> newForce;
     newForce << force,torque;
     forceBuf[forceBufSwitch] = newForce;
-    forceValidityCounter = validityOfForce * 4; //< 4 times bcs RK4 call function 4 times.
+    forceValidityCounter = def::validityOfForce * ODE::getMicrosteps(ODE::ODEMethod::RK4);
     force_ptr = forceBuf + forceBufSwitch;
     forceBufSwitch = 1 - forceBufSwitch;
 }

@@ -12,8 +12,13 @@
 class Simulation
 {
     public:
+        /// @brief Default constructor
         Simulation();
+
+        /// @brief Deconstructor
         ~Simulation();
+
+        /// @brief Run simulation
         void run();
 
     private:
