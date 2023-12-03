@@ -40,11 +40,11 @@ void Aircraft::calcImpulseForce(double COR, double mi_static, double mi_dynamic,
         double jd = mi_dynamic*jr;
         double den_t = (invMassMatrix(0,0) 
         + ((invMassMatrix.block<3,3>(3,3)*r.cross(tangent)).cross(r)).dot(tangent));
-        double jf = -vt.norm()/den_t;
+        double jf = vt.norm()/den_t;
         if(jf > js) jf = jd;
         Eigen::Vector<double,6> delta_t;
         delta_t << tangent, r.cross(tangent);
-        X_g = X_g + jf*invMassMatrix*delta_t;
+        X_g = X_g - jf*invMassMatrix*delta_t;
     }
     std::cout << "Energy after collision: " << X_g.transpose()*massMatrix*X_g << std::endl;
     Vector<double,6> newX = T_inv * X_g;
