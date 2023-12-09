@@ -1,5 +1,6 @@
 #include "uav_state.hpp"
 #include "../dynamic/matrices.hpp"
+#include "../params.hpp"
 
 UAVstate::UAVstate()
 {
@@ -101,10 +102,12 @@ void UAVstate::setDemandedOm(Eigen::VectorXd newDemandedOm) {
 
 void UAVstate::setForce(Eigen::Vector3d force, Eigen::Vector3d torque)
 {
+    static const int microsteps = ODE::getMicrosteps(ODE::fromString(Params::getSingleton()->ODE_METHOD));
+
     Eigen::Vector<double,6> newForce;
     newForce << force,torque;
     forceBuf[forceBufSwitch] = newForce;
-    forceValidityCounter = def::validityOfForce * ODE::getMicrosteps(ODE::ODEMethod::RK4);
+    forceValidityCounter = def::validityOfForce * microsteps;
     force_ptr = forceBuf + forceBufSwitch;
     forceBufSwitch = 1 - forceBufSwitch;
 }

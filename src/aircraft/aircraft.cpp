@@ -1,4 +1,5 @@
 #include "aircraft.hpp"
+#include "../params.hpp"
 
 Aircraft::Aircraft()
 {
@@ -25,7 +26,7 @@ Aircraft::Aircraft()
     massMatrix = Matrices::massMatrix();
     invMassMatrix = massMatrix.inverse();
 
-    ode = ODE::factory(ODE::ODEMethod::RK4);
+    ode = ODE::factory(ODE::fromString(Params::getSingleton()->ODE_METHOD));
 }
 
 void clampOrientationIfNessessery([[maybe_unused]] Eigen::VectorXd& state)
@@ -42,15 +43,16 @@ void clampOrientationIfNessessery([[maybe_unused]] Eigen::VectorXd& state)
 }
 
 void Aircraft::update() {
+    static double step_time = Params::getSingleton()->STEP_TIME; 
     static Logger rotor_logger("rotors.csv", "time,rotors_om");
 
     std::scoped_lock lck(mtx);
     VectorXd next = ode->step(state.real_time, state.getState(),
-                            std::bind_front(&Aircraft::RHS, this), def::STEP_TIME);
+                            std::bind_front(&Aircraft::RHS, this), step_time);
     clampOrientationIfNessessery(next);
-    state.setAcceleration((UAVstate::getX(next) - state.getX()) / def::STEP_TIME);
+    state.setAcceleration((UAVstate::getX(next) - state.getX()) / step_time);
     state = next;
-    state.real_time += def::STEP_TIME;
+    state.real_time += step_time;
     rotor_logger.log(state.real_time, {state.getOm()});
 }
 

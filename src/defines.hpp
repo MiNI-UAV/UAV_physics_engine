@@ -6,9 +6,6 @@
 /// @brief Simulation constants
 namespace def {
 
-/// @brief Step time of simulation. Step of ODE solving methods
-const double STEP_TIME = 0.001;
-
 /// @brief Gravity constant on Earth in m/s2
 const double GRAVITY_CONST = 9.81;
 

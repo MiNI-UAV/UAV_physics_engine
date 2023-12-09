@@ -13,6 +13,7 @@ using namespace std::chrono_literals;
 #include "common.hpp"
 #include "control.hpp"
 #include "../defines.hpp"
+#include "../params.hpp"
 
 
 
@@ -49,7 +50,7 @@ void Simulation::sendIdle()
 
 void Simulation::run()
 {
-    TimedLoop loop(std::round(def::STEP_TIME*1000.0), [this](){
+    TimedLoop loop(std::round(Params::getSingleton()->STEP_TIME * 1000.0), [this](){
         aircraft->update();
         aircraft->sendState(&stateOutSock);
     },  aircraft->state.status);

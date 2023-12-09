@@ -30,6 +30,7 @@ set(SOURCE_FILES
     ${SOURCE_DIR}/simulation/simulation.hpp
     ${SOURCE_DIR}/simulation/uav_state.cpp
     ${SOURCE_DIR}/simulation/uav_state.hpp
+    ${SOURCE_DIR}/params.cpp
 )
 
 
