@@ -121,6 +121,11 @@ Matrix<double,6,6> Matrices::TMatrix(Vector<double,6>  y)
     return res;
 }
 
+Matrix<double,6,6> Matrices::TMatrix(Vector<double,7>  y)
+{
+    return TMatrix(Matrices::quaterionsToRPY(y));
+}
+
 Matrix<double, 3, 3> Matrices::R_nb(const Vector<double,6>&  y)
 {
     double fi = y(3);

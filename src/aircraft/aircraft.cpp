@@ -50,7 +50,8 @@ void Aircraft::update() {
     VectorXd next = ode->step(state.real_time, state.getState(),
                             std::bind_front(&Aircraft::RHS, this), step_time);
     clampOrientationIfNessessery(next);
-    state.setAcceleration((UAVstate::getX(next) - state.getX()) / step_time);
+    state.setAcceleration((Matrices::TMatrix(UAVstate::getY(next)) *UAVstate::getX(next) -
+        Matrices::TMatrix(state.getY()) * state.getX()) / step_time);
     state = next;
     state.real_time += step_time;
     rotor_logger.log(state.real_time, {state.getOm()});

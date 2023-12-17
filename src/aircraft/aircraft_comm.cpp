@@ -32,14 +32,23 @@ void Aircraft::sendState(zmq::socket_t* socket)
     Eigen::Vector<double,6> Y = state.getY();
 #endif
 
-    Eigen::Vector<double,6> vn = Matrices::TMatrix(Y)*state.getX(); 
+    Eigen::Matrix<double,6,6> T = Matrices::TMatrix(Y);
+
+    Eigen::Vector<double,6> vn = T * state.getX(); 
     ss << "vn:" << vn.format(commaFormat);
     s = ss.str();
     message.rebuild(s.data(), s.size());
     ss.str("");
     socket->send(message,zmq::send_flags::none);
 
-    ss << "ab:" << state.getAcceleration().format(commaFormat);
+    Eigen::Vector<double,6> ab = T.colPivHouseholderQr().solve(state.getAcceleration());
+    ss << "ab:" << ab.format(commaFormat);
+    s = ss.str();
+    message.rebuild(s.data(), s.size());
+    ss.str("");
+    socket->send(message,zmq::send_flags::none);
+
+    ss << "an:" << state.getAcceleration().format(commaFormat);
     s = ss.str();
     message.rebuild(s.data(), s.size());
     ss.str("");

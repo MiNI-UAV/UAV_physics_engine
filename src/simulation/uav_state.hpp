@@ -151,7 +151,7 @@ private:
     /* @brief Linear and angular velocity in local coordinate system */
     Eigen::Vector<double,6> x;
 
-    /* @brief Linear and angular acceleration in local coordinate system */
+    /* @brief Linear and angular acceleration in world coordinate system */
     Eigen::Vector<double,6> acceleration;
 
     /* @brief Number of rotors */

@@ -21,6 +21,11 @@ class Matrices
         /// @return transformation matrix
         static Matrix<double,6,6> TMatrix(Vector<double,6>  y);
 
+        /// @brief Calculates transformation matrix from body to world frame for velocities
+        /// @param y actual position vector, quaterion
+        /// @return transformation matrix
+        static Matrix<double,6,6> TMatrix(Vector<double,7>  y);
+
         /// @brief Calculates rotation matrix from world to body frame
         /// @param y actual position & orietation vector (RPY)
         /// @return rotation matrix
