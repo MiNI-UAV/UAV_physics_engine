@@ -104,7 +104,7 @@ Aircraft::calcMomentumConservanceConservation(double m, Eigen::Vector3d speed,
     Vector<double, 6> obj_momentum;
     r = R_bn * r;
     obj_momentum << obj_linear_momentum, r.cross(obj_linear_momentum);
-    reduceMass(m);
+    reduceMass(m,r);
     Vector<double, 6> newX = T_inv * invMassMatrix * (momentum - obj_momentum);
     state.setX(newX);
     return obj_linear_speed;

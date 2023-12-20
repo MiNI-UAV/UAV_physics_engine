@@ -56,4 +56,9 @@ class Matrices
         /// @param x vector of velocites
         /// @return conjugation matrix
         static Matrix4d OM_conj(Vector<double,6>  x);
+
+        /// @brief Calculate skew symmetic matrix, used in cross products
+        /// @param v vector 3d
+        /// @return skew symmetric matrix
+        static Eigen::Matrix3d asSkewSymmeticMatrix(Eigen::Vector3d v);
 };

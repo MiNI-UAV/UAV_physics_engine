@@ -72,6 +72,32 @@ Matrix<double, 6, 6> Matrices::massMatrix()
     massMatrix(5,3) = -params->Ixz;
     massMatrix(4,5) = -params->Iyz;
     massMatrix(5,4) = -params->Iyz;
+
+    double cumulated_load_mass = 0.0;
+    Eigen::Matrix3d neg_cumulated_load_inertia = Eigen::Matrix3d::Zero();
+
+    auto add_load =
+        [&](double m, Eigen::Vector3d r) {
+          cumulated_load_mass += m;
+          Eigen::Matrix3d r_tilde = Matrices::asSkewSymmeticMatrix(r);
+          neg_cumulated_load_inertia += (m * r_tilde * r_tilde);
+        };
+
+    for (int i = 0; i < params->noOfAmmo; i++) 
+    {
+      add_load(params->ammo[i].getMass(), params->ammo[i].getOffset());
+    }
+
+    for (int i = 0; i < params->noOfCargo; i++) 
+    {
+      add_load(params->cargo[i].getMass(), params->cargo[i].getOffset());
+    }
+
+    massMatrix(0,0) += cumulated_load_mass;
+    massMatrix(1,1) += cumulated_load_mass;
+    massMatrix(2,2) += cumulated_load_mass;
+    massMatrix.block<3,3>(3,3) -= neg_cumulated_load_inertia;
+
     return massMatrix;
 }
 
@@ -160,4 +186,16 @@ Matrix<double, 3, 3> Matrices::R_wind_b(double alpha, double beta)
                 sb    , cb    , 0.0,
                 sa*cb , -sa*sb,  ca;
     return r_wind_b;
+}
+
+Eigen::Matrix3d Matrices::asSkewSymmeticMatrix(Eigen::Vector3d v)
+{
+    Eigen::Matrix3d dst = Eigen::Matrix3d::Zero();
+    dst(0, 1) = -v(2);
+    dst(1, 0) = v(2);
+    dst(0, 2) = v(1);
+    dst(2, 0) = -v(1);
+    dst(1, 2) = -v(0);
+    dst(2, 1) = v(0);
+    return dst;
 }

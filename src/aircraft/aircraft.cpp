@@ -57,7 +57,7 @@ void Aircraft::update() {
     rotor_logger.log(state.real_time, {state.getOm()});
 }
 
-void Aircraft::reduceMass(double delta_m) 
+void Aircraft::reduceMass(double delta_m, Eigen::Vector3d r) 
 {
     double m = massMatrix(0,0);
     if(delta_m > m)
@@ -65,7 +65,13 @@ void Aircraft::reduceMass(double delta_m)
         std::cerr << "Mass can not be negative!" << std::endl;
         return;
     }
-    massMatrix = ((m-delta_m)/m) * massMatrix;
+    massMatrix(0,0) -= delta_m;
+    massMatrix(1,1) -= delta_m;
+    massMatrix(2,2) -= delta_m;
+    Eigen::Matrix3d r_tilde = Matrices::asSkewSymmeticMatrix(r);
+    Eigen::Matrix3d neg_lost_inertia =  delta_m * r_tilde * r_tilde;
+    massMatrix.block<3,3>(3,3) += neg_lost_inertia;
+
     invMassMatrix = massMatrix.inverse();
 }
 

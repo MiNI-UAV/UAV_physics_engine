@@ -107,7 +107,8 @@ protected:
 
     /// @brief Reduces mass of aircraft of given value. Mass matrix is reduced proportionally - moments of inertia is scaled as well.
     /// @param delta_m mass reduction
-    void reduceMass(double delta_m);
+    /// @param r lost mass position in local frame
+    void reduceMass(double delta_m, Eigen::Vector3d r);
 
     /// @brief Calculateds result of releasing/launching object from aircraft
     /// @param m object mass
