@@ -77,20 +77,20 @@ Matrix<double, 6, 6> Matrices::massMatrix()
     Eigen::Matrix3d neg_cumulated_load_inertia = Eigen::Matrix3d::Zero();
 
     auto add_load =
-        [&](double m, Eigen::Vector3d r) {
-          cumulated_load_mass += m;
+        [&](double m, Eigen::Vector3d r, int ammount) {
+          cumulated_load_mass += ammount * m;
           Eigen::Matrix3d r_tilde = Matrices::asSkewSymmeticMatrix(r);
-          neg_cumulated_load_inertia += (m * r_tilde * r_tilde);
+          neg_cumulated_load_inertia += ammount * (m * r_tilde * r_tilde);
         };
 
     for (int i = 0; i < params->noOfAmmo; i++) 
     {
-      add_load(params->ammo[i].getMass(), params->ammo[i].getOffset());
+      add_load(params->ammo[i].getMass(), params->ammo[i].getOffset(),params->ammo[i].getAmmount());
     }
 
     for (int i = 0; i < params->noOfCargo; i++) 
     {
-      add_load(params->cargo[i].getMass(), params->cargo[i].getOffset());
+      add_load(params->cargo[i].getMass(), params->cargo[i].getOffset(),params->ammo[i].getAmmount());
     }
 
     massMatrix(0,0) += cumulated_load_mass;
