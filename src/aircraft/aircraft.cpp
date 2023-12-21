@@ -73,8 +73,6 @@ void Aircraft::reduceMass(double delta_m, Eigen::Vector3d r)
     massMatrix.block<3,3>(3,3) += neg_lost_inertia;
 
     invMassMatrix = massMatrix.inverse();
-
-    std::cout << "Mass matrix:\n " << massMatrix << std::endl;
 }
 
 Eigen::VectorXd Aircraft::RHS(double time, Eigen::VectorXd local_state) {
