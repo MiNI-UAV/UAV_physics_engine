@@ -11,12 +11,11 @@
 
 using namespace Eigen;
 
-Vector<double,6> Forces::gravity_loads(const Matrix3d& r_nb)
+Vector<double,6> Forces::gravity_loads(double mass, const Matrix3d& r_nb)
 {
-    const UAVparams* params = UAVparams::getSingleton();
     Vector<double,6> Fg;
     Fg.setZero();
-    Fg.head<3>() = r_nb * Eigen::Vector3d(0.0,0.0,(params->m*def::GRAVITY_CONST));
+    Fg.head<3>() = r_nb * Eigen::Vector3d(0.0,0.0,(mass*def::GRAVITY_CONST));
     return Fg;
 }
 

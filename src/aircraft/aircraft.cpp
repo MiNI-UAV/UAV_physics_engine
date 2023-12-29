@@ -95,7 +95,7 @@ Eigen::VectorXd Aircraft::RHS(double time, Eigen::VectorXd local_state) {
 #endif
     Eigen::Vector<double, 6> accel = invMassMatrix *
         (
-            Forces::gravity_loads(r_nb) +
+            Forces::gravity_loads(massMatrix(0,0),r_nb) +
             Forces::rotor_lift_loads(noOfRotors, rotors.get(),UAVstate::getOm(local_state)) +
             Forces::jet_lift_loads(noOfJets, jets.get(), time) +
             Forces::aerodynamic_loads(X,r_nb*atmosphere->getWind(),surfaces, aero, -Y.z()) +
