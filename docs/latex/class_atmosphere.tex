@@ -1,0 +1,148 @@
+\hypertarget{class_atmosphere}{}\doxysection{Atmosphere Class Reference}
+\label{class_atmosphere}\index{Atmosphere@{Atmosphere}}
+
+
+Representation of atmosphere where aircrafts fly.  
+
+
+
+
+{\ttfamily \#include $<$atmosphere.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_atmosphere_a9bbd0907084e7078242e6f7717946416}{Atmosphere}} ()
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_atmosphere_afbcfeeabf6602a6816405b9217af62fd}{$\sim$\+Atmosphere}} ()
+\begin{DoxyCompactList}\small\item\em Default deconstructor. \end{DoxyCompactList}\item 
+Eigen\+::\+Vector3d \mbox{\hyperlink{class_atmosphere_a73de9e2516dbf91927f6a34da8be88a9}{get\+Wind}} ()
+\begin{DoxyCompactList}\small\item\em Returns wind speed vector in world frame. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{class_atmosphere_a9b383073f8b10d1cd162532c25f5be38}{get\+Air\+Temperature}} ()
+\begin{DoxyCompactList}\small\item\em Returns air temperature. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{class_atmosphere_af3983ecc4615c8b1d82bd42b35c0bcb1}{get\+Air\+Pressure}} ()
+\begin{DoxyCompactList}\small\item\em Returns air pressure. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{class_atmosphere_ae21f2e1023af4d1764f4d88d6607d630}{get\+Air\+Density}} ()
+\begin{DoxyCompactList}\small\item\em Returns air density. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_atmosphere_ae66caed6793370a0096718a825830af3}{update}} (\mbox{\hyperlink{struct_atmosphere_info}{Atmosphere\+Info}} info)
+\begin{DoxyCompactList}\small\item\em Update atmosphere status. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_atmosphere}{Atmosphere}} $\ast$ \mbox{\hyperlink{class_atmosphere_a5a8abfe9a637371802a8795df370472e}{get\+Singleton}} ()
+\begin{DoxyCompactList}\small\item\em Returns pointer to singleton of atmosphere. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Representation of atmosphere where aircrafts fly. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_atmosphere_a9bbd0907084e7078242e6f7717946416}\label{class_atmosphere_a9bbd0907084e7078242e6f7717946416}} 
+\index{Atmosphere@{Atmosphere}!Atmosphere@{Atmosphere}}
+\index{Atmosphere@{Atmosphere}!Atmosphere@{Atmosphere}}
+\doxysubsubsection{\texorpdfstring{Atmosphere()}{Atmosphere()}}
+{\footnotesize\ttfamily Atmosphere\+::\+Atmosphere (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Default constructor. 
+
+\mbox{\Hypertarget{class_atmosphere_afbcfeeabf6602a6816405b9217af62fd}\label{class_atmosphere_afbcfeeabf6602a6816405b9217af62fd}} 
+\index{Atmosphere@{Atmosphere}!````~Atmosphere@{$\sim$Atmosphere}}
+\index{````~Atmosphere@{$\sim$Atmosphere}!Atmosphere@{Atmosphere}}
+\doxysubsubsection{\texorpdfstring{$\sim$Atmosphere()}{~Atmosphere()}}
+{\footnotesize\ttfamily Atmosphere\+::$\sim$\+Atmosphere (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Default deconstructor. 
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_atmosphere_ae21f2e1023af4d1764f4d88d6607d630}\label{class_atmosphere_ae21f2e1023af4d1764f4d88d6607d630}} 
+\index{Atmosphere@{Atmosphere}!getAirDensity@{getAirDensity}}
+\index{getAirDensity@{getAirDensity}!Atmosphere@{Atmosphere}}
+\doxysubsubsection{\texorpdfstring{getAirDensity()}{getAirDensity()}}
+{\footnotesize\ttfamily double Atmosphere\+::get\+Air\+Density (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns air density. 
+
+\begin{DoxyReturn}{Returns}
+air density kg/m3 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_atmosphere_af3983ecc4615c8b1d82bd42b35c0bcb1}\label{class_atmosphere_af3983ecc4615c8b1d82bd42b35c0bcb1}} 
+\index{Atmosphere@{Atmosphere}!getAirPressure@{getAirPressure}}
+\index{getAirPressure@{getAirPressure}!Atmosphere@{Atmosphere}}
+\doxysubsubsection{\texorpdfstring{getAirPressure()}{getAirPressure()}}
+{\footnotesize\ttfamily double Atmosphere\+::get\+Air\+Pressure (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns air pressure. 
+
+\begin{DoxyReturn}{Returns}
+air pressure Pa 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_atmosphere_a9b383073f8b10d1cd162532c25f5be38}\label{class_atmosphere_a9b383073f8b10d1cd162532c25f5be38}} 
+\index{Atmosphere@{Atmosphere}!getAirTemperature@{getAirTemperature}}
+\index{getAirTemperature@{getAirTemperature}!Atmosphere@{Atmosphere}}
+\doxysubsubsection{\texorpdfstring{getAirTemperature()}{getAirTemperature()}}
+{\footnotesize\ttfamily double Atmosphere\+::get\+Air\+Temperature (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns air temperature. 
+
+\begin{DoxyReturn}{Returns}
+air temperature K 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_atmosphere_a5a8abfe9a637371802a8795df370472e}\label{class_atmosphere_a5a8abfe9a637371802a8795df370472e}} 
+\index{Atmosphere@{Atmosphere}!getSingleton@{getSingleton}}
+\index{getSingleton@{getSingleton}!Atmosphere@{Atmosphere}}
+\doxysubsubsection{\texorpdfstring{getSingleton()}{getSingleton()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_atmosphere}{Atmosphere}} $\ast$ Atmosphere\+::get\+Singleton (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Returns pointer to singleton of atmosphere. 
+
+\begin{DoxyReturn}{Returns}
+pointer to \mbox{\hyperlink{class_atmosphere}{Atmosphere}} instance. Nullptr if singleton not exists 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_atmosphere_a73de9e2516dbf91927f6a34da8be88a9}\label{class_atmosphere_a73de9e2516dbf91927f6a34da8be88a9}} 
+\index{Atmosphere@{Atmosphere}!getWind@{getWind}}
+\index{getWind@{getWind}!Atmosphere@{Atmosphere}}
+\doxysubsubsection{\texorpdfstring{getWind()}{getWind()}}
+{\footnotesize\ttfamily Eigen\+::\+Vector3d Atmosphere\+::get\+Wind (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns wind speed vector in world frame. 
+
+\begin{DoxyReturn}{Returns}
+wind speed vector m/s 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_atmosphere_ae66caed6793370a0096718a825830af3}\label{class_atmosphere_ae66caed6793370a0096718a825830af3}} 
+\index{Atmosphere@{Atmosphere}!update@{update}}
+\index{update@{update}!Atmosphere@{Atmosphere}}
+\doxysubsubsection{\texorpdfstring{update()}{update()}}
+{\footnotesize\ttfamily void Atmosphere\+::update (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_atmosphere_info}{Atmosphere\+Info}}}]{info }\end{DoxyParamCaption})}
+
+
+
+Update atmosphere status. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em info} & dto with new atmosphere info \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/simulation/\mbox{\hyperlink{atmosphere_8hpp}{atmosphere.\+hpp}}\item 
+src/simulation/\mbox{\hyperlink{atmosphere_8cpp}{atmosphere.\+cpp}}\end{DoxyCompactItemize}

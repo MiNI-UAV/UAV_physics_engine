@@ -1,0 +1,38 @@
+\hypertarget{control_8hpp}{}\doxysection{src/simulation/control.hpp File Reference}
+\label{control_8hpp}\index{src/simulation/control.hpp@{src/simulation/control.hpp}}
+{\ttfamily \#include $<$zmq.\+hpp$>$}\newline
+{\ttfamily \#include \char`\"{}uav\+\_\+state.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../dynamic/matrices.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../defines.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../aircraft/aircraft.\+hpp\char`\"{}}\newline
+Include dependency graph for control.\+hpp\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{control_8hpp_aea6d4898a85ccc43032ebbcb2c281364}{control\+Listener\+Job}} (zmq\+::context\+\_\+t $\ast$ctx, std\+::string address, \mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$aircraft)
+\begin{DoxyCompactList}\small\item\em Job of control listener thread. Listen for new control command and handle them. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{control_8hpp_aea6d4898a85ccc43032ebbcb2c281364}\label{control_8hpp_aea6d4898a85ccc43032ebbcb2c281364}} 
+\index{control.hpp@{control.hpp}!controlListenerJob@{controlListenerJob}}
+\index{controlListenerJob@{controlListenerJob}!control.hpp@{control.hpp}}
+\doxysubsubsection{\texorpdfstring{controlListenerJob()}{controlListenerJob()}}
+{\footnotesize\ttfamily void control\+Listener\+Job (\begin{DoxyParamCaption}\item[{zmq\+::context\+\_\+t $\ast$}]{ctx,  }\item[{std\+::string}]{address,  }\item[{\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$}]{aircraft }\end{DoxyParamCaption})}
+
+
+
+Job of control listener thread. Listen for new control command and handle them. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ctx} & zero mq context \\
+\hline
+{\em address} & address of listener socket \\
+\hline
+{\em aircraft} & pointer to aircraft \\
+\hline
+\end{DoxyParams}

@@ -1,0 +1,235 @@
+\hypertarget{class_matrices}{}\doxysection{Matrices Class Reference}
+\label{class_matrices}\index{Matrices@{Matrices}}
+
+
+{\ttfamily \#include $<$matrices.\+hpp$>$}
+
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static Matrix$<$ double, 6, 6 $>$ \mbox{\hyperlink{class_matrices_a9dc70de5e2461fd6ced10fd380ac3881}{mass\+Matrix}} ()
+\begin{DoxyCompactList}\small\item\em Constucts initial mass matrix, based on parameters. \end{DoxyCompactList}\item 
+static Matrix$<$ double, 6, 6 $>$ \mbox{\hyperlink{class_matrices_a0122c53b96f05f9382b8f6fc355b0e5c}{gyro\+Matrix}} (Vector$<$ double, 6 $>$ x)
+\begin{DoxyCompactList}\small\item\em Calculates gyroscopic matrix. \end{DoxyCompactList}\item 
+static Matrix$<$ double, 6, 6 $>$ \mbox{\hyperlink{class_matrices_ad7cdbb13a5e238529c053451c345fcd8}{TMatrix}} (Vector$<$ double, 6 $>$ y)
+\begin{DoxyCompactList}\small\item\em Calculates transformation matrix from body to world frame for velocities. \end{DoxyCompactList}\item 
+static Matrix$<$ double, 6, 6 $>$ \mbox{\hyperlink{class_matrices_ac1015432179c4cb31bbc74d3b9fe105d}{TMatrix}} (Vector$<$ double, 7 $>$ y)
+\begin{DoxyCompactList}\small\item\em Calculates transformation matrix from body to world frame for velocities. \end{DoxyCompactList}\item 
+static Matrix$<$ double, 3, 3 $>$ \mbox{\hyperlink{class_matrices_a69cab89c8c63cbdc766a7cf800b05b6e}{R\+\_\+nb}} (const Vector$<$ double, 6 $>$ \&y)
+\begin{DoxyCompactList}\small\item\em Calculates rotation matrix from world to body frame. \end{DoxyCompactList}\item 
+static Matrix$<$ double, 3, 3 $>$ \mbox{\hyperlink{class_matrices_a6edc9c951f69e647b97ae7ba77fe4a3d}{R\+\_\+nb}} (const Vector$<$ double, 7 $>$ \&y)
+\begin{DoxyCompactList}\small\item\em Calculates rotation matrix from world to body frame. \end{DoxyCompactList}\item 
+static Matrix$<$ double, 3, 3 $>$ \mbox{\hyperlink{class_matrices_a9834b23180a7c1a5ac6cd2ff68df0bf3}{R\+\_\+wind\+\_\+b}} (double alpha, double beta)
+\begin{DoxyCompactList}\small\item\em Calculates rotation matrix from wind to body frame. \end{DoxyCompactList}\item 
+static Vector$<$ double, 6 $>$ \mbox{\hyperlink{class_matrices_a999dc8cf9110aa300d43dae5f36d3a07}{quaterions\+To\+RPY}} (Vector$<$ double, 7 $>$ y)
+\begin{DoxyCompactList}\small\item\em Convert position and orientation vector from quaterions to RPY Euler angles. \end{DoxyCompactList}\item 
+static Vector$<$ double, 7 $>$ \mbox{\hyperlink{class_matrices_a9191d82473b815477fba7ca356ee7aac}{RPYto\+Quaterion}} (Vector$<$ double, 6 $>$ y)
+\begin{DoxyCompactList}\small\item\em Convert position and orientation vector from RPY Euler angles to quaterions. \end{DoxyCompactList}\item 
+static Matrix4d \mbox{\hyperlink{class_matrices_a0fce110006d5c04c911c23eb94cd47b2}{OM\+\_\+conj}} (Vector$<$ double, 6 $>$ x)
+\begin{DoxyCompactList}\small\item\em Calculates conjugation matrix for angular velocity. \end{DoxyCompactList}\item 
+static Eigen\+::\+Matrix3d \mbox{\hyperlink{class_matrices_abe6c1b90d7875019e3f451610dc0e021}{as\+Skew\+Symmetic\+Matrix}} (Eigen\+::\+Vector3d v)
+\begin{DoxyCompactList}\small\item\em Calculate skew symmetic matrix, used in cross products. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_matrices_abe6c1b90d7875019e3f451610dc0e021}\label{class_matrices_abe6c1b90d7875019e3f451610dc0e021}} 
+\index{Matrices@{Matrices}!asSkewSymmeticMatrix@{asSkewSymmeticMatrix}}
+\index{asSkewSymmeticMatrix@{asSkewSymmeticMatrix}!Matrices@{Matrices}}
+\doxysubsubsection{\texorpdfstring{asSkewSymmeticMatrix()}{asSkewSymmeticMatrix()}}
+{\footnotesize\ttfamily Eigen\+::\+Matrix3d Matrices\+::as\+Skew\+Symmetic\+Matrix (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector3d}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Calculate skew symmetic matrix, used in cross products. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & vector 3d \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+skew symmetric matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_matrices_a0122c53b96f05f9382b8f6fc355b0e5c}\label{class_matrices_a0122c53b96f05f9382b8f6fc355b0e5c}} 
+\index{Matrices@{Matrices}!gyroMatrix@{gyroMatrix}}
+\index{gyroMatrix@{gyroMatrix}!Matrices@{Matrices}}
+\doxysubsubsection{\texorpdfstring{gyroMatrix()}{gyroMatrix()}}
+{\footnotesize\ttfamily Matrix$<$ double, 6, 6 $>$ Matrices\+::gyro\+Matrix (\begin{DoxyParamCaption}\item[{Vector$<$ double, 6 $>$}]{x }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Calculates gyroscopic matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & velocity vector \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+gyroscopic matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_matrices_a9dc70de5e2461fd6ced10fd380ac3881}\label{class_matrices_a9dc70de5e2461fd6ced10fd380ac3881}} 
+\index{Matrices@{Matrices}!massMatrix@{massMatrix}}
+\index{massMatrix@{massMatrix}!Matrices@{Matrices}}
+\doxysubsubsection{\texorpdfstring{massMatrix()}{massMatrix()}}
+{\footnotesize\ttfamily Matrix$<$ double, 6, 6 $>$ Matrices\+::mass\+Matrix (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Constucts initial mass matrix, based on parameters. 
+
+\begin{DoxyReturn}{Returns}
+mass matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_matrices_a0fce110006d5c04c911c23eb94cd47b2}\label{class_matrices_a0fce110006d5c04c911c23eb94cd47b2}} 
+\index{Matrices@{Matrices}!OM\_conj@{OM\_conj}}
+\index{OM\_conj@{OM\_conj}!Matrices@{Matrices}}
+\doxysubsubsection{\texorpdfstring{OM\_conj()}{OM\_conj()}}
+{\footnotesize\ttfamily Matrix4d Matrices\+::\+OM\+\_\+conj (\begin{DoxyParamCaption}\item[{Vector$<$ double, 6 $>$}]{x }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Calculates conjugation matrix for angular velocity. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & vector of velocites \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+conjugation matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_matrices_a999dc8cf9110aa300d43dae5f36d3a07}\label{class_matrices_a999dc8cf9110aa300d43dae5f36d3a07}} 
+\index{Matrices@{Matrices}!quaterionsToRPY@{quaterionsToRPY}}
+\index{quaterionsToRPY@{quaterionsToRPY}!Matrices@{Matrices}}
+\doxysubsubsection{\texorpdfstring{quaterionsToRPY()}{quaterionsToRPY()}}
+{\footnotesize\ttfamily Vector$<$ double, 6 $>$ Matrices\+::quaterions\+To\+RPY (\begin{DoxyParamCaption}\item[{Vector$<$ double, 7 $>$}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Convert position and orientation vector from quaterions to RPY Euler angles. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em y} & position \& orientation vector \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+position \& orientation vector. Orientation is given in RPY 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_matrices_a69cab89c8c63cbdc766a7cf800b05b6e}\label{class_matrices_a69cab89c8c63cbdc766a7cf800b05b6e}} 
+\index{Matrices@{Matrices}!R\_nb@{R\_nb}}
+\index{R\_nb@{R\_nb}!Matrices@{Matrices}}
+\doxysubsubsection{\texorpdfstring{R\_nb()}{R\_nb()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix$<$ double, 3, 3 $>$ Matrices\+::\+R\+\_\+nb (\begin{DoxyParamCaption}\item[{const Vector$<$ double, 6 $>$ \&}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Calculates rotation matrix from world to body frame. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em y} & actual position \& orietation vector (RPY) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+rotation matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_matrices_a6edc9c951f69e647b97ae7ba77fe4a3d}\label{class_matrices_a6edc9c951f69e647b97ae7ba77fe4a3d}} 
+\index{Matrices@{Matrices}!R\_nb@{R\_nb}}
+\index{R\_nb@{R\_nb}!Matrices@{Matrices}}
+\doxysubsubsection{\texorpdfstring{R\_nb()}{R\_nb()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix$<$ double, 3, 3 $>$ Matrices\+::\+R\+\_\+nb (\begin{DoxyParamCaption}\item[{const Vector$<$ double, 7 $>$ \&}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Calculates rotation matrix from world to body frame. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em y} & actual position \& orietation vector (quaterions) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+rotation matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_matrices_a9834b23180a7c1a5ac6cd2ff68df0bf3}\label{class_matrices_a9834b23180a7c1a5ac6cd2ff68df0bf3}} 
+\index{Matrices@{Matrices}!R\_wind\_b@{R\_wind\_b}}
+\index{R\_wind\_b@{R\_wind\_b}!Matrices@{Matrices}}
+\doxysubsubsection{\texorpdfstring{R\_wind\_b()}{R\_wind\_b()}}
+{\footnotesize\ttfamily Matrix$<$ double, 3, 3 $>$ Matrices\+::\+R\+\_\+wind\+\_\+b (\begin{DoxyParamCaption}\item[{double}]{alpha,  }\item[{double}]{beta }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Calculates rotation matrix from wind to body frame. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em alpha} & angle of attack \\
+\hline
+{\em beta} & angle of slide \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+rotation matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_matrices_a9191d82473b815477fba7ca356ee7aac}\label{class_matrices_a9191d82473b815477fba7ca356ee7aac}} 
+\index{Matrices@{Matrices}!RPYtoQuaterion@{RPYtoQuaterion}}
+\index{RPYtoQuaterion@{RPYtoQuaterion}!Matrices@{Matrices}}
+\doxysubsubsection{\texorpdfstring{RPYtoQuaterion()}{RPYtoQuaterion()}}
+{\footnotesize\ttfamily Vector$<$ double, 7 $>$ Matrices\+::\+RPYto\+Quaterion (\begin{DoxyParamCaption}\item[{Vector$<$ double, 6 $>$}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Convert position and orientation vector from RPY Euler angles to quaterions. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em y} & position \& orientation vector \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+position \& orientation vector. Orientation is given in quaterions 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_matrices_ad7cdbb13a5e238529c053451c345fcd8}\label{class_matrices_ad7cdbb13a5e238529c053451c345fcd8}} 
+\index{Matrices@{Matrices}!TMatrix@{TMatrix}}
+\index{TMatrix@{TMatrix}!Matrices@{Matrices}}
+\doxysubsubsection{\texorpdfstring{TMatrix()}{TMatrix()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix$<$ double, 6, 6 $>$ Matrices\+::\+TMatrix (\begin{DoxyParamCaption}\item[{Vector$<$ double, 6 $>$}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Calculates transformation matrix from body to world frame for velocities. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em y} & actual position vector \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+transformation matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_matrices_ac1015432179c4cb31bbc74d3b9fe105d}\label{class_matrices_ac1015432179c4cb31bbc74d3b9fe105d}} 
+\index{Matrices@{Matrices}!TMatrix@{TMatrix}}
+\index{TMatrix@{TMatrix}!Matrices@{Matrices}}
+\doxysubsubsection{\texorpdfstring{TMatrix()}{TMatrix()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix$<$ double, 6, 6 $>$ Matrices\+::\+TMatrix (\begin{DoxyParamCaption}\item[{Vector$<$ double, 7 $>$}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Calculates transformation matrix from body to world frame for velocities. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em y} & actual position vector, quaterion \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+transformation matrix 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/dynamic/\mbox{\hyperlink{matrices_8hpp}{matrices.\+hpp}}\item 
+src/dynamic/\mbox{\hyperlink{matrices_8cpp}{matrices.\+cpp}}\end{DoxyCompactItemize}

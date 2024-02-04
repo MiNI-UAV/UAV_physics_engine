@@ -1,0 +1,20 @@
+\hypertarget{aircraft_8cpp}{}\doxysection{src/aircraft/aircraft.cpp File Reference}
+\label{aircraft_8cpp}\index{src/aircraft/aircraft.cpp@{src/aircraft/aircraft.cpp}}
+{\ttfamily \#include \char`\"{}aircraft.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../params.\+hpp\char`\"{}}\newline
+Include dependency graph for aircraft.\+cpp\+:
+% FIG 0
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{aircraft_8cpp_ae3f906dd43ba44213f87b488358cc1f2}{clamp\+Orientation\+If\+Nessessery}} (\mbox{[}\mbox{[}maybe\+\_\+unused\mbox{]}\mbox{]} Eigen\+::\+Vector\+Xd \&state)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{aircraft_8cpp_ae3f906dd43ba44213f87b488358cc1f2}\label{aircraft_8cpp_ae3f906dd43ba44213f87b488358cc1f2}} 
+\index{aircraft.cpp@{aircraft.cpp}!clampOrientationIfNessessery@{clampOrientationIfNessessery}}
+\index{clampOrientationIfNessessery@{clampOrientationIfNessessery}!aircraft.cpp@{aircraft.cpp}}
+\doxysubsubsection{\texorpdfstring{clampOrientationIfNessessery()}{clampOrientationIfNessessery()}}
+{\footnotesize\ttfamily void clamp\+Orientation\+If\+Nessessery (\begin{DoxyParamCaption}\item[{\mbox{[}\mbox{[}maybe\+\_\+unused\mbox{]} \mbox{]} Eigen\+::\+Vector\+Xd \&}]{state }\end{DoxyParamCaption})}
+

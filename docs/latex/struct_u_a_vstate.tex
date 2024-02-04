@@ -1,0 +1,454 @@
+\hypertarget{struct_u_a_vstate}{}\doxysection{UAVstate Struct Reference}
+\label{struct_u_a_vstate}\index{UAVstate@{UAVstate}}
+
+
+{\ttfamily \#include $<$uav\+\_\+state.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_u_a_vstate_a6fb1eacbcd8771f4ac5d1f47601426b5}{UAVstate}} ()
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_u_a_vstate_aeeb84fac7f7dcd8c28c8bac605422219}{$\sim$\+UAVstate}} ()
+\begin{DoxyCompactList}\small\item\em Deconstructor. \end{DoxyCompactList}\item 
+Eigen\+::\+Vector$<$ double, 7 $>$ \mbox{\hyperlink{struct_u_a_vstate_a7736d7a0e45ee2d3024fa0991018ded6}{getY}} ()
+\begin{DoxyCompactList}\small\item\em Returns position vector Y from state (quaterions) \end{DoxyCompactList}\item 
+Eigen\+::\+Vector$<$ double, 6 $>$ \mbox{\hyperlink{struct_u_a_vstate_a158b23bdebd1dec94efba7ce776c5ee2}{getX}} ()
+\begin{DoxyCompactList}\small\item\em Returns velocity vector X. \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{struct_u_a_vstate_a3d280d7cc82810e9098d6b9fc951ef94}{get\+Om}} ()
+\begin{DoxyCompactList}\small\item\em Returns rotor\textquotesingle{}s angular velocities vector. \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{struct_u_a_vstate_af00e10279a4dc9579b23792cb7968a25}{get\+Demanded\+Om}} ()
+\begin{DoxyCompactList}\small\item\em Returns rotor\textquotesingle{}s demanded angular velocities vector. \end{DoxyCompactList}\item 
+Eigen\+::\+Vector$<$ double, 6 $>$ \mbox{\hyperlink{struct_u_a_vstate_a3d60527d294b92236765ec09edc7f94e}{get\+Outer\+Force}} ()
+\begin{DoxyCompactList}\small\item\em Returns outer force applied to aircraft. \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{struct_u_a_vstate_aa4377d0b306de93aa7cdd3048ec4fde6}{get\+State}} ()
+\begin{DoxyCompactList}\small\item\em Returns raw state vector. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{struct_u_a_vstate_a9b988df1c1aeea8cf5b30ecfa5ef72f7}{get\+No\+Of\+Rotors}} ()
+\begin{DoxyCompactList}\small\item\em Returns number of rotors. \end{DoxyCompactList}\item 
+Eigen\+::\+Vector$<$ double, 6 $>$ \mbox{\hyperlink{struct_u_a_vstate_a503c83691180f15f1c5f711c46402a27}{get\+Acceleration}} ()
+\begin{DoxyCompactList}\small\item\em Returns aircraft acceleration. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{struct_u_a_vstate_a03542d5be326dc35e2eeff0f8303e12b}{setX}} (Eigen\+::\+Vector$<$ double, 6 $>$ newX)
+\begin{DoxyCompactList}\small\item\em Set velocity vector X. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{struct_u_a_vstate_aded61355e0b46c234e8b9da788fb3982}{set\+Demanded\+Om}} (Eigen\+::\+Vector\+Xd new\+Om)
+\begin{DoxyCompactList}\small\item\em Set demanded angular velocity vector. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{struct_u_a_vstate_a128f7fe102e68232fb9bb872a5868d88}{set\+Force}} (Eigen\+::\+Vector3d force, Eigen\+::\+Vector3d torque=Eigen\+::\+Vector3d(0.\+0, 0.\+0, 0.\+0))
+\begin{DoxyCompactList}\small\item\em Set outer load. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{struct_u_a_vstate_ad75db3bccb2e6c5eeed7a364207cd1c3}{set\+Acceleration}} (Eigen\+::\+Vector$<$ double, 6 $>$ new\+Accel)
+\begin{DoxyCompactList}\small\item\em Set acceleration vector. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_u_a_vstate}{UAVstate}} \& \mbox{\hyperlink{struct_u_a_vstate_a7ae931f673520729c88a25c935d9e165}{operator=}} (Eigen\+::\+Vector\+Xd \&other)
+\begin{DoxyCompactList}\small\item\em Assigns given raw state vector to state. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{struct_u_a_vstate_a3369058e74a93b91fa013f73f5161768}{set\+Status}} (Status new\+Status)
+\begin{DoxyCompactList}\small\item\em Sets new timed loop status. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{struct_u_a_vstate_a6270e1a295f1afe040cf43ec768b1e7d}{setY}} (Eigen\+::\+Vector\+Xd \&state, Eigen\+::\+Vector$<$ double, 7 $>$ Y)
+\begin{DoxyCompactList}\small\item\em Sets position vector Y in given state (quaterions) \end{DoxyCompactList}\item 
+static Eigen\+::\+Vector$<$ double, 7 $>$ \mbox{\hyperlink{struct_u_a_vstate_a7ece6f7ab1e56edae9ff5c3a0e3c33f6}{getY}} (const Eigen\+::\+Vector\+Xd \&state)
+\begin{DoxyCompactList}\small\item\em Returns position vector Y from given state (quaterions) \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{struct_u_a_vstate_a007abdb6488c67d4b54f1e17f558bf5e}{setX}} (Eigen\+::\+Vector\+Xd \&state, Eigen\+::\+Vector$<$ double, 6 $>$ X)
+\begin{DoxyCompactList}\small\item\em Set velocity vector X in given state. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{struct_u_a_vstate_acd2a8493c1d84411e8feab34ed719649}{set\+Om}} (Eigen\+::\+Vector\+Xd \&state, Eigen\+::\+Vector\+Xd Om)
+\begin{DoxyCompactList}\small\item\em Set angular velocity vector in given state. \end{DoxyCompactList}\item 
+static Eigen\+::\+Vector$<$ double, 6 $>$ \mbox{\hyperlink{struct_u_a_vstate_aae1d26006956d05eb665e5bea4bbb355}{getX}} (const Eigen\+::\+Vector\+Xd \&state)
+\begin{DoxyCompactList}\small\item\em Returns velocity vector X from given state. \end{DoxyCompactList}\item 
+static Eigen\+::\+Vector\+Xd \mbox{\hyperlink{struct_u_a_vstate_ac2c83ad211c11d066d09ad2fc5d18084}{get\+Om}} (const Eigen\+::\+Vector\+Xd \&state)
+\begin{DoxyCompactList}\small\item\em Return angular velocity vector from given state. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::atomic$<$ double $>$ \mbox{\hyperlink{struct_u_a_vstate_a500aa9b36f64c0ee2aa1eddf35e6b1fd}{real\+\_\+time}}
+\begin{DoxyCompactList}\small\item\em simulation time \end{DoxyCompactList}\item 
+std\+::mutex \mbox{\hyperlink{struct_u_a_vstate_abc05053d9eef9bde4815e4c21ee1dcb3}{state\+\_\+mtx}}
+\begin{DoxyCompactList}\small\item\em state mutex \end{DoxyCompactList}\item 
+Status \mbox{\hyperlink{struct_u_a_vstate_af79f4d4036d45b102da6c3d25da24abd}{status}}
+\begin{DoxyCompactList}\small\item\em Timed loop status. \end{DoxyCompactList}\item 
+std\+::condition\+\_\+variable \mbox{\hyperlink{struct_u_a_vstate_a86ab6d25f46aec9cfb0977e5b7ebc26c}{status\+\_\+cv}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+std\+::ostream \& \mbox{\hyperlink{struct_u_a_vstate_a9e9cc2c6e97d1745d39b00464d2bcccf}{operator$<$$<$}} (std\+::ostream \&outs, const \mbox{\hyperlink{struct_u_a_vstate}{UAVstate}} \&state)
+\begin{DoxyCompactList}\small\item\em Serializes state to stream. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{struct_u_a_vstate_a6fb1eacbcd8771f4ac5d1f47601426b5}\label{struct_u_a_vstate_a6fb1eacbcd8771f4ac5d1f47601426b5}} 
+\index{UAVstate@{UAVstate}!UAVstate@{UAVstate}}
+\index{UAVstate@{UAVstate}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{UAVstate()}{UAVstate()}}
+{\footnotesize\ttfamily UAVstate\+::\+UAVstate (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Default constructor. 
+
+\mbox{\Hypertarget{struct_u_a_vstate_aeeb84fac7f7dcd8c28c8bac605422219}\label{struct_u_a_vstate_aeeb84fac7f7dcd8c28c8bac605422219}} 
+\index{UAVstate@{UAVstate}!````~UAVstate@{$\sim$UAVstate}}
+\index{````~UAVstate@{$\sim$UAVstate}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{$\sim$UAVstate()}{~UAVstate()}}
+{\footnotesize\ttfamily UAVstate\+::$\sim$\+UAVstate (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Deconstructor. 
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_u_a_vstate_a503c83691180f15f1c5f711c46402a27}\label{struct_u_a_vstate_a503c83691180f15f1c5f711c46402a27}} 
+\index{UAVstate@{UAVstate}!getAcceleration@{getAcceleration}}
+\index{getAcceleration@{getAcceleration}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{getAcceleration()}{getAcceleration()}}
+{\footnotesize\ttfamily Eigen\+::\+Vector$<$double,6$>$ UAVstate\+::get\+Acceleration (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns aircraft acceleration. 
+
+\begin{DoxyReturn}{Returns}
+acceleraton vector 
+\end{DoxyReturn}
+\mbox{\Hypertarget{struct_u_a_vstate_af00e10279a4dc9579b23792cb7968a25}\label{struct_u_a_vstate_af00e10279a4dc9579b23792cb7968a25}} 
+\index{UAVstate@{UAVstate}!getDemandedOm@{getDemandedOm}}
+\index{getDemandedOm@{getDemandedOm}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{getDemandedOm()}{getDemandedOm()}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd UAVstate\+::get\+Demanded\+Om (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns rotor\textquotesingle{}s demanded angular velocities vector. 
+
+\begin{DoxyReturn}{Returns}
+rotor\textquotesingle{}s demanded angular velocities vector rad/s 
+\end{DoxyReturn}
+\mbox{\Hypertarget{struct_u_a_vstate_a9b988df1c1aeea8cf5b30ecfa5ef72f7}\label{struct_u_a_vstate_a9b988df1c1aeea8cf5b30ecfa5ef72f7}} 
+\index{UAVstate@{UAVstate}!getNoOfRotors@{getNoOfRotors}}
+\index{getNoOfRotors@{getNoOfRotors}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{getNoOfRotors()}{getNoOfRotors()}}
+{\footnotesize\ttfamily int UAVstate\+::get\+No\+Of\+Rotors (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns number of rotors. 
+
+\begin{DoxyReturn}{Returns}
+number of rotors 
+\end{DoxyReturn}
+\mbox{\Hypertarget{struct_u_a_vstate_a3d280d7cc82810e9098d6b9fc951ef94}\label{struct_u_a_vstate_a3d280d7cc82810e9098d6b9fc951ef94}} 
+\index{UAVstate@{UAVstate}!getOm@{getOm}}
+\index{getOm@{getOm}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{getOm()}{getOm()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd UAVstate\+::get\+Om (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns rotor\textquotesingle{}s angular velocities vector. 
+
+\begin{DoxyReturn}{Returns}
+rotor\textquotesingle{}s angular velocities vector 
+\end{DoxyReturn}
+\mbox{\Hypertarget{struct_u_a_vstate_ac2c83ad211c11d066d09ad2fc5d18084}\label{struct_u_a_vstate_ac2c83ad211c11d066d09ad2fc5d18084}} 
+\index{UAVstate@{UAVstate}!getOm@{getOm}}
+\index{getOm@{getOm}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{getOm()}{getOm()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd UAVstate\+::get\+Om (\begin{DoxyParamCaption}\item[{const Eigen\+::\+Vector\+Xd \&}]{state }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Return angular velocity vector from given state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em state} & source state \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+angular velocity vector 
+\end{DoxyReturn}
+\mbox{\Hypertarget{struct_u_a_vstate_a3d60527d294b92236765ec09edc7f94e}\label{struct_u_a_vstate_a3d60527d294b92236765ec09edc7f94e}} 
+\index{UAVstate@{UAVstate}!getOuterForce@{getOuterForce}}
+\index{getOuterForce@{getOuterForce}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{getOuterForce()}{getOuterForce()}}
+{\footnotesize\ttfamily Eigen\+::\+Vector$<$ double, 6 $>$ UAVstate\+::get\+Outer\+Force (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns outer force applied to aircraft. 
+
+\begin{DoxyReturn}{Returns}
+outer force N 
+\end{DoxyReturn}
+\mbox{\Hypertarget{struct_u_a_vstate_aa4377d0b306de93aa7cdd3048ec4fde6}\label{struct_u_a_vstate_aa4377d0b306de93aa7cdd3048ec4fde6}} 
+\index{UAVstate@{UAVstate}!getState@{getState}}
+\index{getState@{getState}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{getState()}{getState()}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd UAVstate\+::get\+State (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns raw state vector. 
+
+\begin{DoxyReturn}{Returns}
+state vector 
+\end{DoxyReturn}
+\mbox{\Hypertarget{struct_u_a_vstate_a158b23bdebd1dec94efba7ce776c5ee2}\label{struct_u_a_vstate_a158b23bdebd1dec94efba7ce776c5ee2}} 
+\index{UAVstate@{UAVstate}!getX@{getX}}
+\index{getX@{getX}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{getX()}{getX()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Eigen\+::\+Vector$<$ double, 6 $>$ UAVstate\+::getX (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns velocity vector X. 
+
+\begin{DoxyReturn}{Returns}
+velocity vector X 
+\end{DoxyReturn}
+\mbox{\Hypertarget{struct_u_a_vstate_aae1d26006956d05eb665e5bea4bbb355}\label{struct_u_a_vstate_aae1d26006956d05eb665e5bea4bbb355}} 
+\index{UAVstate@{UAVstate}!getX@{getX}}
+\index{getX@{getX}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{getX()}{getX()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Eigen\+::\+Vector$<$ double, 6 $>$ UAVstate\+::getX (\begin{DoxyParamCaption}\item[{const Eigen\+::\+Vector\+Xd \&}]{state }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Returns velocity vector X from given state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em state} & source state \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+velocity vector X 
+\end{DoxyReturn}
+\mbox{\Hypertarget{struct_u_a_vstate_a7736d7a0e45ee2d3024fa0991018ded6}\label{struct_u_a_vstate_a7736d7a0e45ee2d3024fa0991018ded6}} 
+\index{UAVstate@{UAVstate}!getY@{getY}}
+\index{getY@{getY}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{getY()}{getY()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Eigen\+::\+Vector$<$ double, 7 $>$ UAVstate\+::getY (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns position vector Y from state (quaterions) 
+
+\begin{DoxyReturn}{Returns}
+position vector Y ~\newline
+ 
+\end{DoxyReturn}
+\mbox{\Hypertarget{struct_u_a_vstate_a7ece6f7ab1e56edae9ff5c3a0e3c33f6}\label{struct_u_a_vstate_a7ece6f7ab1e56edae9ff5c3a0e3c33f6}} 
+\index{UAVstate@{UAVstate}!getY@{getY}}
+\index{getY@{getY}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{getY()}{getY()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Eigen\+::\+Vector$<$ double, 7 $>$ UAVstate\+::getY (\begin{DoxyParamCaption}\item[{const Eigen\+::\+Vector\+Xd \&}]{state }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Returns position vector Y from given state (quaterions) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em state} & source state \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+position vector Y ~\newline
+ 
+\end{DoxyReturn}
+\mbox{\Hypertarget{struct_u_a_vstate_a7ae931f673520729c88a25c935d9e165}\label{struct_u_a_vstate_a7ae931f673520729c88a25c935d9e165}} 
+\index{UAVstate@{UAVstate}!operator=@{operator=}}
+\index{operator=@{operator=}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_u_a_vstate}{UAVstate}} \& UAVstate\+::operator= (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{other }\end{DoxyParamCaption})}
+
+
+
+Assigns given raw state vector to state. 
+
+\mbox{\Hypertarget{struct_u_a_vstate_ad75db3bccb2e6c5eeed7a364207cd1c3}\label{struct_u_a_vstate_ad75db3bccb2e6c5eeed7a364207cd1c3}} 
+\index{UAVstate@{UAVstate}!setAcceleration@{setAcceleration}}
+\index{setAcceleration@{setAcceleration}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{setAcceleration()}{setAcceleration()}}
+{\footnotesize\ttfamily void UAVstate\+::set\+Acceleration (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector$<$ double, 6 $>$}]{new\+Accel }\end{DoxyParamCaption})}
+
+
+
+Set acceleration vector. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+Accel} & new acceleration vector \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{struct_u_a_vstate_aded61355e0b46c234e8b9da788fb3982}\label{struct_u_a_vstate_aded61355e0b46c234e8b9da788fb3982}} 
+\index{UAVstate@{UAVstate}!setDemandedOm@{setDemandedOm}}
+\index{setDemandedOm@{setDemandedOm}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{setDemandedOm()}{setDemandedOm()}}
+{\footnotesize\ttfamily void UAVstate\+::set\+Demanded\+Om (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd}]{new\+Om }\end{DoxyParamCaption})}
+
+
+
+Set demanded angular velocity vector. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+Om} & new demanded angular velocity vector \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{struct_u_a_vstate_a128f7fe102e68232fb9bb872a5868d88}\label{struct_u_a_vstate_a128f7fe102e68232fb9bb872a5868d88}} 
+\index{UAVstate@{UAVstate}!setForce@{setForce}}
+\index{setForce@{setForce}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{setForce()}{setForce()}}
+{\footnotesize\ttfamily void UAVstate\+::set\+Force (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector3d}]{force,  }\item[{Eigen\+::\+Vector3d}]{torque = {\ttfamily Eigen\+:\+:Vector3d(0.0,0.0,0.0)} }\end{DoxyParamCaption})}
+
+
+
+Set outer load. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em force} & applied force \\
+\hline
+{\em torque} & applied torque \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{struct_u_a_vstate_acd2a8493c1d84411e8feab34ed719649}\label{struct_u_a_vstate_acd2a8493c1d84411e8feab34ed719649}} 
+\index{UAVstate@{UAVstate}!setOm@{setOm}}
+\index{setOm@{setOm}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{setOm()}{setOm()}}
+{\footnotesize\ttfamily void UAVstate\+::set\+Om (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{state,  }\item[{Eigen\+::\+Vector\+Xd}]{Om }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Set angular velocity vector in given state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em state} & state that should be updated \\
+\hline
+{\em Om} & new angular velocity vector \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{struct_u_a_vstate_a3369058e74a93b91fa013f73f5161768}\label{struct_u_a_vstate_a3369058e74a93b91fa013f73f5161768}} 
+\index{UAVstate@{UAVstate}!setStatus@{setStatus}}
+\index{setStatus@{setStatus}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{setStatus()}{setStatus()}}
+{\footnotesize\ttfamily void UAVstate\+::set\+Status (\begin{DoxyParamCaption}\item[{Status}]{new\+Status }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets new timed loop status. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+Status} & new status \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{struct_u_a_vstate_a03542d5be326dc35e2eeff0f8303e12b}\label{struct_u_a_vstate_a03542d5be326dc35e2eeff0f8303e12b}} 
+\index{UAVstate@{UAVstate}!setX@{setX}}
+\index{setX@{setX}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{setX()}{setX()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void UAVstate\+::setX (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector$<$ double, 6 $>$}]{newX }\end{DoxyParamCaption})}
+
+
+
+Set velocity vector X. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em newX} & new velocity vector X \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{struct_u_a_vstate_a007abdb6488c67d4b54f1e17f558bf5e}\label{struct_u_a_vstate_a007abdb6488c67d4b54f1e17f558bf5e}} 
+\index{UAVstate@{UAVstate}!setX@{setX}}
+\index{setX@{setX}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{setX()}{setX()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void UAVstate\+::setX (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{state,  }\item[{Eigen\+::\+Vector$<$ double, 6 $>$}]{X }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Set velocity vector X in given state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em state} & state that should be updated \\
+\hline
+{\em X} & new velocity vector X \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{struct_u_a_vstate_a6270e1a295f1afe040cf43ec768b1e7d}\label{struct_u_a_vstate_a6270e1a295f1afe040cf43ec768b1e7d}} 
+\index{UAVstate@{UAVstate}!setY@{setY}}
+\index{setY@{setY}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{setY()}{setY()}}
+{\footnotesize\ttfamily void UAVstate\+::setY (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{state,  }\item[{Eigen\+::\+Vector$<$ double, 7 $>$}]{Y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Sets position vector Y in given state (quaterions) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em state} & state that should be updated \\
+\hline
+{\em Y} & new position vector \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{struct_u_a_vstate_a9e9cc2c6e97d1745d39b00464d2bcccf}\label{struct_u_a_vstate_a9e9cc2c6e97d1745d39b00464d2bcccf}} 
+\index{UAVstate@{UAVstate}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{operator$<$$<$}{operator<<}}
+{\footnotesize\ttfamily std\+::ostream\& operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{outs,  }\item[{const \mbox{\hyperlink{struct_u_a_vstate}{UAVstate}} \&}]{state }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+Serializes state to stream. 
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{struct_u_a_vstate_a500aa9b36f64c0ee2aa1eddf35e6b1fd}\label{struct_u_a_vstate_a500aa9b36f64c0ee2aa1eddf35e6b1fd}} 
+\index{UAVstate@{UAVstate}!real\_time@{real\_time}}
+\index{real\_time@{real\_time}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{real\_time}{real\_time}}
+{\footnotesize\ttfamily std\+::atomic$<$double$>$ UAVstate\+::real\+\_\+time}
+
+
+
+simulation time 
+
+\mbox{\Hypertarget{struct_u_a_vstate_abc05053d9eef9bde4815e4c21ee1dcb3}\label{struct_u_a_vstate_abc05053d9eef9bde4815e4c21ee1dcb3}} 
+\index{UAVstate@{UAVstate}!state\_mtx@{state\_mtx}}
+\index{state\_mtx@{state\_mtx}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{state\_mtx}{state\_mtx}}
+{\footnotesize\ttfamily std\+::mutex UAVstate\+::state\+\_\+mtx}
+
+
+
+state mutex 
+
+\mbox{\Hypertarget{struct_u_a_vstate_af79f4d4036d45b102da6c3d25da24abd}\label{struct_u_a_vstate_af79f4d4036d45b102da6c3d25da24abd}} 
+\index{UAVstate@{UAVstate}!status@{status}}
+\index{status@{status}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{status}{status}}
+{\footnotesize\ttfamily Status UAVstate\+::status}
+
+
+
+Timed loop status. 
+
+\mbox{\Hypertarget{struct_u_a_vstate_a86ab6d25f46aec9cfb0977e5b7ebc26c}\label{struct_u_a_vstate_a86ab6d25f46aec9cfb0977e5b7ebc26c}} 
+\index{UAVstate@{UAVstate}!status\_cv@{status\_cv}}
+\index{status\_cv@{status\_cv}!UAVstate@{UAVstate}}
+\doxysubsubsection{\texorpdfstring{status\_cv}{status\_cv}}
+{\footnotesize\ttfamily std\+::condition\+\_\+variable UAVstate\+::status\+\_\+cv}
+
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/simulation/\mbox{\hyperlink{uav__state_8hpp}{uav\+\_\+state.\+hpp}}\item 
+src/simulation/\mbox{\hyperlink{uav__state_8cpp}{uav\+\_\+state.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,130 @@
+\hypertarget{control_8cpp}{}\doxysection{src/simulation/control.cpp File Reference}
+\label{control_8cpp}\index{src/simulation/control.cpp@{src/simulation/control.cpp}}
+{\ttfamily \#include $<$Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$zmq.\+hpp$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include \char`\"{}control.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}uav\+\_\+state.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}common.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../dynamic/matrices.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../aircraft/aircraft.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../defines.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}atmosphere.\+hpp\char`\"{}}\newline
+Include dependency graph for control.\+cpp\+:
+% FIG 0
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{control_8cpp_a7ba9d4969dbafa1d8a9a2a48a457760b}{set\+Atmosphere}} (std\+::string \&msg\+\_\+str, zmq\+::socket\+\_\+t \&sock)
+\item 
+void \mbox{\hyperlink{control_8cpp_a6e921c819299cbc50033b80523222aa1}{set\+Force}} (\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$aircraft, std\+::string \&msg\+\_\+str, zmq\+::socket\+\_\+t \&sock)
+\item 
+void \mbox{\hyperlink{control_8cpp_a935794699e8613f979ea5b159920cb1d}{set\+Speed}} (\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$aircraft, std\+::string \&msg\+\_\+str, zmq\+::socket\+\_\+t \&sock)
+\item 
+bool \mbox{\hyperlink{control_8cpp_ac7b55bb51ab72aedec5776174ea7649c}{control}} (\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$aircraft, std\+::string \&msg\+\_\+str, zmq\+::socket\+\_\+t \&sock)
+\item 
+void \mbox{\hyperlink{control_8cpp_a238ef1ef4e370236d65983965db64d49}{shoot}} (\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$aircraft, std\+::string \&msg\+\_\+str, zmq\+::socket\+\_\+t \&sock)
+\item 
+void \mbox{\hyperlink{control_8cpp_aacab76ea08149bbe8c230acc153ad30d}{drop\+Cargo}} (\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$aircraft, std\+::string \&msg\+\_\+str, zmq\+::socket\+\_\+t \&sock)
+\item 
+bool \mbox{\hyperlink{control_8cpp_a43e8d085072ac8ca6eccdcac3ffdc1ad}{is\+Normal}} (double factor)
+\item 
+void \mbox{\hyperlink{control_8cpp_a2f3d2f727b6d065b8bc891b6f99f48cc}{solid\+Surf\+Colision}} (\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$aircraft, std\+::string \&msg\+\_\+str, zmq\+::socket\+\_\+t \&sock)
+\item 
+void \mbox{\hyperlink{control_8cpp_a227ca883e80d3dc8fd64d6c15117272c}{set\+Control\+Surface}} (\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$aircraft, std\+::string \&msg\+\_\+str, zmq\+::socket\+\_\+t \&sock)
+\item 
+void \mbox{\hyperlink{control_8cpp_ab9d7b2c2629e67abf3bc653bd18183d2}{start\+Jet}} (\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$aircraft, std\+::string \&msg\+\_\+str, zmq\+::socket\+\_\+t \&sock)
+\item 
+void \mbox{\hyperlink{control_8cpp_afe20a4bb3f1b105b6e39d1ff15c82abe}{set\+Hinges}} (\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$aircraft, std\+::string \&msg\+\_\+str, zmq\+::socket\+\_\+t \&sock)
+\item 
+void \mbox{\hyperlink{control_8cpp_aea6d4898a85ccc43032ebbcb2c281364}{control\+Listener\+Job}} (zmq\+::context\+\_\+t $\ast$ctx, std\+::string address, \mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$aircraft)
+\begin{DoxyCompactList}\small\item\em Job of control listener thread. Listen for new control command and handle them. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{control_8cpp_ac7b55bb51ab72aedec5776174ea7649c}\label{control_8cpp_ac7b55bb51ab72aedec5776174ea7649c}} 
+\index{control.cpp@{control.cpp}!control@{control}}
+\index{control@{control}!control.cpp@{control.cpp}}
+\doxysubsubsection{\texorpdfstring{control()}{control()}}
+{\footnotesize\ttfamily bool control (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$}]{aircraft,  }\item[{std\+::string \&}]{msg\+\_\+str,  }\item[{zmq\+::socket\+\_\+t \&}]{sock }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{control_8cpp_aea6d4898a85ccc43032ebbcb2c281364}\label{control_8cpp_aea6d4898a85ccc43032ebbcb2c281364}} 
+\index{control.cpp@{control.cpp}!controlListenerJob@{controlListenerJob}}
+\index{controlListenerJob@{controlListenerJob}!control.cpp@{control.cpp}}
+\doxysubsubsection{\texorpdfstring{controlListenerJob()}{controlListenerJob()}}
+{\footnotesize\ttfamily void control\+Listener\+Job (\begin{DoxyParamCaption}\item[{zmq\+::context\+\_\+t $\ast$}]{ctx,  }\item[{std\+::string}]{address,  }\item[{\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$}]{aircraft }\end{DoxyParamCaption})}
+
+
+
+Job of control listener thread. Listen for new control command and handle them. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ctx} & zero mq context \\
+\hline
+{\em address} & address of listener socket \\
+\hline
+{\em aircraft} & pointer to aircraft \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{control_8cpp_aacab76ea08149bbe8c230acc153ad30d}\label{control_8cpp_aacab76ea08149bbe8c230acc153ad30d}} 
+\index{control.cpp@{control.cpp}!dropCargo@{dropCargo}}
+\index{dropCargo@{dropCargo}!control.cpp@{control.cpp}}
+\doxysubsubsection{\texorpdfstring{dropCargo()}{dropCargo()}}
+{\footnotesize\ttfamily void drop\+Cargo (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$}]{aircraft,  }\item[{std\+::string \&}]{msg\+\_\+str,  }\item[{zmq\+::socket\+\_\+t \&}]{sock }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{control_8cpp_a43e8d085072ac8ca6eccdcac3ffdc1ad}\label{control_8cpp_a43e8d085072ac8ca6eccdcac3ffdc1ad}} 
+\index{control.cpp@{control.cpp}!isNormal@{isNormal}}
+\index{isNormal@{isNormal}!control.cpp@{control.cpp}}
+\doxysubsubsection{\texorpdfstring{isNormal()}{isNormal()}}
+{\footnotesize\ttfamily bool is\+Normal (\begin{DoxyParamCaption}\item[{double}]{factor }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{control_8cpp_a7ba9d4969dbafa1d8a9a2a48a457760b}\label{control_8cpp_a7ba9d4969dbafa1d8a9a2a48a457760b}} 
+\index{control.cpp@{control.cpp}!setAtmosphere@{setAtmosphere}}
+\index{setAtmosphere@{setAtmosphere}!control.cpp@{control.cpp}}
+\doxysubsubsection{\texorpdfstring{setAtmosphere()}{setAtmosphere()}}
+{\footnotesize\ttfamily void set\+Atmosphere (\begin{DoxyParamCaption}\item[{std\+::string \&}]{msg\+\_\+str,  }\item[{zmq\+::socket\+\_\+t \&}]{sock }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{control_8cpp_a227ca883e80d3dc8fd64d6c15117272c}\label{control_8cpp_a227ca883e80d3dc8fd64d6c15117272c}} 
+\index{control.cpp@{control.cpp}!setControlSurface@{setControlSurface}}
+\index{setControlSurface@{setControlSurface}!control.cpp@{control.cpp}}
+\doxysubsubsection{\texorpdfstring{setControlSurface()}{setControlSurface()}}
+{\footnotesize\ttfamily void set\+Control\+Surface (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$}]{aircraft,  }\item[{std\+::string \&}]{msg\+\_\+str,  }\item[{zmq\+::socket\+\_\+t \&}]{sock }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{control_8cpp_a6e921c819299cbc50033b80523222aa1}\label{control_8cpp_a6e921c819299cbc50033b80523222aa1}} 
+\index{control.cpp@{control.cpp}!setForce@{setForce}}
+\index{setForce@{setForce}!control.cpp@{control.cpp}}
+\doxysubsubsection{\texorpdfstring{setForce()}{setForce()}}
+{\footnotesize\ttfamily void set\+Force (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$}]{aircraft,  }\item[{std\+::string \&}]{msg\+\_\+str,  }\item[{zmq\+::socket\+\_\+t \&}]{sock }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{control_8cpp_afe20a4bb3f1b105b6e39d1ff15c82abe}\label{control_8cpp_afe20a4bb3f1b105b6e39d1ff15c82abe}} 
+\index{control.cpp@{control.cpp}!setHinges@{setHinges}}
+\index{setHinges@{setHinges}!control.cpp@{control.cpp}}
+\doxysubsubsection{\texorpdfstring{setHinges()}{setHinges()}}
+{\footnotesize\ttfamily void set\+Hinges (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$}]{aircraft,  }\item[{std\+::string \&}]{msg\+\_\+str,  }\item[{zmq\+::socket\+\_\+t \&}]{sock }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{control_8cpp_a935794699e8613f979ea5b159920cb1d}\label{control_8cpp_a935794699e8613f979ea5b159920cb1d}} 
+\index{control.cpp@{control.cpp}!setSpeed@{setSpeed}}
+\index{setSpeed@{setSpeed}!control.cpp@{control.cpp}}
+\doxysubsubsection{\texorpdfstring{setSpeed()}{setSpeed()}}
+{\footnotesize\ttfamily void set\+Speed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$}]{aircraft,  }\item[{std\+::string \&}]{msg\+\_\+str,  }\item[{zmq\+::socket\+\_\+t \&}]{sock }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{control_8cpp_a238ef1ef4e370236d65983965db64d49}\label{control_8cpp_a238ef1ef4e370236d65983965db64d49}} 
+\index{control.cpp@{control.cpp}!shoot@{shoot}}
+\index{shoot@{shoot}!control.cpp@{control.cpp}}
+\doxysubsubsection{\texorpdfstring{shoot()}{shoot()}}
+{\footnotesize\ttfamily void shoot (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$}]{aircraft,  }\item[{std\+::string \&}]{msg\+\_\+str,  }\item[{zmq\+::socket\+\_\+t \&}]{sock }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{control_8cpp_a2f3d2f727b6d065b8bc891b6f99f48cc}\label{control_8cpp_a2f3d2f727b6d065b8bc891b6f99f48cc}} 
+\index{control.cpp@{control.cpp}!solidSurfColision@{solidSurfColision}}
+\index{solidSurfColision@{solidSurfColision}!control.cpp@{control.cpp}}
+\doxysubsubsection{\texorpdfstring{solidSurfColision()}{solidSurfColision()}}
+{\footnotesize\ttfamily void solid\+Surf\+Colision (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$}]{aircraft,  }\item[{std\+::string \&}]{msg\+\_\+str,  }\item[{zmq\+::socket\+\_\+t \&}]{sock }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{control_8cpp_ab9d7b2c2629e67abf3bc653bd18183d2}\label{control_8cpp_ab9d7b2c2629e67abf3bc653bd18183d2}} 
+\index{control.cpp@{control.cpp}!startJet@{startJet}}
+\index{startJet@{startJet}!control.cpp@{control.cpp}}
+\doxysubsubsection{\texorpdfstring{startJet()}{startJet()}}
+{\footnotesize\ttfamily void start\+Jet (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_aircraft}{Aircraft}} $\ast$}]{aircraft,  }\item[{std\+::string \&}]{msg\+\_\+str,  }\item[{zmq\+::socket\+\_\+t \&}]{sock }\end{DoxyParamCaption})}
+

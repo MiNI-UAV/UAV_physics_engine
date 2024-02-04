@@ -1,0 +1,439 @@
+\hypertarget{class_aircraft}{}\doxysection{Aircraft Class Reference}
+\label{class_aircraft}\index{Aircraft@{Aircraft}}
+
+
+central class in simulation  
+
+
+
+
+{\ttfamily \#include $<$aircraft.\+hpp$>$}
+
+
+
+Collaboration diagram for Aircraft\+:
+% FIG 0
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_aircraft_a187c2e256b8c9c3f2f499f16fec31941}{Aircraft}} ()
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+virtual \mbox{\hyperlink{class_aircraft_a55dc44bdbbb452442ff81dbb0973a79d}{$\sim$\+Aircraft}} ()
+\begin{DoxyCompactList}\small\item\em Virtual deconstructor in case of future use in devired class. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_aircraft_aff5908917582785f9d716a4d7a9ad1a6}{update}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_simulation}{Simulation}} step. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_aircraft_ac6e5f7aea2091984352148a2737f632b}{send\+State}} (zmq\+::socket\+\_\+t $\ast$socket)
+\begin{DoxyCompactList}\small\item\em Sends simulation state via publisher socket. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_aircraft_ac7d5c78b40b52cb97c90e94e62c968b3}{start\+Jet}} (int index)
+\begin{DoxyCompactList}\small\item\em Starts jet engine. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_aircraft_aff5c7c90f53961802844b5f17bd209ac}{trim}} ()
+\begin{DoxyCompactList}\small\item\em Restore trim values of surface angles. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_aircraft_a3921c093a8bbf8abaad415106d014915}{set\+Surface}} (Eigen\+::\+Vector\+Xd angles)
+\begin{DoxyCompactList}\small\item\em Set surface deflation. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_aircraft_ab096528014cd903d45e8ff646a84d342}{set\+Hinge}} (char type, int index, int hinge\+\_\+index, double value)
+\begin{DoxyCompactList}\small\item\em Set angle of specified hinge in specified drive. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_aircraft_a16b152d7bba38b3ae9110e9ba34f69f8}{calc\+Impulse\+Force}} (double COR, double mi\+\_\+static, double mi\+\_\+dynamic, Eigen\+::\+Vector3d collision\+Point, Eigen\+::\+Vector3d surface\+Normal)
+\begin{DoxyCompactList}\small\item\em Calculate impact and result of collision with with solid surface. Results are applied to UAV state. \end{DoxyCompactList}\item 
+std\+::tuple$<$ int, Eigen\+::\+Vector3d $>$ \mbox{\hyperlink{class_aircraft_ad7339804328c4e29e3437722ed016fc4}{drop\+Cargo}} (int index)
+\begin{DoxyCompactList}\small\item\em Release cargo of specified index. \end{DoxyCompactList}\item 
+std\+::tuple$<$ int, Eigen\+::\+Vector3d $>$ \mbox{\hyperlink{class_aircraft_a2f7a3a86b4ccb037397d89f5671cafbd}{shoot\+Ammo}} (int index)
+\begin{DoxyCompactList}\small\item\em Shoot ammo of specified index. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_u_a_vstate}{UAVstate}} \mbox{\hyperlink{class_aircraft_aab8d905f2d88535f53298e7c186d2b3f}{state}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_aircraft_a73ce0cb3228c6bce1211bda6bc55782c}{reduce\+Mass}} (double delta\+\_\+m, Eigen\+::\+Vector3d r)
+\begin{DoxyCompactList}\small\item\em Reduces mass of aircraft of given value. Mass matrix is reduced proportionally -\/ moments of inertia is scaled as well. \end{DoxyCompactList}\item 
+Eigen\+::\+Vector3d \mbox{\hyperlink{class_aircraft_ad5394e9d429900a1425a74cf4a219504}{calc\+Momentum\+Conservance\+Conservation}} (double m, Eigen\+::\+Vector3d speed, Eigen\+::\+Vector3d r)
+\begin{DoxyCompactList}\small\item\em Calculateds result of releasing/launching object from aircraft. \end{DoxyCompactList}\item 
+virtual Eigen\+::\+Vector\+Xd \mbox{\hyperlink{class_aircraft_a00010a86b8ee3883aa75152ef5f50e27}{RHS}} (double, Eigen\+::\+Vector\+Xd)
+\begin{DoxyCompactList}\small\item\em Right hand side of main differential equation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Matrix$<$ double, 6, 6 $>$ \mbox{\hyperlink{class_aircraft_ae0015ecf416fe1a6e64963be83e187f3}{mass\+Matrix}}
+\item 
+Matrix$<$ double, 6, 6 $>$ \mbox{\hyperlink{class_aircraft_a8da9ff5a0173824ad4754680375c8b8c}{inv\+Mass\+Matrix}}
+\item 
+std\+::mutex \mbox{\hyperlink{class_aircraft_ab797abeda5f9b2f010362c7797104871}{mtx}}
+\item 
+int \mbox{\hyperlink{class_aircraft_aa14b31108bf5a606b590f162c003b783}{no\+Of\+Rotors}}
+\item 
+std\+::unique\+\_\+ptr$<$ Rotor\mbox{[}$\,$\mbox{]}$>$ \mbox{\hyperlink{class_aircraft_a19352bca296779a4149b74c110231862}{rotors}}
+\item 
+int \mbox{\hyperlink{class_aircraft_a902b1b90b3b10c9439029d7d0bbc86bc}{no\+Of\+Jets}}
+\item 
+std\+::unique\+\_\+ptr$<$ Jet\mbox{[}$\,$\mbox{]}$>$ \mbox{\hyperlink{class_aircraft_a77e76f92cdacc4f5402633fd584a2094}{jets}}
+\item 
+Control\+Surfaces \mbox{\hyperlink{class_aircraft_acce567224dcd494751c08cf725aa8c55}{surfaces}}
+\item 
+Aero\+Coefficients \mbox{\hyperlink{class_aircraft_ad2032ba509c09566639c4093bca7f147}{aero}}
+\item 
+int \mbox{\hyperlink{class_aircraft_a11226d7a60adbcbf1caa745fd838119f}{no\+Of\+Ammo}}
+\item 
+std\+::unique\+\_\+ptr$<$ Ammo\mbox{[}$\,$\mbox{]}$>$ \mbox{\hyperlink{class_aircraft_a2f4827e0bdc3fb4410435df2582f3ea0}{ammo}}
+\item 
+int \mbox{\hyperlink{class_aircraft_a1014250d674f7208e035dd93f2cadfeb}{no\+Of\+Cargo}}
+\item 
+std\+::unique\+\_\+ptr$<$ Cargo\mbox{[}$\,$\mbox{]}$>$ \mbox{\hyperlink{class_aircraft_a25b3e185fdf6b41c97ef45d37035d914}{cargo}}
+\item 
+std\+::unique\+\_\+ptr$<$ ODE $>$ \mbox{\hyperlink{class_aircraft_ae32caa18031f2bfdd163ae5921a41ba0}{ode}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+central class in simulation 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_aircraft_a187c2e256b8c9c3f2f499f16fec31941}\label{class_aircraft_a187c2e256b8c9c3f2f499f16fec31941}} 
+\index{Aircraft@{Aircraft}!Aircraft@{Aircraft}}
+\index{Aircraft@{Aircraft}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{Aircraft()}{Aircraft()}}
+{\footnotesize\ttfamily Aircraft\+::\+Aircraft (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Default constructor. 
+
+\mbox{\Hypertarget{class_aircraft_a55dc44bdbbb452442ff81dbb0973a79d}\label{class_aircraft_a55dc44bdbbb452442ff81dbb0973a79d}} 
+\index{Aircraft@{Aircraft}!````~Aircraft@{$\sim$Aircraft}}
+\index{````~Aircraft@{$\sim$Aircraft}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{$\sim$Aircraft()}{~Aircraft()}}
+{\footnotesize\ttfamily virtual Aircraft\+::$\sim$\+Aircraft (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Virtual deconstructor in case of future use in devired class. 
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_aircraft_a16b152d7bba38b3ae9110e9ba34f69f8}\label{class_aircraft_a16b152d7bba38b3ae9110e9ba34f69f8}} 
+\index{Aircraft@{Aircraft}!calcImpulseForce@{calcImpulseForce}}
+\index{calcImpulseForce@{calcImpulseForce}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{calcImpulseForce()}{calcImpulseForce()}}
+{\footnotesize\ttfamily void Aircraft\+::calc\+Impulse\+Force (\begin{DoxyParamCaption}\item[{double}]{COR,  }\item[{double}]{mi\+\_\+static,  }\item[{double}]{mi\+\_\+dynamic,  }\item[{Eigen\+::\+Vector3d}]{collision\+Point,  }\item[{Eigen\+::\+Vector3d}]{surface\+Normal }\end{DoxyParamCaption})}
+
+
+
+Calculate impact and result of collision with with solid surface. Results are applied to UAV state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em COR} & coefficient of restitution. e = 0 is perfect inelastic collision, e = 1 is perfect elastic collision. 0 $<$ e $<$ 1 is a real-\/world inelastic collision, in which some kinetic energy is dissipated. \\
+\hline
+{\em mi\+\_\+static} & static friction coefficient \\
+\hline
+{\em mi\+\_\+dynamic} & dynamic friction coefficient \\
+\hline
+{\em collision\+Point} & point of collision \\
+\hline
+{\em surface\+Normal} & surface normal vector ~\newline
+ \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_aircraft_ad5394e9d429900a1425a74cf4a219504}\label{class_aircraft_ad5394e9d429900a1425a74cf4a219504}} 
+\index{Aircraft@{Aircraft}!calcMomentumConservanceConservation@{calcMomentumConservanceConservation}}
+\index{calcMomentumConservanceConservation@{calcMomentumConservanceConservation}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{calcMomentumConservanceConservation()}{calcMomentumConservanceConservation()}}
+{\footnotesize\ttfamily Eigen\+::\+Vector3d Aircraft\+::calc\+Momentum\+Conservance\+Conservation (\begin{DoxyParamCaption}\item[{double}]{m,  }\item[{Eigen\+::\+Vector3d}]{speed,  }\item[{Eigen\+::\+Vector3d}]{r }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Calculateds result of releasing/launching object from aircraft. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em m} & object mass \\
+\hline
+{\em speed} & object\textquotesingle{}s initial velocity vector in body frame \\
+\hline
+{\em r} & offset of object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+initial linear velocity of object in world frame 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aircraft_ad7339804328c4e29e3437722ed016fc4}\label{class_aircraft_ad7339804328c4e29e3437722ed016fc4}} 
+\index{Aircraft@{Aircraft}!dropCargo@{dropCargo}}
+\index{dropCargo@{dropCargo}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{dropCargo()}{dropCargo()}}
+{\footnotesize\ttfamily std\+::tuple$<$ int, Eigen\+::\+Vector3d $>$ Aircraft\+::drop\+Cargo (\begin{DoxyParamCaption}\item[{int}]{index }\end{DoxyParamCaption})}
+
+
+
+Release cargo of specified index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & index of cargo \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns pair of result and velocity of released cargo in world frame. Result is number of cargo of given type that left on board. Result also informs about fails\+:
+\begin{DoxyItemize}
+\item -\/1 -\/ cooldown, next drop is not ready
+\item -\/2 -\/ out of cargos
+\item -\/10 -\/ index not found 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aircraft_a73ce0cb3228c6bce1211bda6bc55782c}\label{class_aircraft_a73ce0cb3228c6bce1211bda6bc55782c}} 
+\index{Aircraft@{Aircraft}!reduceMass@{reduceMass}}
+\index{reduceMass@{reduceMass}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{reduceMass()}{reduceMass()}}
+{\footnotesize\ttfamily void Aircraft\+::reduce\+Mass (\begin{DoxyParamCaption}\item[{double}]{delta\+\_\+m,  }\item[{Eigen\+::\+Vector3d}]{r }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Reduces mass of aircraft of given value. Mass matrix is reduced proportionally -\/ moments of inertia is scaled as well. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em delta\+\_\+m} & mass reduction \\
+\hline
+{\em r} & lost mass position in local frame \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_aircraft_a00010a86b8ee3883aa75152ef5f50e27}\label{class_aircraft_a00010a86b8ee3883aa75152ef5f50e27}} 
+\index{Aircraft@{Aircraft}!RHS@{RHS}}
+\index{RHS@{RHS}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{RHS()}{RHS()}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd Aircraft\+::\+RHS (\begin{DoxyParamCaption}\item[{double}]{time,  }\item[{Eigen\+::\+Vector\+Xd}]{local\+\_\+state }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Right hand side of main differential equation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em time} & time of simulation \\
+\hline
+{\em state} & state vector \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+derivative of state 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aircraft_ac6e5f7aea2091984352148a2737f632b}\label{class_aircraft_ac6e5f7aea2091984352148a2737f632b}} 
+\index{Aircraft@{Aircraft}!sendState@{sendState}}
+\index{sendState@{sendState}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{sendState()}{sendState()}}
+{\footnotesize\ttfamily void Aircraft\+::send\+State (\begin{DoxyParamCaption}\item[{zmq\+::socket\+\_\+t $\ast$}]{socket }\end{DoxyParamCaption})}
+
+
+
+Sends simulation state via publisher socket. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em socket} & zmq socket to send simulation state \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_aircraft_ab096528014cd903d45e8ff646a84d342}\label{class_aircraft_ab096528014cd903d45e8ff646a84d342}} 
+\index{Aircraft@{Aircraft}!setHinge@{setHinge}}
+\index{setHinge@{setHinge}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{setHinge()}{setHinge()}}
+{\footnotesize\ttfamily bool Aircraft\+::set\+Hinge (\begin{DoxyParamCaption}\item[{char}]{type,  }\item[{int}]{index,  }\item[{int}]{hinge\+\_\+index,  }\item[{double}]{value }\end{DoxyParamCaption})}
+
+
+
+Set angle of specified hinge in specified drive. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em type} & type of drive\+: \textquotesingle{}r\textquotesingle{} -\/ rotor, \textquotesingle{}j\textquotesingle{} -\/ jet \\
+\hline
+{\em index} & index of drive \\
+\hline
+{\em hinge\+\_\+index} & index of hinde \\
+\hline
+{\em value} & new angle value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true, if angle was set. Returns false if specified drive or hinge wasn\textquotesingle{}t found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aircraft_a3921c093a8bbf8abaad415106d014915}\label{class_aircraft_a3921c093a8bbf8abaad415106d014915}} 
+\index{Aircraft@{Aircraft}!setSurface@{setSurface}}
+\index{setSurface@{setSurface}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{setSurface()}{setSurface()}}
+{\footnotesize\ttfamily bool Aircraft\+::set\+Surface (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd}]{angles }\end{DoxyParamCaption})}
+
+
+
+Set surface deflation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em angles} & vector of new surface angles \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if angles were set. Returns false if length of vector is not equal to numbers of surfaces 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aircraft_a2f7a3a86b4ccb037397d89f5671cafbd}\label{class_aircraft_a2f7a3a86b4ccb037397d89f5671cafbd}} 
+\index{Aircraft@{Aircraft}!shootAmmo@{shootAmmo}}
+\index{shootAmmo@{shootAmmo}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{shootAmmo()}{shootAmmo()}}
+{\footnotesize\ttfamily std\+::tuple$<$ int, Eigen\+::\+Vector3d $>$ Aircraft\+::shoot\+Ammo (\begin{DoxyParamCaption}\item[{int}]{index }\end{DoxyParamCaption})}
+
+
+
+Shoot ammo of specified index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & index of ammo \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns pair of result and velocity of released cargo in world frame. Result is number of ammo of given type that left on board. Result also informs about fails\+:
+\begin{DoxyItemize}
+\item -\/1 -\/ cooldown, next shoot is not ready
+\item -\/2 -\/ out of ammo
+\item -\/10 -\/ index not found 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aircraft_ac7d5c78b40b52cb97c90e94e62c968b3}\label{class_aircraft_ac7d5c78b40b52cb97c90e94e62c968b3}} 
+\index{Aircraft@{Aircraft}!startJet@{startJet}}
+\index{startJet@{startJet}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{startJet()}{startJet()}}
+{\footnotesize\ttfamily bool Aircraft\+::start\+Jet (\begin{DoxyParamCaption}\item[{int}]{index }\end{DoxyParamCaption})}
+
+
+
+Starts jet engine. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & index of engine to start \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+return true if jet was started. False if jet is running or burnt out 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_aircraft_aff5c7c90f53961802844b5f17bd209ac}\label{class_aircraft_aff5c7c90f53961802844b5f17bd209ac}} 
+\index{Aircraft@{Aircraft}!trim@{trim}}
+\index{trim@{trim}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{trim()}{trim()}}
+{\footnotesize\ttfamily void Aircraft\+::trim (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Restore trim values of surface angles. 
+
+\mbox{\Hypertarget{class_aircraft_aff5908917582785f9d716a4d7a9ad1a6}\label{class_aircraft_aff5908917582785f9d716a4d7a9ad1a6}} 
+\index{Aircraft@{Aircraft}!update@{update}}
+\index{update@{update}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{update()}{update()}}
+{\footnotesize\ttfamily void Aircraft\+::update (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\mbox{\hyperlink{class_simulation}{Simulation}} step. 
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_aircraft_ad2032ba509c09566639c4093bca7f147}\label{class_aircraft_ad2032ba509c09566639c4093bca7f147}} 
+\index{Aircraft@{Aircraft}!aero@{aero}}
+\index{aero@{aero}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{aero}{aero}}
+{\footnotesize\ttfamily Aero\+Coefficients Aircraft\+::aero\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_aircraft_a2f4827e0bdc3fb4410435df2582f3ea0}\label{class_aircraft_a2f4827e0bdc3fb4410435df2582f3ea0}} 
+\index{Aircraft@{Aircraft}!ammo@{ammo}}
+\index{ammo@{ammo}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{ammo}{ammo}}
+{\footnotesize\ttfamily std\+::unique\+\_\+ptr$<$Ammo\mbox{[}$\,$\mbox{]}$>$ Aircraft\+::ammo\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_aircraft_a25b3e185fdf6b41c97ef45d37035d914}\label{class_aircraft_a25b3e185fdf6b41c97ef45d37035d914}} 
+\index{Aircraft@{Aircraft}!cargo@{cargo}}
+\index{cargo@{cargo}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{cargo}{cargo}}
+{\footnotesize\ttfamily std\+::unique\+\_\+ptr$<$Cargo\mbox{[}$\,$\mbox{]}$>$ Aircraft\+::cargo\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_aircraft_a8da9ff5a0173824ad4754680375c8b8c}\label{class_aircraft_a8da9ff5a0173824ad4754680375c8b8c}} 
+\index{Aircraft@{Aircraft}!invMassMatrix@{invMassMatrix}}
+\index{invMassMatrix@{invMassMatrix}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{invMassMatrix}{invMassMatrix}}
+{\footnotesize\ttfamily Matrix$<$double,6,6$>$ Aircraft\+::inv\+Mass\+Matrix\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_aircraft_a77e76f92cdacc4f5402633fd584a2094}\label{class_aircraft_a77e76f92cdacc4f5402633fd584a2094}} 
+\index{Aircraft@{Aircraft}!jets@{jets}}
+\index{jets@{jets}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{jets}{jets}}
+{\footnotesize\ttfamily std\+::unique\+\_\+ptr$<$Jet\mbox{[}$\,$\mbox{]}$>$ Aircraft\+::jets\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_aircraft_ae0015ecf416fe1a6e64963be83e187f3}\label{class_aircraft_ae0015ecf416fe1a6e64963be83e187f3}} 
+\index{Aircraft@{Aircraft}!massMatrix@{massMatrix}}
+\index{massMatrix@{massMatrix}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{massMatrix}{massMatrix}}
+{\footnotesize\ttfamily Matrix$<$double,6,6$>$ Aircraft\+::mass\+Matrix\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_aircraft_ab797abeda5f9b2f010362c7797104871}\label{class_aircraft_ab797abeda5f9b2f010362c7797104871}} 
+\index{Aircraft@{Aircraft}!mtx@{mtx}}
+\index{mtx@{mtx}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{mtx}{mtx}}
+{\footnotesize\ttfamily std\+::mutex Aircraft\+::mtx\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_aircraft_a11226d7a60adbcbf1caa745fd838119f}\label{class_aircraft_a11226d7a60adbcbf1caa745fd838119f}} 
+\index{Aircraft@{Aircraft}!noOfAmmo@{noOfAmmo}}
+\index{noOfAmmo@{noOfAmmo}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{noOfAmmo}{noOfAmmo}}
+{\footnotesize\ttfamily int Aircraft\+::no\+Of\+Ammo\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_aircraft_a1014250d674f7208e035dd93f2cadfeb}\label{class_aircraft_a1014250d674f7208e035dd93f2cadfeb}} 
+\index{Aircraft@{Aircraft}!noOfCargo@{noOfCargo}}
+\index{noOfCargo@{noOfCargo}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{noOfCargo}{noOfCargo}}
+{\footnotesize\ttfamily int Aircraft\+::no\+Of\+Cargo\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_aircraft_a902b1b90b3b10c9439029d7d0bbc86bc}\label{class_aircraft_a902b1b90b3b10c9439029d7d0bbc86bc}} 
+\index{Aircraft@{Aircraft}!noOfJets@{noOfJets}}
+\index{noOfJets@{noOfJets}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{noOfJets}{noOfJets}}
+{\footnotesize\ttfamily int Aircraft\+::no\+Of\+Jets\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_aircraft_aa14b31108bf5a606b590f162c003b783}\label{class_aircraft_aa14b31108bf5a606b590f162c003b783}} 
+\index{Aircraft@{Aircraft}!noOfRotors@{noOfRotors}}
+\index{noOfRotors@{noOfRotors}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{noOfRotors}{noOfRotors}}
+{\footnotesize\ttfamily int Aircraft\+::no\+Of\+Rotors\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_aircraft_ae32caa18031f2bfdd163ae5921a41ba0}\label{class_aircraft_ae32caa18031f2bfdd163ae5921a41ba0}} 
+\index{Aircraft@{Aircraft}!ode@{ode}}
+\index{ode@{ode}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{ode}{ode}}
+{\footnotesize\ttfamily std\+::unique\+\_\+ptr$<$ODE$>$ Aircraft\+::ode\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_aircraft_a19352bca296779a4149b74c110231862}\label{class_aircraft_a19352bca296779a4149b74c110231862}} 
+\index{Aircraft@{Aircraft}!rotors@{rotors}}
+\index{rotors@{rotors}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{rotors}{rotors}}
+{\footnotesize\ttfamily std\+::unique\+\_\+ptr$<$Rotor\mbox{[}$\,$\mbox{]}$>$ Aircraft\+::rotors\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_aircraft_aab8d905f2d88535f53298e7c186d2b3f}\label{class_aircraft_aab8d905f2d88535f53298e7c186d2b3f}} 
+\index{Aircraft@{Aircraft}!state@{state}}
+\index{state@{state}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{state}{state}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_u_a_vstate}{UAVstate}} Aircraft\+::state}
+
+\mbox{\Hypertarget{class_aircraft_acce567224dcd494751c08cf725aa8c55}\label{class_aircraft_acce567224dcd494751c08cf725aa8c55}} 
+\index{Aircraft@{Aircraft}!surfaces@{surfaces}}
+\index{surfaces@{surfaces}!Aircraft@{Aircraft}}
+\doxysubsubsection{\texorpdfstring{surfaces}{surfaces}}
+{\footnotesize\ttfamily Control\+Surfaces Aircraft\+::surfaces\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/aircraft/\mbox{\hyperlink{aircraft_8hpp}{aircraft.\+hpp}}\item 
+src/aircraft/\mbox{\hyperlink{aircraft_8cpp}{aircraft.\+cpp}}\item 
+src/aircraft/\mbox{\hyperlink{aircraft__comm_8cpp}{aircraft\+\_\+comm.\+cpp}}\item 
+src/aircraft/\mbox{\hyperlink{aircraft__impulse_8cpp}{aircraft\+\_\+impulse.\+cpp}}\end{DoxyCompactItemize}
