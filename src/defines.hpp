@@ -13,7 +13,7 @@ const double GRAVITY_CONST = 9.81;
 const double FRICTION_EPS = 0.001;
 
 /// @brief artificial force coefficient. Protect again diving objects in horizontal wall
-const double GENTLY_PUSH = 0.15;
+const double GENTLY_PUSH = 0.25;
 
 /// @brief near zero floating point eps
 const double DOUBLE_EPS = 1e-5;
